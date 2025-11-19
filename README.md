@@ -130,8 +130,10 @@ All operations are done through Cursor chat interface:
   - Book and PDF pages follow a simple rule: `pdf_page = book_page + 1`
   - Example row: Chapter 2 → `book_start=38, book_end=63, pdf_start=39, pdf_end=64`
 - `PDFProcessor.save_chapter()` first tries to use this CSV mapping (deterministic, human-verified ranges) and falls back to automatic chapter detection when no CSV entry exists
+- After extraction each chapter body is passed through `format_chapter_markdown()` (`src/chapter_formatter.py`) which cleans headings, lists, and obvious OCR artifacts so the `.md` reads like a polished chapter. Set `enable_formatting=False` when calling `save_chapter()` if you need the raw extraction.
 - Always verify the full chapter is extracted including the final pages with exercises
 - The PDF extractor auto-detects low-quality text (symbol soup, too few words) and forces an OCR re-read of those pages. It also scans for locally corrupted spans (for example, short parenthetical asides that come out as punctuation soup) and may prefer OCR on those pages even when the rest of the text looks fine. Adjust the thresholds via `PDFProcessor` constructor args if another book needs different heuristics.
+- After text extraction, a light markdown formatter normalizes headings, bullets, and mid-sentence line breaks so that `data/chapters/chapter_N.md` reads like a clean, human-edited chapter. The formatter is conservative and does not re-author content—only structure and whitespace are adjusted for readability.
 
 **Exercise Extraction:**
 - Exercises are formatted as "EXERCISE: [NAME]" in the book

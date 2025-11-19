@@ -11,6 +11,8 @@ try:
 except ImportError:  # pragma: no cover - optional dependency
     pytesseract = None
 
+from .chapter_formatter import format_chapter_markdown
+
 
 class PDFProcessor:
     """Handles PDF reading and chapter extraction."""
@@ -596,8 +598,13 @@ class PDFProcessor:
         
         return extracted_text, info
     
-    def save_chapter(self, chapter_num: int, output_dir: str = "data/chapters", 
-                     chapters_list: Optional[List[Dict]] = None) -> Path:
+    def save_chapter(
+        self,
+        chapter_num: int,
+        output_dir: str = "data/chapters",
+        chapters_list: Optional[List[Dict]] = None,
+        enable_formatting: bool = True,
+    ) -> Path:
         """
         Extract and save chapter to file.
         
@@ -617,28 +624,38 @@ class PDFProcessor:
             chapter_text, chapter_info = self.extract_chapter_from_map(chapter_num)
         except Exception:
             # Fallback to automatic chapter detection
-            chapter_text, chapter_info = self.extract_chapter(chapter_num, chapters_list)
+            chapter_text, chapter_info = self.extract_chapter(
+                chapter_num, chapters_list
+            )
         
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
         
         chapter_file = output_path / f"chapter_{chapter_num}.md"
-        
+
         title = chapter_info.get("title") or chapter_info.get("name") or "Unknown"
-        
+
         # Prefer explicit book_start/book_end (from CSV); fall back to start_page/end_page.
         book_start = chapter_info.get("book_start", chapter_info.get("start_page", ""))
         book_end = chapter_info.get("book_end", chapter_info.get("end_page", ""))
-        
-        with open(chapter_file, 'w', encoding='utf-8') as f:
+
+        body_text = (
+            format_chapter_markdown(chapter_text, chapter_info)
+            if enable_formatting
+            else chapter_text
+        )
+
+        with open(chapter_file, "w", encoding="utf-8") as f:
             f.write(f"# Chapter {chapter_num}\n\n")
             f.write(f"**Title:** {title}\n\n")
             if book_start and book_end:
                 f.write(f"**Pages:** {book_start} - {book_end}\n\n")
             elif "start_page" in chapter_info and "end_page" in chapter_info:
-                f.write(f"**Pages:** {chapter_info['start_page']} - {chapter_info['end_page']}\n\n")
+                f.write(
+                    f"**Pages:** {chapter_info['start_page']} - {chapter_info['end_page']}\n\n"
+                )
             f.write("---\n\n")
-            f.write(chapter_text)
+            f.write(body_text)
         
         return chapter_file
 
