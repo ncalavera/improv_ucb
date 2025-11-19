@@ -28,6 +28,9 @@ class PDFProcessor:
         auto_min_word_runs: int = 2,
         auto_force_min_alpha: int = 120,
         auto_force_min_improvement: int = 30,
+        auto_local_span_min_alpha_ratio: float = 0.3,
+        auto_local_span_max_symbol_ratio: float = 0.45,
+        auto_local_span_min_improvement: int = 15,
     ):
         """
         Initialize PDF processor.
@@ -50,7 +53,15 @@ class PDFProcessor:
                 when auto-detection triggered.
             auto_force_min_improvement: Minimum alphabetic character delta
                 OCR must provide over the base extraction when auto-detection
-                triggered.
+                triggered for obviously low-quality pages.
+            auto_local_span_min_alpha_ratio / auto_local_span_max_symbol_ratio:
+                Thresholds used to detect locally garbled spans (e.g. short
+                parenthetical phrases that are mostly symbol soup) even when the
+                rest of the page looks fine.
+            auto_local_span_min_improvement: When auto-detection was triggered
+                due to local span corruption rather than full-page issues, this
+                is the smaller alphabetic character delta OCR must provide over
+                the base extraction before we switch to OCR for the page.
         """
         self.pdf_path = Path(pdf_path)
         if not self.pdf_path.exists():
@@ -67,6 +78,11 @@ class PDFProcessor:
         self.auto_min_word_runs = auto_min_word_runs
         self.auto_force_min_alpha = auto_force_min_alpha
         self.auto_force_min_improvement = auto_force_min_improvement
+        self.auto_local_span_min_alpha_ratio = auto_local_span_min_alpha_ratio
+        self.auto_local_span_max_symbol_ratio = auto_local_span_max_symbol_ratio
+        self.auto_local_span_min_improvement = auto_local_span_min_improvement
+        # Tracks whether the last OCR auto-trigger was due to a small corrupted span
+        self._force_ocr_local_span = False
     
     @staticmethod
     def _clean_page_text(text: str) -> str:
@@ -133,11 +149,43 @@ class PDFProcessor:
         
         return "\n".join(result_lines)
     
+    def _has_symbol_soup_span(self, text: str) -> bool:
+        """
+        Detect short spans (typically parenthetical asides) that are locally
+        garbled – mostly symbols with very few alphabetic characters – even
+        when the rest of the page looks fine.
+        """
+        # For now, focus on parenthetical spans, which frequently hold
+        # italic side-comments like "(or funny part of the scene)".
+        for match in re.finditer(r"\([^)]{5,160}\)", text):
+            span = match.group(0)
+            inner = span[1:-1].strip()
+            if not inner:
+                continue
+            total_chars = len(inner)
+            if total_chars == 0:
+                continue
+            alpha_chars = sum(1 for c in inner if c.isalpha())
+            symbol_chars = sum(
+                1 for c in inner if not (c.isalnum() or c.isspace())
+            )
+            alpha_ratio = alpha_chars / total_chars
+            symbol_ratio = symbol_chars / total_chars
+            if (
+                alpha_ratio < self.auto_local_span_min_alpha_ratio
+                and symbol_ratio > self.auto_local_span_max_symbol_ratio
+            ):
+                return True
+        return False
+
     def _should_force_ocr(self, text: str) -> bool:
         """
         Decide whether OCR should be forced based on the quality of the
         base text extractor output.
         """
+        # Default assumption: if we auto-trigger OCR, it is for full-page issues
+        # unless a later local-span check marks it as a localized corruption.
+        self._force_ocr_local_span = False
         if not self.auto_detect_ocr:
             return False
         stripped = text.strip()
@@ -161,6 +209,13 @@ class PDFProcessor:
         long_words = re.findall(r"[A-Za-z]{4,}", stripped)
         if len(long_words) < self.auto_min_word_runs:
             return True
+
+        # Finally, look for locally corrupted spans such as parenthetical asides
+        # that are mostly symbol soup; if found, mark the trigger as local.
+        if self._has_symbol_soup_span(stripped):
+            self._force_ocr_local_span = True
+            return True
+
         return False
 
     def _extract_page_text(self, page, pdf_page_index: int) -> str:
@@ -179,6 +234,7 @@ class PDFProcessor:
         # Base extractor: pdfplumber text
         base_text = page.extract_text() or ""
         force_ocr = self._should_force_ocr(base_text)
+        force_ocr_local = bool(self._force_ocr_local_span)
         should_attempt_ocr = (self.use_ocr or force_ocr) and pytesseract is not None
 
         # Fast path: no OCR configured or available
@@ -199,10 +255,20 @@ class PDFProcessor:
         
         # Decide which text to trust
         use_ocr = False
-        if force_ocr and ocr_alpha >= max(
-            self.auto_force_min_alpha, base_alpha + self.auto_force_min_improvement
-        ):
-            use_ocr = True
+        if force_ocr:
+            # When auto-detection was triggered by a small corrupted span rather
+            # than by obviously bad full-page text, allow a smaller improvement
+            # threshold so we can fix short phrases without requiring a huge
+            # overall alpha gain.
+            improvement_needed = (
+                self.auto_local_span_min_improvement
+                if force_ocr_local
+                else self.auto_force_min_improvement
+            )
+            if ocr_alpha >= self.auto_force_min_alpha and ocr_alpha >= (
+                base_alpha + improvement_needed
+            ):
+                use_ocr = True
         elif ocr_alpha >= self.ocr_min_alpha and base_alpha == 0:
             use_ocr = True
         elif base_alpha > 0 and ocr_alpha >= max(
