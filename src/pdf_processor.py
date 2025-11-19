@@ -1,5 +1,6 @@
 """PDF processing module for extracting chapters from PDF books."""
 
+import csv
 import re
 from pathlib import Path
 from typing import List, Dict, Optional, Tuple
@@ -361,6 +362,90 @@ class PDFProcessor:
         
         return extracted_text, info
     
+    # --- CSV-based chapter mapping helpers ---
+    
+    def _load_chapter_page_map(
+        self,
+        csv_path: str = "data/ucb_chapter_pages.csv",
+    ) -> Dict[str, Dict[str, str]]:
+        """
+        Load chapter/section page ranges from a CSV file.
+        
+        The CSV is expected to live at data/ucb_chapter_pages.csv and contain
+        at least the columns:
+        - unit_type (e.g. 'Chapter', 'Foreword', 'Introduction')
+        - chapter_number (may be empty for non-numbered sections)
+        - title
+        - book_start, book_end
+        - pdf_start, pdf_end
+        """
+        path = Path(csv_path)
+        if not path.exists():
+            raise FileNotFoundError(f"Chapter page map CSV not found: {csv_path}")
+        
+        mapping: Dict[str, Dict[str, str]] = {}
+        with path.open("r", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                unit_type = (row.get("unit_type") or "").strip()
+                chapter_number = (row.get("chapter_number") or "").strip()
+                key = ""
+                if unit_type.lower() == "chapter" and chapter_number:
+                    key = f"chapter_{chapter_number}"
+                else:
+                    # Use unit_type as key for non-numbered sections (e.g. Foreword)
+                    key = unit_type.lower()
+                
+                if key:
+                    mapping[key] = row
+        
+        return mapping
+    
+    def extract_chapter_from_map(
+        self,
+        chapter_num: int,
+        csv_path: str = "data/ucb_chapter_pages.csv",
+    ) -> Tuple[str, Dict]:
+        """
+        Extract chapter text using explicit page ranges from a CSV mapping.
+        
+        This prefers deterministic, human-verified ranges over automatic
+        chapter detection when the CSV is available.
+        """
+        mapping = self._load_chapter_page_map(csv_path)
+        key = f"chapter_{chapter_num}"
+        if key not in mapping:
+            raise ValueError(f"No CSV page mapping found for chapter {chapter_num}")
+        
+        row = mapping[key]
+        
+        # Parse numeric fields from CSV
+        try:
+            book_start = int(row["book_start"])
+            book_end = int(row["book_end"])
+            pdf_start = int(row["pdf_start"])
+            pdf_end = int(row["pdf_end"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(f"Invalid page range data for {key} in CSV") from exc
+        
+        # Derive offset so book/page numbering matches the CSV exactly
+        page_offset = pdf_start - book_start
+        
+        extracted_text, info = self.extract_by_page_range(
+            pdf_start=pdf_start,
+            pdf_end=pdf_end,
+            book_start=book_start,
+            book_end=book_end,
+            page_offset=page_offset,
+        )
+        
+        # Enrich info with CSV metadata
+        info["unit_type"] = row.get("unit_type")
+        info["title"] = row.get("title")
+        info["chapter_number"] = row.get("chapter_number")
+        
+        return extracted_text, info
+    
     def save_chapter(self, chapter_num: int, output_dir: str = "data/chapters", 
                      chapters_list: Optional[List[Dict]] = None) -> Path:
         """
@@ -374,17 +459,34 @@ class PDFProcessor:
         Returns:
             Path to saved chapter file
         """
-        chapter_text, chapter_info = self.extract_chapter(chapter_num, chapters_list)
+        chapter_text: str
+        chapter_info: Dict
+        
+        # First try CSV-based, deterministic ranges (if available for this book)
+        try:
+            chapter_text, chapter_info = self.extract_chapter_from_map(chapter_num)
+        except Exception:
+            # Fallback to automatic chapter detection
+            chapter_text, chapter_info = self.extract_chapter(chapter_num, chapters_list)
         
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
         
         chapter_file = output_path / f"chapter_{chapter_num}.md"
         
+        title = chapter_info.get("title") or chapter_info.get("name") or "Unknown"
+        
+        # Prefer explicit book_start/book_end (from CSV); fall back to start_page/end_page.
+        book_start = chapter_info.get("book_start", chapter_info.get("start_page", ""))
+        book_end = chapter_info.get("book_end", chapter_info.get("end_page", ""))
+        
         with open(chapter_file, 'w', encoding='utf-8') as f:
             f.write(f"# Chapter {chapter_num}\n\n")
-            f.write(f"**Title:** {chapter_info.get('title', 'Unknown')}\n\n")
-            f.write(f"**Pages:** {chapter_info['start_page']} - {chapter_info['end_page']}\n\n")
+            f.write(f"**Title:** {title}\n\n")
+            if book_start and book_end:
+                f.write(f"**Pages:** {book_start} - {book_end}\n\n")
+            elif "start_page" in chapter_info and "end_page" in chapter_info:
+                f.write(f"**Pages:** {chapter_info['start_page']} - {chapter_info['end_page']}\n\n")
             f.write("---\n\n")
             f.write(chapter_text)
         
