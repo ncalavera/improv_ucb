@@ -377,20 +377,28 @@ seamless story that sounds as if it is coming from one person.
 
 
 
+CHAPTER TWO + How to Create a Base Reality
+
 Commitment
-in Long Form
-Improvisation. All elements of a scene outside of the game (5/%D>’’.%
-?&/)%5D%)1$%2<$’$@ should be grounded in the reality that the performers
+
+DEFINITION
+
+There is a need for reality is tong rorm
+
+Improvisation. All elements of a scene outside of the game (or funny
+part of the scene) should be grounded in the reality that the performers
 have agreed upon. Obviously, this includes your performance. You could
 be following all of the rules we have presented and still not draw an
 audience into your reality if you do not commit.
-In simplest terms, <5==")=$’) is good acting. A Long Form
+
+In simplest terms, commitment is good acting. A Long Form
 improviser is expected to invest in the reality of the scene in such a way
 that the audience doesn’t see an improviser, but a believable character
 on stage. Good actors in movies or television disappear into their roles.
 Bad actors “take you out of the movie.” Good acting and commitment
 to the choices you make in a scene will help your audience become
 engaged in the reality you are creating.
+
 A commitment to the reality of the scene does not mean that every
 scene you perform has to take place in our reality. It means that you can
 do scenes about vampires, pirates, or truckers in deep space, as long
@@ -398,59 +406,89 @@ as you are committing to the specific reality in which we might find
 these sorts of characters. You must make choices about how to portray
 these characters and then remain consistent with your portrayal of the
 characters for the entire scene.
+
 Focusing on commitment will prevent you from forcing an “unusual
 thing.” If you commit to your characters and portray them as real
 people, it will make it easier for you to recognize the unusual when it
 happens organically.
+
 Commitment allows your audience to suspend disbelief and
 fully experience a fictional reality. The antithesis of commitment is
-($)&<1=$’). Detachment makes the audience aware of the artifice of the
+detachment. Detachment makes the audience aware of the artifice of the
 scene, drawing attention to the fact that you are a comedian performing
 a scene as opposed to a character within the fictional reality of a scene.
+
 Detachment generally comes in one of two forms: unintentional
 detachment and ironic detachment.
-!"#"$%"$#&"’()*%$’+,-%"$)is the result of improvisers making
+
+Unintentional detachment is the result of improvisers making
 choices, but playing them in a half-hearted way. It often comes
 down to bad acting. Generally, improvisers guilty of this form of
 detachment are simply “telling” and not “showing” an audience their
 ideas. One example of unintentional detachment would be a man
+
+
 
 playing a petite little girl without adjusting his voice or demeanor.
 The improviser “says” he is a little girl but he fails to “be” a little girl.
 Another example would be an improviser saying that they just broke
 their leg in three places, but failing to limp or show any emotional
 response to their injury.
-./&"#+)*%$’+,-%"$)means consciously not committing to the reality
+
+Ironic detachment means consciously not committing to the reality
 of the scene in order to get a laugh. Again, this will take the audience
-out of the reality of the scene. This is also referred to as <5==$’)"’!.
+out of the reality of the scene. This is also referred to as commenting.
 The examples from the previous paragraph would be examples of ironic
 detachment if the lack of commitment was intentional. Below are some
 other examples of ironic detachment:
+
+¢ You are ina courtroom scene and choose to comment on the fact that
+there are only two chairs in the room. (You are not committing to the
+fictional reality of the Where.)
+
+* Your male scene partner is playing a woman and you make a “boy,
+you’re an ugly woman” remark. (You are not committing to the fictional
+reality of the Who.)
+
+* You are playing Paul Revere and say something like, “It’s a shame that
+there isn’t some sort of mobile device that would allow me to contact
+my fellow colonists remotely.” (You are not committing to the fictional
+reality of the What.)
+
 While commenting will often allow a performer to get a quick laugh,
 that laugh will come at the expense of establishing a base reality, which
 ultimately will undermine the integrity of the scene. Even a momentary
 lapse in commitment can make it difficult for your audience to stay
 engaged in the base reality of the scene.
+
 The best improvisers completely commit themselves to their scenes.
 You must commit to the character you are playing and your reality, and
 never sell it out for a laugh or out of fear of not getting a laugh. The more
 you commit to your character and the reality of the scene, the more
 engaging the scene will be and the more likely it is that you will discover
 what is truly funny about the scene.
+
+TOP OF YOUR INTELLIGENCE
+
 In simplest terms, “top of your intelligence” refers to responding
 truthfully to any stimulus within a scene. It is about allowing yourself
 to have a true, honest emotional response. “Intelligence,” in this case, is
 your knowledge of how a human being would react to a given situation.
 This requires emotional and social intelligence. Playing at the top of
-your intelligence means responding the way a real person would in a
+your intelligence means responding the way a real person would ina
 given situation.
+
 The principle of “show, don’t tell” comes into play here. It is not
 enough to simply react verbally. In order to truly play at the top of your
 
+
+
 intelligence, you will need to react emotionally as well. Marry your
 verbal response with an emotional one.
+
 For example, when another character pulls out a gun in a scene
 and you are scared of it, you are playing at the top of your intelligence.
+
 When you lovingly embrace your girlfriend upon hearing the news that
 she is pregnant, you are playing at the top of your intelligence. When
 your character touches something hot and you recoil in pain, you are
@@ -462,8 +500,23 @@ a person might have in any of these situations would also be considered
 a “top of intelligence” response. For instance, in the case of hearing the
 news that your girlfriend is pregnant, it is equally valid to respond in
 shock or despair.
+
+WHAT TOP OF YOUR INTELLIGENCE IS NOT
+
+TT. of your intelligence is often misunderstood. Top of your
+intelligence does not mean that you should have your
+character rattle off trivial or obscure facts. It does not mean that
+your character has to be “smart.” It does not mean that you
+should quip cleverly or show off how well educated you may be in
+real life. It also does not mean that every character you play has
+to know everything that you know. If you are playing a character
+dumber than you are, your character will not know everything
+that you do.
+
 Commitment and playing at the top of your intelligence helps you to
 create a rich base reality for your scene.
+
+
 
 EXERCISE: GIVE THE SETUP
 
@@ -677,35 +730,58 @@ established about the scene. “Being inattentive” denials are less
 intentional than “pulling the rug out,” but they are just as damaging to
 the start of the scene.
 
+COFFEE POT BASEBALL BAT
+
+
 When you are inattentive, you can miss important details, such as the
 gender, age, or name of the character your scene partner is playing. You
 could also miss important information about the character of the space.
+
 For instance, if your scene partner steps out shivering and you fail
 to acknowledge that it is cold, you are denying an aspect of your reality
-+)1&)%")%"2%<5-(@ being provided to you by your scene partner. This will
+(that it is cold) being provided to you by your scene partner. This will
 likely force some sort of explanation and take your focus away from
 establishing the base reality of your scene.
-Another common form of denial is referred to as (>$-"’!%"’")"&)"5’2. In
+
+DUELING INITIATIONS
+
+Another common form of denial is referred to as dueling initiations. In
 this form of denial, one of the improvisers refuses to let go of his or her
 pre-conceived idea. They are unnecessarily forcing a new element into
 the scene instead of building upon what their scene partner has offered
 up. Here is a Dueling Initiations Example: Two improvisers doing a two-
 person scene off of the suggestion “office.”
 
+Player 1 walks on stage, miming a coffee cup in his hand.
+
+PLAYER 1: “If you finish the break room coffee, you need to
+start a new pot.”
+
+PLAYER 2: “Look, I’ll get to that. We need to bring in a ringer
+for the company softball team or else we’re gonna
+get destroyed.”
+
+
+
 In this example, Player 2 has acknowledged the information established
 by Player 1 while also adding in new information. The problem is that
 this new information does not build upon anything established by the
 scene initiation. Instead, Player 2 has rejected Player 1’s idea in favor
+
 of his own. Instead of steamrolling with a new idea, Player 2 should be
 looking to Yes And the specific base reality offered in the first line.
+
+DENIAL’S EFFECT ON THE AUDIENCE
+
 If you deny the contributions of your scene partner, you run the risk
 of confusing your audience. Remember that in Long Form, we are
-starting each scene in a blank space, a void without costumes or a
+starting each scene in a blank space, a void without costumes ora
 set. Given the lack of visual information, the audience is logically
 going to latch onto and invest in whatever the improvisers establish
 as the reality of the scene. A denial at the start of a scene is confusing
 because it creates competing realities instead of a single reality that
 you have built together.
+
 The danger of denial extends beyond the obvious, practical pitfall
 of confusing your audience. Denial that flies in the face of information
 established by an initiation is often the product of a conscious choice.
@@ -714,6 +790,7 @@ the beginning of the scene. They are also usually just not as interesting
 as the unusual thing that you would eventually discover with your scene
 partner. An unusual thing that you discover with someone else will
 always be more satisfying and much more fun to play with.
+
 Don’t be tempted by the quick, easy laughs that you will sometimes
 get from denial. You will be distinguishing yourself as a bad teammate
 in exchange for these laughs. An improviser that relies on the sort of
@@ -722,16 +799,23 @@ does nothing but score by taking the ball away from the point guard on
 his own team. When you deny your scene partner, you make them feel
 cheated and unsupported. Single laughs coming from a denial will be at
 the expense of consistent laughs later in the scene.
+
 Making the game of your scene a denial is not the same as building a
 scene with your scene partner. If you try to make every scene like this,
 you have nothing more than a gimmick.
+
+AVOIDING DENIAL
+
 If your scene partner establishes the Who, What, or Where before you
+
 do so in a scene, always drop your idea and go with theirs. Holding onto
 your own ideas about the context of the scene could lead you to deny
 your scene partner. Holding onto your own idea is also likely to create
 confusion and disconnect between you and your fellow improviser.
 Simply agreeing about the base reality of the scene is far more important
 than the specifics of the reality itself. In the end, the memorable part
+
+
 
 of the scene is not going to be the base reality of the scene (the Who,
 What, and Where). The memorable part of the scene will be the funny
