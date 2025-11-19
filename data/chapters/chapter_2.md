@@ -6,16 +6,46 @@
 
 ---
 
+SECTION ONE * CHAPTER TWO
+
+How to
+Create
+a Base
+Reality
+
 In this chapter we go
+
 over how to make your
 base reality strong and
 truthful. The more
 truthful and committed
 you are with your base
 reality, the easier it will be
-for your game !1*#()%4#’$(
-%:(1*#(.)#&#/(to stand out.
+for your game (the comedy
+of the scene) to stand out.
+
 Topics covered:
+
+¢ Make ita priority to listen well
+
+« Practice good give-and-
+take with each other
+
+« Commit to the reality of the scene
+
+« Avoid detachment—including
+unintentional detachment
+and ironic detachment
+
+« Play to the top of your intelligence—
+don’t agree to things blindly or be
+oblivious to things for no reason
+
+« Avoid denials, which include pulling
+the rug out, being inattentive
+and dueling initiations
+
+
 
 Listening
 a Long Form improv scene with
@@ -50,17 +80,302 @@ There is nothing more awkward to watch on stage than two
 improvisers fighting for focus. An ability to give and take focus is
 necessary for good listening.
 
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%:A=%"KJ%H?%L:BB>%
-03&5$,%67%%85% <HI%>?@KM<%L:BB>%"%M<J<J9<M<=%?@M%N<==DAO%
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%:A=%<P<M>?A<%<CH<%
-03&5$,%67%%85% <HI%<P<M>?A<%DA%QL<%?UDR<%NDCC%9<%V<:C?@H%?S%>?@I%
+ti; ©
 
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%:A=%DQ%DH%?A%
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%:A=%"%@H<=%Q?%L:P<%
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%:A=%"KCC%<:Q%QLDH%
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%:A=%J>%9M?QL<M%
+EXERCISE: COCKTAIL PARTY
 
-03&5$,%G7%%85% <HI%>?@%9:;<=%J<%:A%:BBC<%BD<I%9@Q%"KJ%
+INSTRUCTIONS
+
+¢ The participating improvisers split into groups of two or three and then
+spread out. Another improviser acts as a “conductor.”
+
+¢ Each group is assigned a number.
+
+
+
+Each group of improvisers should commit physically to the idea that
+they are different parts of the same cocktail party.
+
+All three groups are given the same suggestion to inspire three
+different conversations. For example, if the suggestion was “gun,”
+one group may talk about gun control, another group may talk about
+Guns N’ Roses, and the third group may talk about video games.
+
+The conductor calls out the number of the group that will have focus.
+
+While one group is speaking, the others should mime a conversation
+while listening to what is being said.
+
+When the conductor calls out a new number, the previous group gives
+focus by stopping their conversation. The new group takes focus by
+starting or resuming their conversation.
+
+After a few rounds of calling out numbers, the conductor falls away
+and the three groups begin giving and taking focus on their own. The
+improvisers should look for natural pauses in conversation and take
+focus by loudly and clearly re-starting their conversation.
+
+Each group should take the passage of time into consideration
+
+as they return to their conversation. You are not “pausing” your
+conversation and picking it up exactly where you left off; it should be
+assumed that your characters have been talking while you have been
+miming and the other group has had the focus in the scene.
+
+VARIATION
+
+Use the same basic set-up, but this time each group should listen
+carefully to the group currently speaking.
+
+After each group has had at least two opportunities to speak, you
+should look for ways to make connections between your conversation
+and the other conversations happening.
+
+When your group retakes focus, try to incorporate specifics, details,
+ideas, and themes that you heard mentioned by the other groups.
+
+PURPOSE
+
+The purpose of this exercise is to allow improvisers to practice taking
+and giving focus in group scenes.
+
+This variation of the exercise gives new improvisers another
+opportunity to practice listening.
+
+If you are really listening to the other conversations, you should be
+able to find ways for themes and ideas to overlap naturally. This is a
+skill you will use often when performing Long Form.
+
+
+
+CHAPTER TWO + How to Create a Base Reality
+
+EXERCISE: “YES...AND”
+SCENEWORK
+INSTRUCTIONS
+
+¢ Atleast three improvisers are needed for this exercise.
+
+¢ Two improvisers perform a scene from a single suggestion given by the
+third. The third improviser watches the scene.
+
+¢ One improviser will initiate, or give the first line of the scene.
+
+¢ Theimprovisers will then literally say “Yes And” at the start of each
+successive line. The “Yes And” will come in this form:
+
+« “Yes” [repeat the information from the last line]
+« “And” [add new information to the scene]
+
+¢ Statements are necessary for this exercise. Questions won’t add new
+information; they will only force your scene partner to add information.
+Imperatives (e.g. “Come here!”) also fail because they often force your
+scene partner to do something without adding new information about
+the Who, What, and Where. Statements allow you to more quickly
+establish a reality and find something unusual to explore in that reality.
+
+¢ Make sure that your Yes And statements add information to the present
+moment and the characters in the scene. Avoid Yes And statements that
+refer to the past, the future, or characters not in the scene.
+
+* Resist the urge to “Yes...But.” Someone else in your group should stop
+the scene every time a scene partner says “But” instead of “And” to
+give them a chance to deliver a different line without “But.” “Yes...But”
+shows a desire to argue instead of building the scene together.
+
+PURPOSE
+
+* One purpose of this exercise is to practice listening in a Long Form
+scene. You must be listening carefully in this exercise since you will
+have to repeat what was just said. Repeating the information from the
+previous line proves that you have been listening.
+
+e When you add new information in your line, you are showing that you
+understand your partner’s contribution to the scene.
+
+« Yes And scenes usually feel a little stilted. However, this exercise is
+essential for getting the behavior of Yes Anding into your muscle
+memory. Before things become second nature, we need to practice
+them consciously.
+
+* This exercise will make it glaringly obvious whether or not you are
+listening. This exercise prevents you from skipping this important
+scene work step.
+
+
+
+“VES...AND” SCENE EXAMPLES
+
+EXAMPLE 1
+
+PLAYER 1: “I baked you an apple pie.”
+
+PLAYER 2: “Yes, you baked me an apple pie, and I’m so happy
+you remembered our wedding anniversary.”
+
+(Player 2 has established the Who and What with this “Yes And.” We
+now know that the characters are a married couple celebrating a
+wedding anniversary.)
+
+PLAYER 1: “Yes, you’re happy | remembered our wedding
+anniversary, and let’s eat this tonight when we
+come home from dinner.”
+
+(Player 1 has started to establish the Where with this “Yes And.” We now
+know that the couple is in their house, getting ready to go to dinner.)
+
+EXAMPLE 2
+
+PLAYER 1: “I baked you an apple pie.”
+PLAYER 2: “Yes, you baked me an apple pie, and everyone else
+in the office is going to be jealous of me.”
+
+(Player 2 has established the Where with this “Yes And.” We now know that
+the characters are at their workplace.)
+
+PLAYER 1: “Yes, everyone in the office will be jealous of you,
+
+and you just tell them that if their sales were as
+high as yours, I’d bake them an apple pie, too.”
+
+
+
+CHAPTER TWO + How to Create a Base Reality
+
+BAD “YES...AND” SCENE EXAMPLES
+
+EXAMPLE 1
+
+PLAYER 1: “I baked you an apple pie.”
+
+PLAYER 2: “Yes, you baked me an apple pie, and it is on
+
+a plate.”
+(Player 2 has not really offered an “And” for the scene in this example. You
+want to go beyond the obvious of what you probably already know or could
+
+assume when you Yes And. No new information has been established with the
+“And” in this example.)
+
+EXAMPLE 2
+
+PLAYER 1: “I baked you an apple pie.”
+
+PLAYER 2: “Yes, you baked me an apple pie, and | used to have
+apple pie every Sunday when | was a kid.”
+
+(Player 2 has made this scene about the past.)
+
+EXAMPLE 3
+
+PLAYER 1: “I baked you an apple pie.”
+
+PLAYER 2: “Yes, you baked me an apple pie, and Ill eat this
+tomorrow with my lunch.”
+
+(Player 2 has made this scene about the future.)
+
+EXAMPLE 4
+
+PLAYER 1: “I baked you an apple pie.”
+
+PLAYER 2: “Yes, you baked me an apple pie, and my brother
+Mike loves apple pie.”
+
+(Player 2 has made the scene about a character not in the scene.)
+
+
+
+EXAMPLE 5
+
+PLAYER 1: “I baked you an apple pie.”
+
+PLAYER 2: “Yes, you baked me an apple pie, but I’m
+
+not hungry.”
+
+(Player 2 has done “yes but” instead of “Yes And.” Doing so will start your
+scenes off with unnecessary conflict.)
+
+EXERCISE: THREE LINE SCENES
+
+INSTRUCTIONS
+
+Have any number of improvisers form two single-file lines on
+opposite sides of the stage. The line on the left side of the stage
+will be the “initiation” line. The line on the right will be the
+“response” line.
+
+One improviser from each line will step forward to perform
+a scene inspired by a suggestion offered by someone else in
+the group.
+
+¢ Left Side will initiate.
+¢ Right Side will respond to the initiation.
+Left Side will respond to the response.
+
+After the three lines, each improviser should go to the end of the
+opposite line. The next two improvisers in line then step out, get
+another suggestion, and do a new three-line scene.
+
+These three-line scenes will not be complete scenes. They will
+end after the third line. These scenes don’t have to reach any
+sort of resolution. You should still make strong choices and
+commit as if these are going to be full-length scenes.
+
+Continue until everyone has had a chance to initiate
+and respond.
+
+PURPOSE
+
+The purpose of this exercise is to practice establishing the Who,
+What, and Where as quickly and clearly as possible. It will be
+easier for you to establish this information if you make strong
+choices at the top of your scenes.
+
+
+
+CHAPTER TWO + How to Create a Base Reality
+
+EXERCISE: CONDUCTED STORY
+
+INSTRUCTIONS
+Three or more improvisers stand in a line.
+
+Another improviser will stand in front of them and act asa
+“conductor” for a story that they will tell together.
+
+The conductor points at an improviser, who begins telling
+a story.
+
+The conductor will then randomly point at a different
+improviser. The improviser currently speaking will abruptly
+stop telling the story. Then, the new improviser being pointed
+at will pick up telling the story at the exact moment where
+the previous improviser left off. The same rule will apply each
+time the conductor points to a new improviser.
+
+The conductor can point to a new improviser at any time.
+
+Caution: Don’t try to be funny. Don’t try to add absurd
+twists for laughs. Your only goal is to tell a simple story with
+aclear plot and consistent tone throughout, as if written by
+a single author.
+
+PURPOSE
+
+This exercise will improve your listening by forcing you to be in
+the moment. You don’t know when you are going to be called
+on to speak. You could have to continue telling the story at any
+point—the end of a sentence or in the middle of a word. This
+means that you must be listening intently to know both what
+has been said just before you are called upon to speak, AND
+what has happened so farin the story as a whole.
+
+If you do a good job of listening, you will be able to tell a
+seamless story that sounds as if it is coming from one person.
+
+
 
 Commitment
 in Long Form
@@ -150,12 +465,185 @@ shock or despair.
 Commitment and playing at the top of your intelligence helps you to
 create a rich base reality for your scene.
 
-!" F%.%.<%(")$%"2%11/,1"4(/.")$%"9#8N‘"8XOL#"SOV;#ZMDC";NS;:"
+EXERCISE: GIVE THE SETUP
+
+INSTRUCTIONS
+PART ONE
+
+Two improvisers take the stage.
+
+Instead of receiving a suggestion, every scene will start with the
+
+two improvisers having a conversation as their actual selves. The
+improvisers in this scene should focus on playing the sceneina
+grounded, realistic, and truthful way. The scene should have a casual
+or conversational tone.
+
+A third improviser will stop them if they feels that either improviser
+
+is “performing” or not acting realistically in any way. This third
+improviser should be asking themself, “Is this really what either of
+these people would say?” in order to find those moments that are not
+realistic or genuine.
+
+Once the “unreal” moment has been discussed, the
+improvisers should back up and play the moment again ina
+way that is more realistic.
+
+Stop and repeat this process if the scene again becomes unrealistic.
+
+PART TWO
+
+Now each pair of improvisers will be given a simple, specific, and
+relatable scenario or “set-up” to start with (e.g. two parents watching
+their kids in a little league game, a second date at a familiar chain
+restaurant, etc.).
+
+Again, the improvisers should play close to themselves in these scenes.
+Their focus should once again be on playing themselves in a grounded,
+realistic, and truthful way.
+
+A third improviser should look to stop the scene any time either
+performer in the scene is not acting realistically.
+
+Once the “unreal” moment has been discussed, the improvisers should
+back up and play the moment again in a way that is more realistic.
+
+Stop and repeat this process if the scene again becomes unrealistic.
+
+PART THREE
+
+Now each pair should be given the suggestion of two character
+archetypes that will be different from their actual selves, but within
+the realm of possibility in real life (e.g. two astronauts, the Pope anda
+Cardinal, the President and the First Lady, etc.).
+
+
+
+CHAPTER TWO + How to Create a Base Reality
+
+The goal of both players in these scenes is to play these character
+archetypes in the same grounded, realistic, and truthful manner
+that they played themselves in Part One.
+
+The third improviser looking to stop the scene can judge the
+success of this part of the exercise by considering how closely these
+scenes resemble the tone and execution of those scenes in Part
+One. Again, the third improviser should stop the scene any time
+either performer in the scene is not acting realistically.
+
+Once the “unreal” moment has been discussed, the improvisers
+should back up and play the moment again in a way that is
+more realistic.
+
+Stop and repeat this process if the scene again becomes unrealistic.
+
+PART FOUR
+
+For the final section of this exercise, each pair should be given the
+suggestion of two character archetypes that are so fundamentally
+different from their actual selves that they could not “be” them in
+real life. These character archetypes should require the improvisers
+to alter their voices and physicality (e.g. two elderly people, two
+Russian immigrants, etc.).
+
+Again, the goal of both players in these scenes is to play these
+characters in the same, grounded, realistic, and truthful manner that
+they played themselves in Part One.
+
+While the improvisers will need to adopt a character voice or
+different way of moving in these scenes, they should make these
+traits as realistic as they can.
+
+The third improviser can once again judge the success of this part of
+the exercise by looking for how closely these scenes resemble the
+tone and execution of those scenes in Part One. This third improviser
+should now be asking, “Is this really what either of these types of
+people would say or do in real life?” in order to find those moments
+that are not realistic or genuine.
+
+Once the “unreal” moment has been discussed, the improvisers
+should back up and play the moment again in a way that is
+more realistic.
+
+Stop and repeat this process if the scene again becomes unrealistic.
+
+
+
+ADDITIONAL TIPS
+
+Start your scenes “in the middle.” That means initiating with a
+specific statement and assuming or labeling a relationship from the
+start. Starting your scenes “in the middle” is a good idea in general.
+
+Remember the lessons from the “TALK ABOUT SOMETHING ELSE”
+exercise. In real life, you usually don’t just talk about whatever it is
+that you are doing as you are doing it. You usually talk about lots of
+other things: work, your family, your friends, interests, etc. Use the
+scenes in this exercise as an opportunity to practice doing this. The
+third improviser watching these scenes should stop the scene if the
+improvisers get trapped into talking about what they are doing.
+
+PURPOSE
+
+The purpose of this exercise is to give you a chance to focus on
+playing the reality of the scene in a believable way. If you are able
+to successfully portray characters and situations that feel real and
+grounded, the absurd element of the scene will stand out better in
+contrast. It is easier to recognize the unusual in a scene if we begin
+our scenes with a familiar situation or recognizable reality.
+
+This exercise also reinforces that our ideas for scenes do not have to
+be crazy, wacky, forced or complicated at the start. In fact, starting
+with the familiar increases our odds of finding a first unusual thing.
+
+
+
+CHAPTER TWO + How to Create a Base Reality
+
+EXERCISE: WOULD YOU?
+
+INSTRUCTIONS
+Have two improvisers take the stage.
+
+Do a series of two-person scenes where the suggestion must
+be an emotionally charged scenario (e.g. finding out you have
+cancer, being involved in a robbery, going on a first date, etc.).
+
+Video-record these scenes.
+As a group, watch each scene.
+
+Stop line-by-line and ask the improviser in the scene variations
+on the question, “Would you...?” in relation to their action and
+dialogue (e.g. “Would you have really reacted that way to a
+person in real life?”)
+
+Each answer should be an honest assessment of whether or
+not they were successful in giving their character realistic
+human behavior.
+
+Whenever the question is answered with some version of “No,”
+discuss other options this improviser had in that scene.
+
+PURPOSE
+
+This exercise is a great way to consider how you are reacting in
+
+Analyzing your scene work in the moment is extremely difficult.
+Watching scenes on videotape after the fact allows you to step
+outside of your own performance and really focus on your
+tendencies as a performer.
 
 Denial
-to agree with any aspect of
+
+DEFINITION
+
+Denial means failing to agree with any aspect of
+
 the reality established by your scene partner. You should look at every
 contribution that your scene partner makes to the scene as a gift. If you
+
+
 
 acknowledge and build upon these gifts, your job of finding a scene will
 be easier.
@@ -286,6 +774,40 @@ rides, in which you had to consciously think about steering, pedaling,
 and keeping balanced all at once. Right now, it is just important to
 realize that time and practice will eventually make following the rules
 more automatic.
+
+SECTION ONE * CHAPTER TWO
+
+Chapter
+Review
+
+¢ Make it a priority to listen well
+
+« Practice good give-and-take
+with each other
+
+e Commit to the reality of the scene
+
+« Avoid detachment—including
+unintentional detachment and
+ironic detachment
+
+« Play to the top of your
+intelligence—don’t agree to
+things blindly or be oblivious to
+things for no reason
+
+¢ Avoid denials, which include
+pulling the rug out, being
+inattentive and dueling initiations
+
+¢ Cocktail Party
+¢ Yes...And Scene Work
+¢ Three Line Scenes
+¢ Conducted Story
+« Give the Setup
+¢ Would You?
+
+
 
 The Game
 of the Scene

@@ -137,3 +137,11 @@ The interactive workflow follows this structure:
     - Common plan structures
     - Quick plan generation from templates
 
+## 2025-11-19
+
+### Fixed Missing Chapter 2 Review Text
+- Added rule-based OCR auto-detection in `src/pdf_processor.py`. The extractor now measures alpha vs symbol ratios plus word runs and forces OCR when the base text is clearly garbled.
+- Exposed tuning knobs via `PDFProcessor.__init__` so future books can adjust thresholds without editing the method logic.
+- Regenerated `data/chapters/chapter_2.md`; the Chapter Review and exercise list (book page 61) now appear alongside the rest of the chapter.
+- Created a `.venv` with `pdfplumber` and `pytesseract` installed so OCR fallback is available locally (requires the `tesseract` binary in PATH).
+
