@@ -151,12 +151,12 @@ class PDFProcessor:
     
     def _has_symbol_soup_span(self, text: str) -> bool:
         """
-        Detect short spans (typically parenthetical asides) that are locally
-        garbled – mostly symbols with very few alphabetic characters – even
-        when the rest of the page looks fine.
+        Detect short spans or tokens that are locally garbled – mostly symbols
+        with very few alphabetic characters – even when the rest of the page
+        looks fine.
         """
-        # For now, focus on parenthetical spans, which frequently hold
-        # italic side-comments like "(or funny part of the scene)".
+        # 1) Parenthetical spans, which frequently hold italic side-comments
+        # like "(or funny part of the scene)".
         for match in re.finditer(r"\([^)]{5,160}\)", text):
             span = match.group(0)
             inner = span[1:-1].strip()
@@ -168,6 +168,29 @@ class PDFProcessor:
             alpha_chars = sum(1 for c in inner if c.isalpha())
             symbol_chars = sum(
                 1 for c in inner if not (c.isalnum() or c.isspace())
+            )
+            alpha_ratio = alpha_chars / total_chars
+            symbol_ratio = symbol_chars / total_chars
+            if (
+                alpha_ratio < self.auto_local_span_min_alpha_ratio
+                and symbol_ratio > self.auto_local_span_max_symbol_ratio
+            ):
+                return True
+
+        # 2) Generic symbol-heavy tokens (e.g. \"!\"#$%&'()%\"-style runs) that
+        # appear inline with otherwise clean text. These often represent
+        # short italic phrases that the base extractor encoded as punctuation.
+        for match in re.finditer(r"[^\w\s]{5,}", text):
+            token = match.group(0)
+            token_stripped = token.strip()
+            if not token_stripped:
+                continue
+            total_chars = len(token_stripped)
+            if total_chars == 0:
+                continue
+            alpha_chars = sum(1 for c in token_stripped if c.isalpha())
+            symbol_chars = sum(
+                1 for c in token_stripped if not (c.isalnum() or c.isspace())
             )
             alpha_ratio = alpha_chars / total_chars
             symbol_ratio = symbol_chars / total_chars

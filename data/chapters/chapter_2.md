@@ -47,38 +47,53 @@ and dueling initiations
 
 
 
+CHAPTER TWO + How to Create a Base Reality
+
 Listening
-a Long Form improv scene with
+
+DEFINITION
+
+When building a Long Form improv scene with
+
 someone else, there is nothing more important than listening. The
 beginning of the scene is built through Yes And, and you cannot Yes And
-something if you haven’t heard it. It is important to listen because you
+something if you haven't heard it. It is important to listen because you
 are going to have to agree with and add to what your scene partner has
 just said. The last thing said on stage is either going to make your base
 reality more detailed and specific, or it will be the first unusual thing,
 the start of your game.
+
 The start of the scene, like a basement, needs to be strong enough
 to support everything else that will be built upon it. Listening needs to
 happen so that you and your scene partner are on the same page about
-what 3,&’(of house you are building. If you don’t actively listen at the
+what kind of house you are building. If you don’t actively listen at the
 beginning of a scene, you may think that you are building a house out of
 straw, while your teammate thinks you are building it with bricks.
+
 The goal of the beginning of the scene is to establish a relatable
 reality from which an unusual or absurd thing can be recognized.
 None of this will be possible if you are not actively listening. A great
 improviser is a good listener.
 
+
+
+GIVE AND TAKE
+
 To be able to communicate effectively and build a Long Form scene with
 another improviser, you have to learn when to speak and when to listen.
-This is called !"#$%&’(%)&*$.
-One improviser shouldn’t be doing all of the work in a scene. By giving
+This is called give and take.
+One improviser shouldn't be doing all of the work in a scene. By giving
 and taking focus, you share the burden of discovery and creation. Giving
 and taking are equally important. It is important that you stop talking
-and !"#$%focus to your scene partner when they want to add to the scene.
-It is equally important that you begin speaking and )&*$ focus from them
+and give focus to your scene partner when they want to add to the scene.
+It is equally important that you begin speaking and take focus from them
 when you have something to contribute to the scene.
+
 There is nothing more awkward to watch on stage than two
 improvisers fighting for focus. An ability to give and take focus is
 necessary for good listening.
+
+
 
 ti; ©
 
@@ -700,17 +715,30 @@ contribution that your scene partner makes to the scene as a gift. If you
 
 acknowledge and build upon these gifts, your job of finding a scene will
 be easier.
+
 Failing to agree with whatever your partner is trying to establish
 about your scene can happen in many different ways at the beginning
 of a scene. When it does, it puts you and your scene partner in a very
 difficult position in terms of building a successful, funny scene.
+
+PULLING THE RUG OUT
+
 There are many different forms of denial. One classic example of denial
-is the ?>--"’!%)1$%/>! out denial. Let’s look at an example:
+is the pulling the rug out denial. Let’s look at an example:
+
+Player 1 steps out and mimes opening a medical file.
+
+PLAYER 1: “Your test results have come back. | have some
+good news for you.”
+
+PLAYER 2: “You’re not a doctor! Why are you acting like a
+
 Player 2 has done something worse here than failing to add information
 to the start of the scene. Player 2 has “pulled the rug out” from under
-Player 1 and actively destroyed the information he has just been given%
-+)1$%"($&%)1&)%1$%"2%&%?&)"$’)%&’(%)1&)%,-&.$/%A%"2%&%(5<)5/@. This is the
+Player 1 and actively destroyed the information he has just been given
+(the idea that he is a patient and that Player 1 is a doctor). This is the
 antithesis of Yes And, wherein information is created. Not only are
+
 the improvisers back at square one, but they must now also deal with
 the fact that Player 1 must be crazy or a liar for pretending to be a
 doctor. Player 2 has denied himself and his scene partner the chance to
@@ -718,17 +746,23 @@ organically discover something unusual in their scene. The worst thing
 about this denial is that it ruins what could have been a great idea from
 Player 1. Denying your scene partners will make it impossible for you to
 build trust with them.
+
 Out of nervousness, many new improvisers will force something
 unusual to happen at the start of a scene to get a laugh. One of the
 quickest, cheapest, and easiest ways to make your audience laugh is to
 make your scene partner seem crazy. Playing like this will make the
 rest of your scene more difficult to perform, and it will turn you into an
 improviser with whom nobody wants to play.
-J$"’!%"’&))$’)"#$ is a more mild form of denial. It involves poor
+
+BEING INATTENTIVE
+
+Being inattentive is a more mild form of denial. It involves poor
 listening and a failure to acknowledge what your scene partner has
 established about the scene. “Being inattentive” denials are less
 intentional than “pulling the rug out,” but they are just as damaging to
 the start of the scene.
+
+
 
 COFFEE POT BASEBALL BAT
 
@@ -817,23 +851,31 @@ than the specifics of the reality itself. In the end, the memorable part
 
 
 
+CHAPTER TWO + How to Create a Base Reality
+
 of the scene is not going to be the base reality of the scene (the Who,
 What, and Where). The memorable part of the scene will be the funny
 thing you discover that breaks from this base reality you and your scene
 partner have created.
+
 There is never a good reason to deny any aspect of the reality that
 your scene partner has established. Denying your scene partner may
 occasionally get a laugh, but it ultimately prevents you from finding a
 strong, successful, funny scene.
+
+TAKE A BREATH & HANG IN THERE
+
 We are now ready to move on to the “funny” part of the scene. As you
 can see, an awful lot goes into the base reality of any scene. In many
 ways, the success of a Long Form scene as a whole rides on what
 happens in those first few lines.
+
 You may feel overwhelmed at this point. Realize that this is a natural
 part of the learning process. The only way you will ever own these
-concepts is through lots of practice and repetition. You shouldn’t have
+concepts is through lots of practice and repetition. You shouldn't have
 a disregard for the rules as you learn them; you should look to practice
 them so much that you no longer find them overwhelming.
+
 The many “rules” discussed for the beginning of the scene tend to
 overwhelm new improvisers who are attempting to follow them all,
 in the moment, while creating a scene. According to Del Close, to be
@@ -842,11 +884,13 @@ directors, and editors all at once. You are handling all of these skills
 at once and you must also have a sense of where your scene could be
 going. Inevitably, you are always carrying a little bit of baggage in some
 part of your brain while you are improvising.
-The challenge is to never let this baggage block the moment you’re
+
+The challenge is to never let this baggage block the moment you're
 in. With repeated practice, the rules and instructions described as
 being essential to the beginning of the scene do start to become second
 nature. As this happens, you should find it easier and easier to truly “be
 in the moment.”
+
 Think back to when you first learned to ride a bike. Learning how to
 ride was originally quite daunting. New bike riders are making constant
 minor adjustments just to keep from falling over, and in spite of these
@@ -858,6 +902,8 @@ rides, in which you had to consciously think about steering, pedaling,
 and keeping balanced all at once. Right now, it is just important to
 realize that time and practice will eventually make following the rules
 more automatic.
+
+
 
 SECTION ONE * CHAPTER TWO
 
