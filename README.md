@@ -125,8 +125,11 @@ All operations are done through Cursor chat interface:
 
 **Chapter Extraction:**
 - Each chapter includes exercises at the END, often in a "Chapter Review" or exercises section
-- The PDF processor extracts chapters from start page to the page BEFORE the next chapter
-- Example: Chapter 1 pages 1-37, Chapter 2 starts page 38, so extract pages 1-37 inclusive
+- For the Upright Citizens Brigade book, chapter boundaries are stored once in `data/ucb_chapter_pages.csv`:
+  - Columns: `unit_type, chapter_number, title, book_start, book_end, pdf_start, pdf_end`
+  - Book and PDF pages follow a simple rule: `pdf_page = book_page + 1`
+  - Example row: Chapter 2 → `book_start=38, book_end=63, pdf_start=39, pdf_end=64`
+- `PDFProcessor.save_chapter()` first tries to use this CSV mapping (deterministic, human-verified ranges) and falls back to automatic chapter detection when no CSV entry exists
 - Always verify the full chapter is extracted including the final pages with exercises
 
 **Exercise Extraction:**
@@ -147,6 +150,7 @@ All operations are done through Cursor chat interface:
 - No CLI interface - all interaction via Cursor chat
 - Image processing workflow has been archived (no longer needed)
 - Chapter boundaries are detected automatically from PDF structure
+  - When a CSV page map (like `data/ucb_chapter_pages.csv`) exists, it takes precedence over automatic detection for that book
 
 ## Development Log
 
