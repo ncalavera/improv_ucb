@@ -15,12 +15,18 @@ from .chapter_formatter import format_chapter_markdown
 
 
 class PDFProcessor:
-    """Handles PDF reading and chapter extraction."""
+    """Handles PDF reading and chapter extraction.
+
+    The default configuration is tuned for the Upright Citizens Brigade book:
+    OCR is enabled by default (when pytesseract is available) and a set of
+    heuristics in :meth:`_should_force_ocr` decide when OCR should replace
+    the base pdfplumber text for obviously garbled pages or local spans.
+    """
     
     def __init__(
         self,
         pdf_path: str,
-        use_ocr: bool = False,
+        use_ocr: bool = True,
         ocr_prefer_ratio: float = 1.5,
         ocr_min_alpha: int = 200,
         auto_detect_ocr: bool = True,
@@ -39,8 +45,9 @@ class PDFProcessor:
         
         Args:
             pdf_path: Path to PDF file
-            use_ocr: If True and pytesseract is available, use OCR as a fallback
-                     per page when it clearly produces more real text.
+            use_ocr: When True (default) and pytesseract is available, enable an
+                     OCR fallback per page when it clearly produces more real
+                     text according to the heuristics below.
             ocr_prefer_ratio: Prefer OCR when its alphabetic character count is at
                               least this multiple of the base extractor's count.
             ocr_min_alpha: Minimum alphabetic characters for OCR text to be

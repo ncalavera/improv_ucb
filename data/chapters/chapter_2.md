@@ -29,7 +29,8 @@ The start of the scene, like a basement, needs to be strong enough to support ev
 
 The goal of the beginning of the scene is to establish a relatable reality from which an unusual or absurd thing can be recognized. None of this will be possible if you are not actively listening. A great improviser is a good listener.
 
-## Give And Take
+### Give And
+TAKE
 
 To be able to communicate effectively and build a Long Form scene with another improviser, you have to learn when to speak and when to listen. This is called give and take. One improviser shouldn't be doing all of the work in a scene. By giving and taking focus, you share the burden of discovery and creation. Giving and taking are equally important. It is important that you stop talking and give focus to your scene partner when they want to add to the scene. It is equally important that you begin speaking and take focus from them when you have something to contribute to the scene.
 
@@ -95,71 +96,79 @@ If you are really listening to the other conversations, you should be able to fi
 
 ### Example 1
 
-PLAYER 1: “I baked you an apple pie.”
+### Player
+1: “I baked you an apple pie.”
 
-PLAYER 2: “Yes, you baked me an apple pie, and I’m so happy
-you remembered our wedding anniversary.”
+### Player
+2: “Yes, you baked me an apple pie, and I’m so happy you remembered our wedding anniversary.”
 
 (Player 2 has established the Who and What with this “Yes And.” We now know that the characters are a married couple celebrating a wedding anniversary.)
 
-PLAYER 1: “Yes, you’re happy I remembered our wedding
-anniversary, and let’s eat this tonight when we come home from dinner.”
+### Player
+1: “Yes, you’re happy I remembered our wedding anniversary, and let’s eat this tonight when we come home from dinner.”
 
 (Player 1 has started to establish the Where with this “Yes And.” We now know that the couple is in their house, getting ready to go to dinner.)
 
 ### Example 2
 
-PLAYER 1: “I baked you an apple pie.”
-PLAYER 2: “Yes, you baked me an apple pie, and everyone else
-in the office is going to be jealous of me.”
+### Player
+1: “I baked you an apple pie.”
+### Player
+2: “Yes, you baked me an apple pie, and everyone else in the office is going to be jealous of me.”
 
 (Player 2 has established the Where with this “Yes And.” We now know that the characters are at their workplace.)
 
-PLAYER 1: “Yes, everyone in the office will be jealous of you,
-and you just tell them that if their sales were as high as yours, I’d bake them an apple pie, too.”
+### Player
+1: “Yes, everyone in the office will be jealous of you, and you just tell them that if their sales were as high as yours, I’d bake them an apple pie, too.”
 
-## Bad “Yes...And” Scene Examples
+### Bad
+“YES...AND” SCENE EXAMPLES
 
 ### Example 1
 
-PLAYER 1: “I baked you an apple pie.”
+### Player
+1: “I baked you an apple pie.”
 
-PLAYER 2: “Yes, you baked me an apple pie, and it is on
-a plate.” (Player 2 has not really offered an “And” for the scene in this example. You want to go beyond the obvious of what you probably already know or could assume when you Yes And. No new information has been established with the “And” in this example.)
+### Player
+2: “Yes, you baked me an apple pie, and it is on a plate.” (Player 2 has not really offered an “And” for the scene in this example. You want to go beyond the obvious of what you probably already know or could assume when you Yes And. No new information has been established with the “And” in this example.)
 
 ### Example 2
 
-PLAYER 1: “I baked you an apple pie.”
+### Player
+1: “I baked you an apple pie.”
 
-PLAYER 2: “Yes, you baked me an apple pie, and I used to have
-apple pie every Sunday when I was a kid.”
+### Player
+2: “Yes, you baked me an apple pie, and I used to have apple pie every Sunday when I was a kid.”
 
 (Player 2 has made this scene about the past.)
 
 ### Example 3
 
-PLAYER 1: “I baked you an apple pie.”
+### Player
+1: “I baked you an apple pie.”
 
-PLAYER 2: “Yes, you baked me an apple pie, and Ill eat this
-tomorrow with my lunch.”
+### Player
+2: “Yes, you baked me an apple pie, and Ill eat this tomorrow with my lunch.”
 
 (Player 2 has made this scene about the future.)
 
 ### Example 4
 
-PLAYER 1: “I baked you an apple pie.”
+### Player
+1: “I baked you an apple pie.”
 
-PLAYER 2: “Yes, you baked me an apple pie, and my brother
-Mike loves apple pie.”
+### Player
+2: “Yes, you baked me an apple pie, and my brother Mike loves apple pie.”
 
 (Player 2 has made the scene about a character not in the scene.)
 
 ### Example 5
 
-PLAYER 1: “I baked you an apple pie.”
+### Player
+1: “I baked you an apple pie.”
 
-PLAYER 2: “Yes, you baked me an apple pie, but I’m
-not hungry.”
+### Player
+2: “Yes, you baked me an apple pie, but I’m not hungry.”
 
 (Player 2 has done “yes but” instead of “Yes And.” Doing so will start your scenes off with unnecessary conflict.)
 
@@ -227,16 +236,17 @@ Unintentional detachment is the result of improvisers making choices, but playin
 Ironic detachment means consciously not committing to the reality of the scene in order to get a laugh. Again, this will take the audience out of the reality of the scene. This is also referred to as commenting. The examples from the previous paragraph would be examples of ironic detachment if the lack of commitment was intentional. Below are some
 ### Other Examples Of Ironic Detachment
 
-- You are ina courtroom scene and choose to comment on the fact that there are only two chairs in the room. (You are not committing to the fictional reality of the Where.)
+- You are in a courtroom scene and choose to comment on the fact that there are only two chairs in the room. (You are not committing to the fictional reality of the Where.)
 - Your male scene partner is playing a woman and you make a “boy, you’re an ugly woman” remark. (You are not committing to the fictional reality of the Who.)
 - You are playing Paul Revere and say something like, “It’s a shame that there isn’t some sort of mobile device that would allow me to contact my fellow colonists remotely.” (You are not committing to the fictional reality of the What.)
 While commenting will often allow a performer to get a quick laugh, that laugh will come at the expense of establishing a base reality, which ultimately will undermine the integrity of the scene. Even a momentary lapse in commitment can make it difficult for your audience to stay engaged in the base reality of the scene.
 
 The best improvisers completely commit themselves to their scenes. You must commit to the character you are playing and your reality, and never sell it out for a laugh or out of fear of not getting a laugh. The more you commit to your character and the reality of the scene, the more engaging the scene will be and the more likely it is that you will discover what is truly funny about the scene.
 
-## Top Of Your Intelligence
+### Top Of Your
+INTELLIGENCE
 
-In simplest terms, “top of your intelligence” refers to responding truthfully to any stimulus within a scene. It is about allowing yourself to have a true, honest emotional response. “Intelligence,” in this case, is your knowledge of how a human being would react to a given situation. This requires emotional and social intelligence. Playing at the top of your intelligence means responding the way a real person would ina given situation.
+In simplest terms, “top of your intelligence” refers to responding truthfully to any stimulus within a scene. It is about allowing yourself to have a true, honest emotional response. “Intelligence,” in this case, is your knowledge of how a human being would react to a given situation. This requires emotional and social intelligence. Playing at the top of your intelligence means responding the way a real person would in a given situation.
 
 The principle of “show, don’t tell” comes into play here. It is not enough to simply react verbally. In order to truly play at the top of your intelligence, you will need to react emotionally as well. Marry your verbal response with an emotional one.
 
@@ -244,7 +254,8 @@ For example, when another character pulls out a gun in a scene and you are scare
 
 When you lovingly embrace your girlfriend upon hearing the news that she is pregnant, you are playing at the top of your intelligence. When your character touches something hot and you recoil in pain, you are playing at the top of your intelligence. When you resentfully get coffee for your mean boss or a rude customer, you are playing at the top of your intelligence. It is important to note the above responses are not the only valid responses to each given scenario. Any real or truthful response that a person might have in any of these situations would also be considered a “top of intelligence” response. For instance, in the case of hearing the news that your girlfriend is pregnant, it is equally valid to respond in shock or despair.
 
-WHAT TOP OF YOUR INTELLIGENCE IS NOT
+### What Top Of Your Intelligence Is
+NOT
 
 Top of your intelligence is often misunderstood. Top of your intelligence does not mean that you should have your character rattle off trivial or obscure facts. It does not mean that your character has to be “smart.” It does not mean that you should quip cleverly or show off how well educated you may be in real life. It also does not mean that every character you play has to know everything that you know. If you are playing a character dumber than you are, your character will not know everything that you do.
 
@@ -261,7 +272,7 @@ Instead of receiving a suggestion, every scene will start with the two improvise
 
 A third improviser will stop them if they feels that either improviser is “performing” or not acting realistically in any way. This third improviser should be asking themself, “Is this really what either of these people would say?” in order to find those moments that are not realistic or genuine.
 
-Once the “unreal” moment has been discussed, the improvisers should back up and play the moment again ina way that is more realistic.
+Once the “unreal” moment has been discussed, the improvisers should back up and play the moment again in a way that is more realistic.
 
 Stop and repeat this process if the scene again becomes unrealistic.
 
@@ -344,42 +355,47 @@ Denial means failing to agree with any aspect of the reality established by your
 
 Failing to agree with whatever your partner is trying to establish about your scene can happen in many different ways at the beginning of a scene. When it does, it puts you and your scene partner in a very difficult position in terms of building a successful, funny scene.
 
-PULLING THE RUG OUT
+### Pulling The Rug
+OUT
 
 There are many different forms of denial. One classic example of denial is the pulling the rug out denial. Let’s look at an example:
 
 Player 1 steps out and mimes opening a medical file.
 
-PLAYER 1: “Your test results have come back. I have some
-good news for you.”
+### Player
+1: “Your test results have come back. I have some good news for you.”
 
-PLAYER 2: “You’re not a doctor! Why are you acting like a
+### Player
+2: “You’re not a doctor! Why are you acting like a
 
 Player 2 has done something worse here than failing to add information to the start of the scene. Player 2 has “pulled the rug out” from under Player 1 and actively destroyed the information he has just been given (the idea that he is a patient and that Player 1 is a doctor). This is the antithesis of Yes And, wherein information is created. Not only are the improvisers back at square one, but they must now also deal with the fact that Player 1 must be crazy or a liar for pretending to be a doctor. Player 2 has denied himself and his scene partner the chance to organically discover something unusual in their scene. The worst thing about this denial is that it ruins what could have been a great idea from Player 1. Denying your scene partners will make it impossible for you to build trust with them.
 
 Out of nervousness, many new improvisers will force something unusual to happen at the start of a scene to get a laugh. One of the quickest, cheapest, and easiest ways to make your audience laugh is to make your scene partner seem crazy. Playing like this will make the rest of your scene more difficult to perform, and it will turn you into an improviser with whom nobody wants to play.
 
-BEING INATTENTIVE
+### Being
+INATTENTIVE
 
 Being inattentive is a more mild form of denial. It involves poor listening and a failure to acknowledge what your scene partner has established about the scene. “Being inattentive” denials are less intentional than “pulling the rug out,” but they are just as damaging to the start of the scene.
 
-COFFEE POT BASEBALL BAT
+### Coffee Pot Baseball
+BAT
 
 When you are inattentive, you can miss important details, such as the gender, age, or name of the character your scene partner is playing. You could also miss important information about the character of the space.
 
 For instance, if your scene partner steps out shivering and you fail to acknowledge that it is cold, you are denying an aspect of your reality (that it is cold) being provided to you by your scene partner. This will likely force some sort of explanation and take your focus away from establishing the base reality of your scene.
 
-DUELING INITIATIONS
+### Dueling
+INITIATIONS
 
 Another common form of denial is referred to as dueling initiations. In this form of denial, one of the improvisers refuses to let go of his or her pre-conceived idea. They are unnecessarily forcing a new element into the scene instead of building upon what their scene partner has offered up. Here is a Dueling Initiations Example: Two improvisers doing a two-person scene off of the suggestion “office.”
 
 Player 1 walks on stage, miming a coffee cup in his hand.
 
-PLAYER 1: “If you finish the break room coffee, you need to
-start a new pot.”
+### Player
+1: “If you finish the break room coffee, you need to start a new pot.”
 
-PLAYER 2: “Look, I’ll get to that. We need to bring in a ringer
-for the company softball team or else we’re gonna get destroyed.”
+### Player
+2: “Look, I’ll get to that. We need to bring in a ringer for the company softball team or else we’re gonna get destroyed.”
 
 In this example, Player 2 has acknowledged the information established by Player 1 while also adding in new information. The problem is that this new information does not build upon anything established by the scene initiation. Instead, Player 2 has rejected Player 1’s idea in favor of his own. Instead of steamrolling with a new idea, Player 2 should be looking to Yes And the specific base reality offered in the first line.
 
@@ -393,13 +409,15 @@ Don’t be tempted by the quick, easy laughs that you will sometimes get from de
 
 Making the game of your scene a denial is not the same as building a scene with your scene partner. If you try to make every scene like this, you have nothing more than a gimmick.
 
-AVOIDING DENIAL
+### Avoiding
+DENIAL
 
 If your scene partner establishes the Who, What, or Where before you do so in a scene, always drop your idea and go with theirs. Holding onto your own ideas about the context of the scene could lead you to deny your scene partner. Holding onto your own idea is also likely to create confusion and disconnect between you and your fellow improviser. Simply agreeing about the base reality of the scene is far more important than the specifics of the reality itself. In the end, the memorable part of the scene is not going to be the base reality of the scene (the Who, What, and Where). The memorable part of the scene will be the funny thing you discover that breaks from this base reality you and your scene partner have created.
 
 There is never a good reason to deny any aspect of the reality that your scene partner has established. Denying your scene partner may occasionally get a laugh, but it ultimately prevents you from finding a strong, successful, funny scene.
 
-TAKE A BREATH & HANG IN THERE
+### Take A Breath & Hang In
+THERE
 
 We are now ready to move on to the “funny” part of the scene. As you can see, an awful lot goes into the base reality of any scene. In many ways, the success of a Long Form scene as a whole rides on what happens in those first few lines.
 

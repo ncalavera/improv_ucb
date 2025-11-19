@@ -134,6 +134,9 @@ All operations are done through Cursor chat interface:
 - Always verify the full chapter is extracted including the final pages with exercises
 - The PDF extractor auto-detects low-quality text (symbol soup, too few words) and forces an OCR re-read of those pages. It also scans for locally corrupted spans (for example, short parenthetical asides that come out as punctuation soup) and may prefer OCR on those pages even when the rest of the text looks fine. Adjust the thresholds via `PDFProcessor` constructor args if another book needs different heuristics.
 - After text extraction, a light markdown formatter normalizes headings, bullets, and mid-sentence line breaks so that `data/chapters/chapter_N.md` reads like a clean, human-edited chapter. The formatter is conservative and does not re-author content—only structure and whitespace are adjusted for readability.
+- **Current defaults (Nov 2025)**:
+  - `PDFProcessor` now enables OCR by default (when `pytesseract` is available) so the high-quality settings used for Chapters 1–2 are automatically applied on future runs.
+  - `src/chapter_formatter.py` contains UCB-specific cleanup heuristics (dropping repeated “CHAPTER ONE * …” headers, fixing common spacing artifacts, promoting uppercase section/exercise titles, etc.). If you extract this book again, leave `enable_formatting=True` so those rules kick in automatically.
 
 **Exercise Extraction:**
 - Exercises are formatted as "EXERCISE: [NAME]" in the book
