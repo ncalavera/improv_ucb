@@ -31,15 +31,28 @@ MAJOR_SECTION_KEYWORDS = {
     "THE GAME OF THE SCENE",
 }
 
+# Known UCB exercise / section title normalizations where OCR case is noisy.
+UCB_TITLE_NORMALIZATIONS = {
+    "EXERCISE: FIND YES AND IN A REAL CONVERSATION": "Exercise: Find Yes And in a Real Conversation",
+    "EXERCISE: CHARACTER OF THE SPACE": "Exercise: Character of the Space",
+    "EXERCISE: TALK ABOUT SOMETHING ELSE": "Exercise: Talk About Something Else",
+}
+
 NOISE_LINES = {"ti; ©"}
 
 REPLACEMENTS = {
+    # Global text fixes
     "is tong rorm": "is Long Form",
     "TT. of your intelligence": "Top of your intelligence",
     "“VES...AND”": "“YES...AND”",
     "VES...AND": "YES...AND",
     "“Ves...And”": "“Yes...And”",
     "Ves...And": "Yes...And",
+    # Common UCB OCR spacing artifacts
+    "Asecond": "A second",
+    "outa ": "out a ",
+    " ona ": " on a ",
+    " ina ": " in a ",
 }
 
 
@@ -49,7 +62,12 @@ def format_chapter_markdown(raw_text: str, metadata: Optional[Dict[str, str]] = 
 
     Args:
         raw_text: Body of the chapter as extracted from the PDF (no header metadata).
-        metadata: Optional metadata about the chapter (number, title, etc.).
+        metadata: Optional metadata about the chapter (number, title, etc.). For the
+            Upright Citizens Brigade book we apply a few opinionated cleanups:
+            - Drop repeated running headers like \"CHAPTER ONE * What is a Base Reality?\".
+            - Normalize common OCR spacing artifacts (\"Asecond\" → \"A second\", etc.).
+            - Promote UCB-style all-caps section titles and example/exercise labels
+              into proper markdown headings.
 
     Returns:
         Cleaned markdown body.
@@ -107,6 +125,15 @@ def _should_drop_line(line: str) -> bool:
 
     # Running footers like "CHAPTER TWO + ..." or book title lines.
     if "CHAPTER" in upper_line and "+" in line:
+        return True
+
+    # UCB-style running headers/footers that repeat the chapter title
+    # e.g. "CHAPTER ONE * What is a Base Reality?"
+    if upper_line.startswith("CHAPTER ") and (" * " in line or " - " in line):
+        return True
+
+    # Isolated all-caps junk fragments we saw in UCB OCR (e.g. "UNS", "PHONES").
+    if upper_line in {"UNS", "PHONES"}:
         return True
 
     return False
@@ -187,8 +214,13 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
         prev_line = _find_neighbor(lines, idx, direction=-1) or ""
 
         if upper_line.startswith("EXERCISE:"):
-            title = strip_line.split(":", 1)[1].strip()
-            promoted.append(f"## Exercise: {title}")
+            # Normalize known UCB exercise titles when possible.
+            normalized = UCB_TITLE_NORMALIZATIONS.get(upper_line)
+            if normalized:
+                promoted.append(f"## {normalized}")
+            else:
+                title = strip_line.split(":", 1)[1].strip()
+                promoted.append(f"## Exercise: {title}")
             continue
 
         if (
@@ -208,6 +240,19 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
         if strip_line.endswith(":") and len(strip_line.split()) <= 6:
             heading = strip_line[:-1].strip()
             promoted.append(f"### {heading.title()}")
+            continue
+
+        # UCB-style inline heading prefixes on a single line, e.g.:
+        # "NAME YOUR CHARACTERS tis good to include..."
+        inline_heading_match = re.match(
+            r"^([A-Z][A-Z\s',&]+)\s+(.+)$", strip_line
+        )
+        if inline_heading_match and len(inline_heading_match.group(1).split()) <= 6:
+            raw_heading = inline_heading_match.group(1).title()
+            rest = inline_heading_match.group(2).lstrip()
+            promoted.append(f"### {raw_heading}")
+            if rest:
+                promoted.append(rest[0].upper() + rest[1:])
             continue
 
         if _looks_like_major_heading(strip_line, prev_line, next_line, metadata):
