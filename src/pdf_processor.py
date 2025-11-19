@@ -5,20 +5,151 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple
 import pdfplumber
 
+try:
+    import pytesseract  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    pytesseract = None
+
 
 class PDFProcessor:
     """Handles PDF reading and chapter extraction."""
     
-    def __init__(self, pdf_path: str):
+    def __init__(
+        self,
+        pdf_path: str,
+        use_ocr: bool = False,
+        ocr_prefer_ratio: float = 1.5,
+        ocr_min_alpha: int = 200,
+    ):
         """
         Initialize PDF processor.
         
         Args:
             pdf_path: Path to PDF file
+            use_ocr: If True and pytesseract is available, use OCR as a fallback
+                     per page when it clearly produces more real text.
+            ocr_prefer_ratio: Prefer OCR when its alphabetic character count is at
+                              least this multiple of the base extractor's count.
+            ocr_min_alpha: Minimum alphabetic characters for OCR text to be
+                           considered \"real\" content.
         """
         self.pdf_path = Path(pdf_path)
         if not self.pdf_path.exists():
             raise FileNotFoundError(f"PDF file not found: {pdf_path}")
+        
+        # OCR configuration
+        self.use_ocr = bool(use_ocr and pytesseract is not None)
+        self.ocr_prefer_ratio = ocr_prefer_ratio
+        self.ocr_min_alpha = ocr_min_alpha
+    
+    @staticmethod
+    def _clean_page_text(text: str) -> str:
+        """
+        Remove obviously garbled OCR/encoding noise while preserving real content.
+        
+        This is primarily aimed at sidebar/boxed content that PDF text extractors
+        sometimes render as symbol-heavy garbage (e.g. \"!\"#$%&'(&'\").
+        The heuristic is intentionally simple:
+        - Keep lines that clearly contain words (several alphabetic characters in a row)
+        - Drop lines that are mostly non-letter symbols with almost no letters
+        - Preserve reasonable blank lines so paragraph breaks remain intact
+        """
+        lines = text.split("\n")
+        cleaned_lines = []
+        
+        for line in lines:
+            stripped = line.strip()
+            
+            # Always keep explicit blank lines to preserve some structure;
+            # we'll collapse runs of them later.
+            if not stripped:
+                cleaned_lines.append("")
+                continue
+            
+            alpha_count = sum(1 for c in stripped if c.isalpha())
+            digit_count = sum(1 for c in stripped if c.isdigit())
+            line_len = len(stripped)
+            
+            # Obvious keep cases:
+            # - Pure words/headings (only letters and spaces)
+            # - Normal sentences with spaces and clear 3+ letter words
+            only_letters_and_spaces = all((c.isalpha() or c.isspace()) for c in stripped)
+            has_word_run = bool(re.search(r"[A-Za-z]{3,}", stripped))
+            has_space = " " in stripped
+            
+            if only_letters_and_spaces or (has_space and has_word_run):
+                cleaned_lines.append(line)
+                continue
+            
+            # Obvious drop cases:
+            # - Contains digits but no clear word run (typical of encoded layout text)
+            # - Single noisy token (no spaces) that isn't just letters
+            if (digit_count > 0 and not has_word_run) or (not has_space and not stripped.isalpha()):
+                continue
+            
+            # Fallback: drop lines that are mostly non-letters (symbol soup)
+            if line_len > 0 and alpha_count / line_len <= 0.25:
+                continue
+            
+            cleaned_lines.append(line)
+        
+        # Collapse excessive consecutive blank lines (max two in a row)
+        result_lines = []
+        blank_streak = 0
+        for line in cleaned_lines:
+            if line.strip():
+                blank_streak = 0
+                result_lines.append(line)
+            else:
+                blank_streak += 1
+                if blank_streak <= 2:
+                    result_lines.append(line)
+        
+        return "\n".join(result_lines)
+    
+    def _extract_page_text(self, page, pdf_page_index: int) -> str:
+        """
+        Extract text for a single page, optionally using OCR when it clearly
+        yields more real text than the base pdfplumber extraction.
+        
+        Option A logic (per our design):
+        - Always run the normal text extractor first.
+        - If OCR is enabled and available, also OCR the page image.
+        - If OCR's alphabetic character count is much higher than the base
+          extractor's (by `ocr_prefer_ratio`) *and* above `ocr_min_alpha`,
+          prefer the OCR result for the entire page.
+        - Otherwise, stick with the base extractor result.
+        """
+        # Base extractor: pdfplumber text
+        base_text = page.extract_text() or ""
+        
+        # Fast path: no OCR configured or available
+        if not self.use_ocr or pytesseract is None:
+            return self._clean_page_text(base_text) if base_text else ""
+        
+        ocr_text = ""
+        try:
+            # Render page to image using pdfplumber's helper (Pillow image)
+            image = page.to_image(resolution=300).original  # type: ignore[attr-defined]
+            ocr_text = pytesseract.image_to_string(image)
+        except Exception:
+            # If OCR fails for any reason, just fall back to base text
+            return self._clean_page_text(base_text) if base_text else ""
+        
+        base_alpha = sum(1 for c in base_text if c.isalpha())
+        ocr_alpha = sum(1 for c in ocr_text if c.isalpha())
+        
+        # Decide which text to trust
+        use_ocr = False
+        if ocr_alpha >= self.ocr_min_alpha and base_alpha == 0:
+            use_ocr = True
+        elif base_alpha > 0 and ocr_alpha >= max(
+            self.ocr_min_alpha, int(base_alpha * self.ocr_prefer_ratio)
+        ):
+            use_ocr = True
+        
+        chosen = ocr_text if use_ocr else base_text
+        return self._clean_page_text(chosen) if chosen else ""
     
     def find_chapters(self, max_pages: int = 200) -> List[Dict]:
         """
@@ -140,7 +271,7 @@ class PDFProcessor:
             # Extract from start_page to end_page (inclusive)
             for page_num in range(start_page - 1, min(end_page, len(pdf.pages))):
                 page = pdf.pages[page_num]
-                text = page.extract_text()
+                text = self._extract_page_text(page, page_num)
                 if text:
                     text_parts.append(text)
                     page_numbers.append(page_num + 1)
@@ -210,7 +341,7 @@ class PDFProcessor:
             # Extract from pdf_start to pdf_end (inclusive)
             for pdf_page_num in range(pdf_start - 1, min(pdf_end, len(pdf.pages))):
                 page = pdf.pages[pdf_page_num]
-                text = page.extract_text()
+                text = self._extract_page_text(page, pdf_page_num)
                 if text:
                     text_parts.append(text)
                     # Store book page number (PDF page - offset)

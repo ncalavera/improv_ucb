@@ -197,43 +197,116 @@ class JamPlanGenerator:
         lines = []
         lines.append(f"# {title}\n")
         lines.append(f"**Дата создания:** {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
-        lines.append(f"**Общая длительность:** {duration} минут\n")
+        lines.append(f"**Основная часть:** {duration} минут\n")
         lines.append(f"**Основа:** Главы {', '.join(map(str, chapters))}\n")
         lines.append("\n---\n\n")
         
-        # Frameworks section (first - theory)
-        if frameworks:
-            lines.append("## Ключевые концепции\n\n")
-            
-            for framework in frameworks:
-                name = framework.get('Name', 'Unknown')
-                desc_ru = self._get_russian_text(framework, 'Description (EN)', 'Description (RU)')
-                howto_ru = self._get_russian_text(framework, 'How-to/Instructions (EN)', 'How-to/Instructions (RU)')
-                
-                lines.append(f"### {name}\n\n")
-                if desc_ru:
-                    lines.append(f"{desc_ru}\n\n")
-                if howto_ru:
-                    lines.append(f"**Как применять:**\n")
-                    lines.append(f"{howto_ru}\n\n")
-                lines.append("---\n\n")
+        # Brief overview of the session
+        lines.append("## Кратко о сессии\n\n")
+        lines.append(
+            "Эта сессия сочетает объяснение ключевых концепций книги и "
+            "немедленную практику через упражнения. План рассчитан на одну "
+            "основную часть (~"
+            f"{duration} минут) после разминки и организационных моментов.\n\n"
+        )
+        lines.append(
+            "Рекомендуемая общая структура встречи:\n\n"
+            "- 20–30 минут: сбор участников и разогрев\n"
+            f"- {max(duration - 20, duration)} минут: основная часть по плану ниже\n\n"
+        )
         
-        # Exercises section (second - practice)
-        if exercises:
-            lines.append(f"## Упражнения ({duration // 2} минут)\n\n")
+        # Global feedback principles (based on previous session experience)
+        lines.append("### Принципы обратной связи на всю сессию\n\n")
+        lines.append(
+            "- **Один голос за раз:** после сцены даёт обратную связь один выбранный человек, "
+            "остальные добавляют только по запросу.\n"
+        )
+        lines.append(
+            "- **Чувствительность участников:** заранее спросите у игроков, какого стиля "
+            "обратной связи они хотят (мягкая, поддерживающая / более прямолинейная).\n"
+        )
+        lines.append(
+            "- **Наблюдаемое поведение, не личности:** формулируйте наблюдения через "
+            "конкретные действия в сцене, а не через оценки людей.\n\n"
+        )
+        lines.append("---\n\n")
+        
+        # Build sequential steps: concept + exercise by chapter
+        # Group frameworks and exercises by chapter for pairing
+        chapter_to_frameworks: Dict[int, List[Dict]] = {}
+        chapter_to_exercises: Dict[int, List[Dict]] = {}
+        for ch in chapters:
+            chapter_to_frameworks[ch] = [fw for fw in frameworks if fw.get('_chapter') == ch]
+            chapter_to_exercises[ch] = [ex for ex in exercises if ex.get('_chapter') == ch]
+        
+        # Build ordered list of steps (each step may contain framework, exercise, or both)
+        steps = []
+        for ch in chapters:
+            fw_list = chapter_to_frameworks.get(ch, [])
+            ex_list = chapter_to_exercises.get(ch, [])
+            max_len = max(len(fw_list), len(ex_list))
+            for i in range(max_len):
+                step = {
+                    'chapter': ch,
+                    'framework': fw_list[i] if i < len(fw_list) else None,
+                    'exercise': ex_list[i] if i < len(ex_list) else None,
+                }
+                steps.append(step)
+        
+        total_steps = len(steps) if steps else 1
+        step_time = max(10, duration // total_steps)
+        
+        lines.append("## Пошаговый план (основная часть)\n\n")
+        
+        for idx, step in enumerate(steps, 1):
+            ch = step['chapter']
+            fw = step['framework']
+            ex = step['exercise']
             
-            for i, exercise in enumerate(exercises, 1):
-                name = exercise.get('Name', 'Unknown')
-                desc_ru = self._get_russian_text(exercise, 'Description (EN)', 'Description (RU)')
-                howto_ru = self._get_russian_text(exercise, 'How-to/Instructions (EN)', 'How-to/Instructions (RU)')
+            # Build step title
+            title_parts = []
+            if fw:
+                title_parts.append(fw.get('Name', 'Концепция'))
+            if ex:
+                title_parts.append(ex.get('Name', 'Упражнение'))
+            step_title = " + ".join(title_parts) if title_parts else f"Шаг {idx}"
+            
+            lines.append(f"### Шаг {idx}. {step_title} (~{step_time} минут)\n\n")
+            lines.append(f"**Глава:** {ch}\n\n")
+            
+            # Framework explanation
+            if fw:
+                fw_name = fw.get('Name', 'Unknown')
+                fw_desc_ru = self._get_russian_text(fw, 'Description (EN)', 'Description (RU)')
+                fw_howto_ru = self._get_russian_text(fw, 'How-to/Instructions (EN)', 'How-to/Instructions (RU)')
                 
-                lines.append(f"### {i}. {name}\n\n")
-                if desc_ru:
-                    lines.append(f"{desc_ru}\n\n")
-                if howto_ru:
-                    lines.append(f"**Инструкции:**\n")
-                    lines.append(f"{howto_ru}\n\n")
-                lines.append("---\n\n")
+                lines.append(f"**Концепция:** {fw_name}\n\n")
+                if fw_desc_ru:
+                    lines.append(f"{fw_desc_ru}\n\n")
+                if fw_howto_ru:
+                    lines.append("**Как применять в сценах:**\n")
+                    lines.append(f"{fw_howto_ru}\n\n")
+            
+            # Exercise description
+            if ex:
+                ex_name = ex.get('Name', 'Unknown')
+                ex_desc_ru = self._get_russian_text(ex, 'Description (EN)', 'Description (RU)')
+                ex_howto_ru = self._get_russian_text(ex, 'How-to/Instructions (EN)', 'How-to/Instructions (RU)')
+                
+                lines.append(f"**Упражнение:** {ex_name}\n\n")
+                if ex_desc_ru:
+                    lines.append(f"{ex_desc_ru}\n\n")
+                if ex_howto_ru:
+                    lines.append("**Инструкции (группа 6–10 человек):**\n")
+                    lines.append(f"{ex_howto_ru}\n\n")
+                
+                # Local reminder about feedback style for sensitive exercises
+                lines.append(
+                    "_Во время обсуждения после упражнения давайте обратную связь по одному человеку, "
+                    "следя за тоном и потребностями игроков._\n\n"
+                )
+            
+            lines.append("---\n\n")
         
         # Chapter context section (brief summary)
         if chapter_content:
