@@ -147,3 +147,7 @@ All operations are done through Cursor chat interface:
 - No CLI interface - all interaction via Cursor chat
 - Image processing workflow has been archived (no longer needed)
 - Chapter boundaries are detected automatically from PDF structure
+
+## Development Log
+
+See [WORK_LOG.md](WORK_LOG.md) for detailed development history, design decisions, and next steps.

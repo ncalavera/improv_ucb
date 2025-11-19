@@ -143,8 +143,13 @@ class JamGenerator:
                 story.append(Paragraph(f"<b>{text}</b>", normal_style))
             else:
                 # Regular paragraph
-                # Escape HTML and handle basic formatting
-                para_text = self._escape_html(line)
+                # Convert markdown bold (**text**) to HTML bold
+                para_text = line
+                para_text = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', para_text)
+                # Escape HTML special characters (but preserve tags we just added)
+                para_text = self._escape_html(para_text)
+                # Restore bold tags after escaping
+                para_text = para_text.replace('&lt;b&gt;', '<b>').replace('&lt;/b&gt;', '</b>')
                 story.append(Paragraph(para_text, normal_style))
             
             i += 1
