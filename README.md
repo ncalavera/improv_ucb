@@ -131,6 +131,7 @@ All operations are done through Cursor chat interface:
   - Example row: Chapter 2 → `book_start=38, book_end=63, pdf_start=39, pdf_end=64`
 - `PDFProcessor.save_chapter()` first tries to use this CSV mapping (deterministic, human-verified ranges) and falls back to automatic chapter detection when no CSV entry exists
 - Always verify the full chapter is extracted including the final pages with exercises
+- The PDF extractor auto-detects low-quality text (symbol soup, too few words) and forces an OCR re-read of those pages. Adjust the thresholds via `PDFProcessor` constructor args if another book needs different heuristics.
 
 **Exercise Extraction:**
 - Exercises are formatted as "EXERCISE: [NAME]" in the book

@@ -21,6 +21,13 @@ class PDFProcessor:
         use_ocr: bool = False,
         ocr_prefer_ratio: float = 1.5,
         ocr_min_alpha: int = 200,
+        auto_detect_ocr: bool = True,
+        auto_min_length: int = 40,
+        auto_min_alpha_ratio: float = 0.3,
+        auto_max_symbol_ratio: float = 0.55,
+        auto_min_word_runs: int = 2,
+        auto_force_min_alpha: int = 120,
+        auto_force_min_improvement: int = 30,
     ):
         """
         Initialize PDF processor.
@@ -33,6 +40,17 @@ class PDFProcessor:
                               least this multiple of the base extractor's count.
             ocr_min_alpha: Minimum alphabetic characters for OCR text to be
                            considered \"real\" content.
+            auto_detect_ocr: Enable heuristics that auto-trigger OCR when the
+                base extractor output appears corrupted.
+            auto_min_length / auto_min_alpha_ratio / auto_max_symbol_ratio /
+                auto_min_word_runs: Tunable thresholds that determine when the
+                base extraction is considered low quality.
+            auto_force_min_alpha: Minimum alphabetic character count the OCR
+                output must reach before we consider replacing the base text
+                when auto-detection triggered.
+            auto_force_min_improvement: Minimum alphabetic character delta
+                OCR must provide over the base extraction when auto-detection
+                triggered.
         """
         self.pdf_path = Path(pdf_path)
         if not self.pdf_path.exists():
@@ -42,6 +60,13 @@ class PDFProcessor:
         self.use_ocr = bool(use_ocr and pytesseract is not None)
         self.ocr_prefer_ratio = ocr_prefer_ratio
         self.ocr_min_alpha = ocr_min_alpha
+        self.auto_detect_ocr = auto_detect_ocr
+        self.auto_min_length = auto_min_length
+        self.auto_min_alpha_ratio = auto_min_alpha_ratio
+        self.auto_max_symbol_ratio = auto_max_symbol_ratio
+        self.auto_min_word_runs = auto_min_word_runs
+        self.auto_force_min_alpha = auto_force_min_alpha
+        self.auto_force_min_improvement = auto_force_min_improvement
     
     @staticmethod
     def _clean_page_text(text: str) -> str:
@@ -108,6 +133,36 @@ class PDFProcessor:
         
         return "\n".join(result_lines)
     
+    def _should_force_ocr(self, text: str) -> bool:
+        """
+        Decide whether OCR should be forced based on the quality of the
+        base text extractor output.
+        """
+        if not self.auto_detect_ocr:
+            return False
+        stripped = text.strip()
+        if not stripped:
+            return True
+        total_chars = len(stripped)
+        if total_chars < self.auto_min_length:
+            return True
+        alpha_chars = sum(1 for c in stripped if c.isalpha())
+        if total_chars == 0:
+            return True
+        alpha_ratio = alpha_chars / total_chars
+        if alpha_ratio < self.auto_min_alpha_ratio:
+            return True
+        symbol_chars = sum(
+            1 for c in stripped if not (c.isalnum() or c.isspace())
+        )
+        symbol_ratio = symbol_chars / total_chars
+        if symbol_ratio > self.auto_max_symbol_ratio:
+            return True
+        long_words = re.findall(r"[A-Za-z]{4,}", stripped)
+        if len(long_words) < self.auto_min_word_runs:
+            return True
+        return False
+
     def _extract_page_text(self, page, pdf_page_index: int) -> str:
         """
         Extract text for a single page, optionally using OCR when it clearly
@@ -123,9 +178,11 @@ class PDFProcessor:
         """
         # Base extractor: pdfplumber text
         base_text = page.extract_text() or ""
-        
+        force_ocr = self._should_force_ocr(base_text)
+        should_attempt_ocr = (self.use_ocr or force_ocr) and pytesseract is not None
+
         # Fast path: no OCR configured or available
-        if not self.use_ocr or pytesseract is None:
+        if not should_attempt_ocr:
             return self._clean_page_text(base_text) if base_text else ""
         
         ocr_text = ""
@@ -142,7 +199,11 @@ class PDFProcessor:
         
         # Decide which text to trust
         use_ocr = False
-        if ocr_alpha >= self.ocr_min_alpha and base_alpha == 0:
+        if force_ocr and ocr_alpha >= max(
+            self.auto_force_min_alpha, base_alpha + self.auto_force_min_improvement
+        ):
+            use_ocr = True
+        elif ocr_alpha >= self.ocr_min_alpha and base_alpha == 0:
             use_ocr = True
         elif base_alpha > 0 and ocr_alpha >= max(
             self.ocr_min_alpha, int(base_alpha * self.ocr_prefer_ratio)
