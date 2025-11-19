@@ -60,6 +60,8 @@ The system will:
 - Extract frameworks and exercises using LLM
 - Add entries to `data/catalog.csv` (English only)
 
+> **Clarification:** Phrases like "process chapter 3" always refer to the Upright Citizens Brigade book chapters defined in `data/ucb_chapter_pages.csv`. Use those CSV ranges (book and PDF pages) so future agents can jump straight to the correct section without re-deriving boundaries.
+
 ### 2. Catalog Structure
 
 The catalog (`data/catalog.csv`) is a CSV file with:
@@ -137,6 +139,7 @@ All operations are done through Cursor chat interface:
 - **Current defaults (Nov 2025)**:
   - `PDFProcessor` now enables OCR by default (when `pytesseract` is available) so the high-quality settings used for Chapters 1–2 are automatically applied on future runs.
   - `src/chapter_formatter.py` contains UCB-specific cleanup heuristics (dropping repeated “CHAPTER ONE * …” headers, fixing common spacing artifacts, promoting uppercase section/exercise titles, etc.). If you extract this book again, leave `enable_formatting=True` so those rules kick in automatically.
+- **Nov 2025 formatter update:** `format_chapter_markdown()` now auto-promotes the first body heading, merges orphaned all-caps fragments like “EASIER” back into their parent headings, splits headings that accidentally swallow sentences (e.g. `### Example. ...`), and converts curved quotes/dashes to ASCII. If a future chapter still needs tweaks, update `src/chapter_formatter.py` and rerun `PDFProcessor.save_chapter(<n>)` instead of hand-editing the markdown output.
 
 **Exercise Extraction:**
 - Exercises are formatted as "EXERCISE: [NAME]" in the book

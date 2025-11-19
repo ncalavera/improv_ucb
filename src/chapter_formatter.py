@@ -40,6 +40,22 @@ UCB_TITLE_NORMALIZATIONS = {
 
 NOISE_LINES = {"ti; ©"}
 
+UNICODE_PUNCT_REPLACEMENTS = str.maketrans(
+    {
+        "’": "'",
+        "‘": "'",
+        "‛": "'",
+        "‚": "'",
+        "“": '"',
+        "”": '"',
+        "„": '"',
+        "—": "--",
+        "–": "-",
+        "…": "...",
+    }
+)
+
+
 REPLACEMENTS = {
     # Global text fixes
     "is tong rorm": "is Long Form",
@@ -48,6 +64,10 @@ REPLACEMENTS = {
     "VES...AND": "YES...AND",
     "“Ves...And”": "“Yes...And”",
     "Ves...And": "Yes...And",
+    "Whatis": "What is",
+    "Let'S": "Let's",
+    "NowLet's": "Now let's",
+    "Let S": "Let's",
     # Common UCB OCR spacing artifacts
     "Asecond": "A second",
     "outa ": "out a ",
@@ -73,7 +93,8 @@ def format_chapter_markdown(raw_text: str, metadata: Optional[Dict[str, str]] = 
         Cleaned markdown body.
     """
 
-    text = raw_text.replace("\r\n", "\n").replace("\r", "\n")
+    text = _normalize_unicode_punctuation(raw_text)
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
     lines = [line.rstrip() for line in text.split("\n")]
 
     cleaned: List[str] = []
@@ -92,7 +113,9 @@ def format_chapter_markdown(raw_text: str, metadata: Optional[Dict[str, str]] = 
 
     merged_fragments = _merge_fragmented_lines(cleaned)
     promoted = _promote_headings(merged_fragments, metadata or {})
-    compact_blanks = _drop_spurious_blank_lines(promoted)
+    merged_headings = _coalesce_heading_fragments(promoted)
+    separated_headings = _split_overloaded_headings(merged_headings)
+    compact_blanks = _drop_spurious_blank_lines(separated_headings)
     combined_lists = _combine_multiline_list_items(compact_blanks)
     reflowed = _reflow_paragraphs(combined_lists)
     trimmed = _trim_blank_runs(reflowed)
@@ -102,6 +125,11 @@ def format_chapter_markdown(raw_text: str, metadata: Optional[Dict[str, str]] = 
         output = output.replace(bad, good)
 
     return output + "\n"
+def _normalize_unicode_punctuation(raw_text: str) -> str:
+    """Convert curly quotes/dashes to ASCII equivalents for consistent output."""
+    return raw_text.translate(UNICODE_PUNCT_REPLACEMENTS)
+
+
 
 
 def _should_drop_line(line: str) -> bool:
@@ -191,13 +219,19 @@ def _looks_like_fragment(text: str) -> bool:
 
 def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
     promoted: List[str] = []
+    primary_heading_emitted = False
     for idx, line in enumerate(lines):
         strip_line = line.strip()
         if not strip_line:
             promoted.append("")
             continue
 
-        if strip_line.startswith("##") or strip_line.startswith("###"):
+        if strip_line.startswith("##"):
+            promoted.append(strip_line)
+            primary_heading_emitted = True
+            continue
+
+        if strip_line.startswith("###"):
             promoted.append(strip_line)
             continue
 
@@ -207,11 +241,14 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
 
         if meta_title and strip_line.lower() == meta_title:
             promoted.append(f"## {strip_line}")
+            primary_heading_emitted = True
             continue
 
         upper_line = strip_line.upper()
         next_line = _find_neighbor(lines, idx, direction=1) or ""
         prev_line = _find_neighbor(lines, idx, direction=-1) or ""
+        prev_blank = idx == 0 or not lines[idx - 1].strip()
+        next_blank = idx + 1 >= len(lines) or not lines[idx + 1].strip()
 
         if upper_line.startswith("EXERCISE:"):
             # Normalize known UCB exercise titles when possible.
@@ -221,6 +258,7 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
             else:
                 title = strip_line.split(":", 1)[1].strip()
                 promoted.append(f"## Exercise: {title}")
+            primary_heading_emitted = True
             continue
 
         if (
@@ -255,8 +293,20 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
                 promoted.append(rest[0].upper() + rest[1:])
             continue
 
-        if _looks_like_major_heading(strip_line, prev_line, next_line, metadata):
+        if _looks_like_major_heading(
+            strip_line, metadata, prev_blank=prev_blank, next_blank=next_blank
+        ):
             promoted.append(f"## {strip_line.title()}")
+            primary_heading_emitted = True
+            continue
+
+        if (
+            not primary_heading_emitted
+            and _looks_like_primary_heading(strip_line)
+        ):
+            heading_text = strip_line if strip_line.endswith("?") else strip_line.title()
+            promoted.append(f"## {heading_text}")
+            primary_heading_emitted = True
             continue
 
         promoted.append(strip_line)
@@ -264,13 +314,92 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
     return promoted
 
 
+def _coalesce_heading_fragments(lines: List[str]) -> List[str]:
+    """
+    Merge stray OCR fragments (e.g. 'EASIER') that belong to the previous heading.
+    """
+    merged: List[str] = []
+
+    for line in lines:
+        stripped = line.strip()
+        if (
+            _is_heading_tail_fragment(stripped)
+            and merged
+            and merged[-1].strip().startswith(("##", "###"))
+        ):
+            merged[-1] = f"{merged[-1].strip()} {_normalize_fragment_case(stripped)}"
+            continue
+        merged.append(line)
+
+    return merged
+
+
+def _split_overloaded_headings(lines: List[str]) -> List[str]:
+    """
+    Split headings that accidentally captured sentence text (e.g. "### Example. ...").
+    """
+    result: List[str] = []
+
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith(("##", "###")):
+            parts = stripped.split(" ", 1)
+            if len(parts) == 2:
+                marker, heading_body = parts
+                dot_idx = heading_body.find(". ")
+                if (
+                    dot_idx != -1
+                    and len(heading_body[:dot_idx].split()) <= 4
+                ):
+                    heading_text = heading_body[:dot_idx].rstrip(". ")
+                    remainder = heading_body[dot_idx + 2 :].lstrip()
+                    result.append(f"{marker} {heading_text}")
+                    if remainder:
+                        result.append(remainder[0].upper() + remainder[1:])
+                    continue
+        result.append(line)
+
+    return result
+
+
+def _is_heading_tail_fragment(text: str) -> bool:
+    if not text:
+        return False
+    if text.startswith("#") or text.startswith("- ") or text.startswith(">"):
+        return False
+    letters = [c for c in text if c.isalpha()]
+    if not letters:
+        return False
+    if any(c.islower() for c in letters):
+        return False
+    if len(text.split()) > 4:
+        return False
+    if len(text) > 48:
+        return False
+    return True
+
+
+def _normalize_fragment_case(fragment: str) -> str:
+    """Title-ize alphabetic sequences while preserving punctuation."""
+    def _title_match(match: re.Match[str]) -> str:
+        return match.group(0).title()
+
+    return re.sub(r"[A-Za-z]+(?:'[A-Za-z]+)?", _title_match, fragment.lower())
+
+
 def _looks_like_major_heading(
     line: str,
-    prev_line: str,
-    next_line: str,
     metadata: Optional[Dict[str, str]] = None,
+    prev_blank: bool = False,
+    next_blank: bool = False,
 ) -> bool:
-    if ":" in line or line.endswith(".") or len(line) > 60:
+    if (
+        ":" in line
+        or line.endswith(".")
+        or len(line) > 60
+        or ">" in line
+        or re.fullmatch(r"[-=+><\s]+", line)
+    ):
         return False
 
     words = line.split()
@@ -288,12 +417,44 @@ def _looks_like_major_heading(
     if upper.endswith("EXAMPLES") and "EXAMPLE" not in upper[:-8]:
         return True
 
-    if re.match(r"^[A-Z0-9 .,'“”\"-]+$", line) or line == line.title():
-        prev_blank = not prev_line.strip() if prev_line is not None else True
-        next_blank = not next_line.strip() if next_line is not None else False
-        return prev_blank and not next_blank
+    if (
+        re.match(r"^[A-Z0-9 .,'“”\"-]+$", line)
+        or line == line.title()
+        or _is_mostly_capitalized(line)
+    ):
+        return prev_blank
 
     return False
+
+
+def _is_mostly_capitalized(line: str) -> bool:
+    words = re.findall(r"[A-Za-z]+", line)
+    if not words or len(words) > 8:
+        return False
+    minor_words = {"a", "an", "and", "or", "the", "of", "to", "in", "on", "at", "for"}
+    capitalized = sum(1 for word in words if word[0].isupper())
+    allowed_lower = sum(1 for word in words if word.lower() in minor_words)
+    return capitalized + allowed_lower == len(words) and capitalized >= 1
+
+
+def _looks_like_primary_heading(line: str) -> bool:
+    if (
+        not line
+        or line.startswith("- ")
+        or ">" in line
+        or re.fullmatch(r"[-=+><\s]+", line)
+    ):
+        return False
+    if len(line) > 80:
+        return False
+    if ":" in line:
+        return False
+    if line.count(".") > 0:
+        return False
+    words = line.split()
+    if not words or len(words) > 10:
+        return False
+    return True
 
 
 def _drop_spurious_blank_lines(lines: List[str]) -> List[str]:
