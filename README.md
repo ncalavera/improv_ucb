@@ -76,13 +76,28 @@ The catalog (`data/catalog.csv`) is a CSV file with:
 
 ### 3. Generate Jam Plan
 
+**Markdown-First Workflow (Recommended):**
+
 Request via Cursor chat: "Create jam plan for chapters 1-2"
 
-The system will:
-- Show brief summary of available frameworks and exercises
-- Ask questions (duration, focus, group size, etc.)
-- Generate jam plan using catalog + chapter content
-- Create PDF in `output/jam_plans/`
+The workflow:
+1. Create English markdown file first (`output/jam_plans/session_X_jam_plan_en.md`)
+2. Review and iterate on content structure
+3. Verify all exercise names and instructions against actual chapter content
+4. Translate to Russian markdown (`output/jam_plans/session_X_jam_plan_ru.md`)
+5. Generate PDFs from markdown files (optional)
+
+**Jam Plan Structure:**
+- **Block-based format**: Organize by learning themes (e.g., Platform Building, Object Work, Commitment)
+- **Sequential flow**: Each block includes concept explanation followed by exercises
+- **Group adaptations**: All exercises adapted for 6-10 person groups
+- **Feedback integration**: Built-in feedback principles from previous sessions
+- **Timing estimates**: Rough time allocations per block and exercise
+
+**Exercise Verification:**
+- All exercise names must match exact names from book chapters
+- All instructions must come from actual chapter content (not catalog summaries)
+- Group adaptations noted when book version differs (e.g., two-person vs. whole-group)
 
 ### 4. Translation
 
