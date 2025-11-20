@@ -176,6 +176,142 @@ All operations are done through Cursor chat interface:
 - Chapter boundaries are detected automatically from PDF structure
   - When a CSV page map (like `data/ucb_chapter_pages.csv`) exists, it takes precedence over automatic detection for that book
 
+# PDF Generation System
+
+## Clean Architecture Overview
+
+The PDF generation system follows a clean separation of concerns:
+
+### JamGenerator (`src/jam_generator.py`)
+- **Purpose:** Content creation only
+- **Input:** Requirements, exercise data
+- **Output:** Pure markdown files
+- **No:** PDF generation, styling, or presentation logic
+
+### PDFGenerator (`src/pdf_generator.py`)
+- **Purpose:** Universal markdown → PDF conversion
+- **Input:** Any markdown file
+- **Output:** Beautiful styled PDFs with UCB branding
+- **Features:**
+  - Smart image placement and tracking
+  - Automatic versioning (no overwrites)
+  - Content-aware filename generation
+  - Professional typography and CSS styling
+
+## PDF Generation Usage
+
+### Quick Start
+```bash
+# Activate PDF environment
+source .venv_pdf/bin/activate
+
+# Generate chapter PDFs
+python3 scripts/generate_pdf.py data/chapters/chapter_1_ru.md \
+    --content-type chapter --theme BaseReality
+
+# Generate jam plan PDFs
+python3 scripts/generate_pdf.py output/jam_plans/session_2_ru.md \
+    --content-type jam_plan --theme CommitmentAndListening
+```
+
+### Command Options
+- `--content-type`: `chapter` or `jam_plan` (affects image selection)
+- `--theme`: Theme name for output filename (e.g., BaseReality, CommitmentAndListening)
+- `--title`: Optional title override for PDF
+- `--no-images`: Skip image enhancement
+
+## Key PDF Features
+
+### 1. **Automatic Versioning**
+- Never overwrites existing PDFs
+- Auto-increments: `chapter_1_BaseReality_v001.pdf` → `v002.pdf` → `v003.pdf`
+- Keeps history for debugging and comparison
+- Safe for iterative development
+
+### 2. **Smart Image Management**
+- Tracks which images used across all PDFs in `logs/image_usage.json`
+- Automatically selects unused images for new content
+- Different image pools for chapters vs jam plans
+- Prevents repetition across documents
+
+### 3. **Content-Aware Output Naming**
+```
+chapter_1_BaseReality_v001.pdf
+session_2_CommitmentAndListening_v001.pdf
+chapter_3_CharacterWork_v001.pdf
+```
+
+### 4. **Professional UCB Styling**
+- Georgia serif typography for readability
+- Branded footers with UCB logo and author credit
+- Optimal page breaks and image placement
+- Professional margins and spacing
+- WeasyPrint-based high-quality rendering
+
+## Image Configuration
+
+Images are automatically selected from predefined pools:
+
+**Chapter Images:**
+- `ucb_improv_training.jpg` - Training and education
+- `the_big_team.jpg` - Team collaboration
+- `kristen_schaal_performance.jpg` - Performance examples
+- `john_early_performance.jpg` - Exercise demonstrations
+- `bigger_show.jpg` - Show concepts
+
+**Jam Plan Images:**
+- `bigger_show.jpg` - Show and performance focus
+- `asssscat_will_ferrell.jpg` - Advanced improv concepts
+- `ego_nwodim_asssscat.jpg` - Professional examples
+- `jon_gabrus_asssscat.jpg` - Performance techniques
+- `ucb_improv_training.jpg` - Training sessions
+
+## PDF Generation Workflow
+
+The complete workflow from content to PDF:
+
+1. **Content Creation** → `session_X_ru.md` (pure markdown via JamGenerator)
+2. **PDF Generation** → `python scripts/generate_pdf.py` (universal styling via PDFGenerator)
+3. **Output** → `session_X_ThemeName_v001.pdf` (versioned, branded PDF)
+
+## Architecture Benefits
+
+✅ **No Script Duplication** - Single universal PDF generator replaces 3+ separate scripts
+✅ **Easy Content Addition** - Just create markdown, run one command
+✅ **Version Safety** - Never lose work due to overwrites
+✅ **Intelligent Images** - Automatic selection prevents repetition
+✅ **Clean Code** - Complete separation of content vs presentation
+✅ **Future-Proof** - Works with any markdown content
+
+## Migration from Old Scripts
+
+**Old Way (multiple hardcoded scripts):**
+```bash
+python scripts/generate_chapter1_pdf.py    # Chapter 1 only
+python scripts/generate_chapter2_pdf.py    # Chapter 2 only
+python scripts/generate_russian_pdf.py     # Jam plans only
+```
+
+**New Way (one universal script):**
+```bash
+python scripts/generate_pdf.py <any_markdown_file> --content-type <type> --theme <theme>
+```
+
+The old scripts are kept for reference but are no longer needed.
+
+## CSS and Styling Technical Details
+
+All styling is embedded in `PDFGenerator._markdown_to_html()`:
+
+- **Page Setup:** A4 size, professional margins (1.5cm/2cm)
+- **Typography:** Georgia serif font family, 11pt base size
+- **Headers:** Hierarchical sizing (18pt/14pt/12pt)
+- **Page Breaks:** Smart breaks to keep content together
+- **Images:** Responsive sizing with max 35vh height
+- **Footers:** Author credit, page numbers, UCB logo positioning
+
+CSS is injected during HTML conversion, then WeasyPrint renders to PDF.
+
 ## Development Log
 
 See [WORK_LOG.md](WORK_LOG.md) for detailed development history, design decisions, and next steps.
