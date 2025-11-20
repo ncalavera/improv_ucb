@@ -13,20 +13,33 @@ from datetime import datetime
 def main():
     # Paths
     input_file = Path(__file__).parent.parent / 'output' / 'jam_plans' / 'session_2_jam_plan_ru.md'
-    output_file = Path(__file__).parent.parent / 'output' / 'jam_plans' / 'session_2_ru.pdf'  # Clean filename
+    # Generate final filename
+    output_file = Path(__file__).parent.parent / 'output' / 'jam_plans' / 'UCB_Jams_Session2_BaseReality.pdf'
     
-    # Clean up old PDF files
-    old_pdfs = list(output_file.parent.glob('session_2_jam_plan_ru_*.pdf'))
-    if old_pdfs:
-        print(f"Cleaning up {len(old_pdfs)} old PDF file(s)...")
-        for old_pdf in old_pdfs:
-            old_pdf.unlink()
-            print(f"  Deleted: {old_pdf.name}")
+    # Clean up old PDF files - DISABLED to keep history
+    # old_pdfs = list(output_file.parent.glob('session_2_jam_plan_ru_*.pdf'))
+    # if old_pdfs:
+    #     print(f"Cleaning up {len(old_pdfs)} old PDF file(s)...")
+    #     for old_pdf in old_pdfs:
+    #         old_pdf.unlink()
+    #         print(f"  Deleted: {old_pdf.name}")
     
     # Read markdown content
     print(f"Reading markdown from: {input_file}")
     with open(input_file, 'r', encoding='utf-8') as f:
         content = f.read()
+
+    # Insert final page image after Closing Notes header
+    print("Inserting final page image...")
+    target_header = "## Заключительные заметки (5 минут)"
+    if target_header in content:
+        # Add image after header
+        replacement = f"{target_header}\n\n![Final Page](../../assets/ucb_final_page.png)"
+        content = content.replace(target_header, replacement)
+    else:
+        print(f"Warning: Header '{target_header}' not found. Appending image to end.")
+        content += "\n\n<div style='page-break-before: always;'></div>\n\n"
+        content += "![Final Page](../../assets/ucb_final_page.png)"
     
     # Generate PDF
     print(f"Generating PDF with improved design...")

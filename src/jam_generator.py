@@ -201,7 +201,7 @@ class JamGenerator:
                 
                 @bottom-right {
                     content: "";
-                    background-image: url(assets/ucb_logo.png);
+                    background-image: url(../../assets/ucb_logo.png);
                     background-size: contain;
                     background-repeat: no-repeat;
                     background-position: center right;
