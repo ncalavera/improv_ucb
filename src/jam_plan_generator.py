@@ -93,6 +93,68 @@ class JamPlanGenerator:
         
         return chapter_content
     
+    def _extract_exercise_from_chapter(self, exercise_name: str, chapter_content: Dict[int, str]) -> Optional[str]:
+        """
+        Extract exact exercise instructions from chapter content.
+        
+        Args:
+            exercise_name: Name of exercise (e.g., "EXERCISE: THREE LINE SCENES")
+            chapter_content: Dictionary mapping chapter numbers to chapter content
+            
+        Returns:
+            Full exercise text from chapter, or None if not found
+        """
+        # Normalize exercise name - remove "EXERCISE: " prefix and handle variations
+        search_name = exercise_name.replace("EXERCISE: ", "").strip()
+        # Handle common name variations
+        name_variations = {
+            "FOLD LAUNDRY WHILE TALKING": "TALK ABOUT Something Else",
+            "FOLD LAUNDRY": "TALK ABOUT Something Else"
+        }
+        if search_name.upper() in name_variations:
+            search_name = name_variations[search_name.upper()]
+        
+        for chapter_num, content in chapter_content.items():
+            # Look for exercise header
+            lines = content.split('\n')
+            in_exercise = False
+            exercise_lines = []
+            
+            for i, line in enumerate(lines):
+                # Check if this line starts an exercise section
+                if line.startswith('## Exercise:') or line.startswith('## EXERCISE:'):
+                    # Extract exercise name from header
+                    header_name = line.replace('## Exercise:', '').replace('## EXERCISE:', '').strip()
+                    # Check if it matches (case-insensitive, partial match)
+                    # Also check if key words match (e.g., "TALK" and "SOMETHING" for "TALK ABOUT Something Else")
+                    search_words = set(search_name.upper().split())
+                    header_words = set(header_name.upper().split())
+                    # Match if significant overlap or if one contains the other
+                    if (search_name.upper() in header_name.upper() or 
+                        header_name.upper() in search_name.upper() or
+                        len(search_words & header_words) >= 2):  # At least 2 words match
+                        in_exercise = True
+                        exercise_lines.append(line)
+                        continue
+                
+                # If we're in an exercise, collect lines until next major section
+                if in_exercise:
+                    # Stop at next ## header (but not ###)
+                    if line.startswith('## ') and not line.startswith('### '):
+                        # Check if it's another exercise or different section
+                        if 'Exercise' not in line and 'EXERCISE' not in line:
+                            break
+                        # If it's another exercise, stop here
+                        if 'Exercise' in line or 'EXERCISE' in line:
+                            break
+                    
+                    exercise_lines.append(line)
+            
+            if exercise_lines:
+                return '\n'.join(exercise_lines).strip()
+        
+        return None
+    
     def _get_russian_text(self, entry: Dict, field_en: str, field_ru: str) -> str:
         """
         Get Russian text from entry, using catalog translation if available,
@@ -163,6 +225,201 @@ class JamPlanGenerator:
                 entries_with_translations.append(original_entry)
         
         return entries_with_translations
+    
+    def _format_jam_plan_blocks(self, catalog_data: Dict, blocks: List[Dict],
+                                duration: int, title: Optional[str] = None,
+                                chapter_content: Optional[Dict[int, str]] = None,
+                                language: str = 'ru') -> str:
+        """
+        Format jam plan as markdown with block-based structure.
+        
+        Args:
+            catalog_data: Dictionary with 'frameworks' and 'exercises' (all available)
+            blocks: List of block definitions, each with:
+                - 'name': Block name (Russian or English)
+                - 'framework_names': List of framework names to include
+                - 'exercise_names': List of exercise names to include
+            duration: Total duration in minutes
+            title: Optional custom title
+            chapter_content: Optional dictionary mapping chapter numbers to content (for exact exercise text)
+            language: 'ru' for Russian, 'en' for English
+            
+        Returns:
+            Formatted jam plan as markdown string
+        """
+        is_russian = language == 'ru'
+        
+        # Ensure all entries have Russian translations if needed
+        all_entries = catalog_data['frameworks'] + catalog_data['exercises']
+        if is_russian:
+            entries_with_ru = self._ensure_translations(all_entries)
+        else:
+            entries_with_ru = all_entries
+        
+        # Create lookup dictionaries
+        framework_lookup = {fw.get('Name', ''): fw for fw in entries_with_ru if fw.get('Type', '').lower() == 'framework'}
+        exercise_lookup = {ex.get('Name', ''): ex for ex in entries_with_ru if ex.get('Type', '').lower() == 'exercise'}
+        
+        # Generate title
+        if not title:
+            title = "План джема" if is_russian else "Jam Plan"
+        
+        # Start building plan - cleaner format
+        lines = []
+        lines.append(f"# {title}\n\n")
+        lines.append(f"**{'Основная часть' if is_russian else 'Main Part'}:** {duration} {'минут' if is_russian else 'minutes'}\n\n")
+        lines.append("---\n\n")
+        
+        # Brief overview
+        if is_russian:
+            lines.append("## Кратко о сессии\n\n")
+            lines.append(
+                f"План состоит из {len(blocks)} блоков. Каждый блок включает концепции и упражнения. "
+                f"Общая длительность основной части: ~{duration} минут.\n\n"
+            )
+        else:
+            lines.append("## Session Overview\n\n")
+            lines.append(
+                f"The plan consists of {len(blocks)} blocks. Each block includes concepts and exercises. "
+                f"Total duration of main part: ~{duration} minutes.\n\n"
+            )
+        
+        # Global feedback principles
+        if is_russian:
+            lines.append("### Принципы обратной связи\n\n")
+            lines.append(
+                "- **Один голос за раз:** после сцены даёт обратную связь один выбранный человек, "
+                "остальные добавляют только по запросу.\n"
+            )
+            lines.append(
+                "- **Чувствительность участников:** заранее спросите у игроков, какого стиля "
+                "обратной связи они хотят (мягкая, поддерживающая / более прямолинейная).\n"
+            )
+            lines.append(
+                "- **Наблюдаемое поведение, не личности:** формулируйте наблюдения через "
+                "конкретные действия в сцене, а не через оценки людей.\n\n"
+            )
+        else:
+            lines.append("### Feedback Principles\n\n")
+            lines.append(
+                "- **One voice at a time:** after a scene, one selected person gives feedback, "
+                "others add only upon request.\n"
+            )
+            lines.append(
+                "- **Participant sensitivity:** ask players in advance what style of feedback "
+                "they want (soft, supportive / more direct).\n"
+            )
+            lines.append(
+                "- **Observable behavior, not personalities:** frame observations through "
+                "concrete actions in the scene, not through assessments of people.\n\n"
+            )
+        lines.append("---\n\n")
+        
+        # Format blocks
+        block_time = duration // len(blocks) if blocks else duration
+        if is_russian:
+            lines.append("## План по блокам\n\n")
+        else:
+            lines.append("## Plan by Blocks\n\n")
+        
+        for idx, block in enumerate(blocks, 1):
+            block_name = block.get('name', f'Блок {idx}' if is_russian else f'Block {idx}')
+            framework_names = block.get('framework_names', [])
+            exercise_names = block.get('exercise_names', [])
+            
+            if is_russian:
+                lines.append(f"### Блок {idx}. {block_name} (~{block_time} минут)\n\n")
+            else:
+                lines.append(f"### Block {idx}. {block_name} (~{block_time} minutes)\n\n")
+            
+            # Add frameworks
+            if framework_names:
+                if is_russian:
+                    lines.append("**Концепции:**\n\n")
+                else:
+                    lines.append("**Concepts:**\n\n")
+                    
+                for fw_name in framework_names:
+                    fw = framework_lookup.get(fw_name)
+                    if fw:
+                        if is_russian:
+                            fw_desc = self._get_russian_text(fw, 'Description (EN)', 'Description (RU)')
+                            fw_howto = self._get_russian_text(fw, 'How-to/Instructions (EN)', 'How-to/Instructions (RU)')
+                        else:
+                            fw_desc = fw.get('Description (EN)', '').strip()
+                            fw_howto = fw.get('How-to/Instructions (EN)', '').strip()
+                        
+                        lines.append(f"**{fw_name}**\n\n")
+                        if fw_desc:
+                            lines.append(f"{fw_desc}\n\n")
+                        if fw_howto:
+                            if is_russian:
+                                lines.append(f"*Как применять:* {fw_howto}\n\n")
+                            else:
+                                lines.append(f"*How to apply:* {fw_howto}\n\n")
+                    else:
+                        if is_russian:
+                            lines.append(f"**{fw_name}** (описание не найдено в каталоге)\n\n")
+                        else:
+                            lines.append(f"**{fw_name}** (description not found in catalog)\n\n")
+                lines.append("\n")
+            
+            # Add exercises - use chapter content if available
+            if exercise_names:
+                if is_russian:
+                    lines.append("**Упражнения:**\n\n")
+                else:
+                    lines.append("**Exercises:**\n\n")
+                    
+                for ex_name in exercise_names:
+                    # Try to get exact text from chapter first
+                    exercise_text = None
+                    if chapter_content:
+                        exercise_text = self._extract_exercise_from_chapter(ex_name, chapter_content)
+                    
+                    if exercise_text:
+                        # Use exact text from chapter
+                        lines.append(f"**{ex_name}**\n\n")
+                        lines.append(f"{exercise_text}\n\n")
+                    else:
+                        # Fall back to catalog
+                        ex = exercise_lookup.get(ex_name)
+                        if ex:
+                            if is_russian:
+                                ex_desc = self._get_russian_text(ex, 'Description (EN)', 'Description (RU)')
+                                ex_howto = self._get_russian_text(ex, 'How-to/Instructions (EN)', 'How-to/Instructions (RU)')
+                            else:
+                                ex_desc = ex.get('Description (EN)', '').strip()
+                                ex_howto = ex.get('How-to/Instructions (EN)', '').strip()
+                            
+                            lines.append(f"**{ex_name}**\n\n")
+                            if ex_desc:
+                                lines.append(f"{ex_desc}\n\n")
+                            if ex_howto:
+                                if is_russian:
+                                    lines.append(f"*Инструкции (группа 6–10 человек):*\n{ex_howto}\n\n")
+                                else:
+                                    lines.append(f"*Instructions (group of 6–10 people):*\n{ex_howto}\n\n")
+                        else:
+                            if is_russian:
+                                lines.append(f"**{ex_name}** (инструкции не найдены)\n\n")
+                            else:
+                                lines.append(f"**{ex_name}** (instructions not found)\n\n")
+                
+                if is_russian:
+                    lines.append(
+                        "_Во время обсуждения после упражнений давайте обратную связь по одному человеку, "
+                        "следя за тоном и потребностями игроков._\n\n"
+                    )
+                else:
+                    lines.append(
+                        "_During discussion after exercises, give feedback one person at a time, "
+                        "paying attention to tone and player needs._\n\n"
+                    )
+            
+            lines.append("---\n\n")
+        
+        return ''.join(lines)
     
     def _format_jam_plan(self, catalog_data: Dict, chapter_content: Dict[int, str],
                         chapters: List[int], duration: int, 
@@ -326,10 +583,48 @@ class JamPlanGenerator:
         
         return ''.join(lines)
     
+    def _filter_catalog_data(self, catalog_data: Dict, 
+                            framework_names: Optional[List[str]] = None,
+                            exercise_names: Optional[List[str]] = None) -> Dict:
+        """
+        Filter catalog data to include only specified frameworks and exercises.
+        
+        Args:
+            catalog_data: Dictionary with 'frameworks' and 'exercises'
+            framework_names: Optional list of framework names to include (case-insensitive partial match)
+            exercise_names: Optional list of exercise names to include (case-insensitive partial match)
+            
+        Returns:
+            Filtered catalog data dictionary
+        """
+        frameworks = catalog_data.get('frameworks', [])
+        exercises = catalog_data.get('exercises', [])
+        
+        if framework_names:
+            framework_names_lower = [name.lower() for name in framework_names]
+            frameworks = [
+                fw for fw in frameworks 
+                if any(name in fw.get('Name', '').lower() for name in framework_names_lower)
+            ]
+        
+        if exercise_names:
+            exercise_names_lower = [name.lower() for name in exercise_names]
+            exercises = [
+                ex for ex in exercises 
+                if any(name in ex.get('Name', '').lower() for name in exercise_names_lower)
+            ]
+        
+        return {
+            'frameworks': frameworks,
+            'exercises': exercises
+        }
+    
     def generate_jam_plan(self, chapters: List[int], duration: int = 120,
                          title: Optional[str] = None,
                          output_filename: Optional[str] = None,
-                         use_weasyprint: bool = False) -> Path:
+                         use_weasyprint: bool = False,
+                         framework_names: Optional[List[str]] = None,
+                         exercise_names: Optional[List[str]] = None) -> Path:
         """
         Generate a complete jam plan PDF from catalog and chapter content.
         
@@ -339,6 +634,8 @@ class JamPlanGenerator:
             title: Optional custom title
             output_filename: Optional output filename (without extension)
             use_weasyprint: Use weasyprint instead of reportlab
+            framework_names: Optional list of framework names to include (filters catalog)
+            exercise_names: Optional list of exercise names to include (filters catalog)
             
         Returns:
             Path to generated PDF file
@@ -349,6 +646,12 @@ class JamPlanGenerator:
         print("  Loading catalog data...")
         catalog_data = self._load_catalog_data(chapters)
         print(f"    Found {len(catalog_data['frameworks'])} frameworks, {len(catalog_data['exercises'])} exercises")
+        
+        # Filter if specified
+        if framework_names or exercise_names:
+            print(f"  Filtering catalog data...")
+            catalog_data = self._filter_catalog_data(catalog_data, framework_names, exercise_names)
+            print(f"    After filtering: {len(catalog_data['frameworks'])} frameworks, {len(catalog_data['exercises'])} exercises")
         
         print("  Loading chapter content...")
         chapter_content = self._load_chapter_content(chapters)
@@ -375,6 +678,89 @@ class JamPlanGenerator:
         
         print(f"✓ Jam plan PDF created: {pdf_path}")
         return pdf_path
+    
+    def generate_jam_plan_with_blocks(self, blocks: List[Dict], duration: int = 120,
+                                      title: Optional[str] = None,
+                                      output_filename: Optional[str] = None,
+                                      use_weasyprint: bool = False,
+                                      chapters: Optional[List[int]] = None,
+                                      generate_both_languages: bool = True) -> List[Path]:
+        """
+        Generate complete jam plan PDFs using block-based structure.
+        
+        Args:
+            blocks: List of block definitions, each with:
+                - 'name': Block name (Russian or English)
+                - 'framework_names': List of framework names to include
+                - 'exercise_names': List of exercise names to include
+            duration: Total duration in minutes
+            title: Optional custom title (base name, language suffix will be added)
+            output_filename: Optional output filename (without extension, language suffix will be added)
+            use_weasyprint: Use weasyprint instead of reportlab
+            chapters: Optional list of chapter numbers to load catalog from (default: all chapters in blocks)
+            generate_both_languages: If True, generate both Russian and English PDFs
+            
+        Returns:
+            List of paths to generated PDF files
+        """
+        # Determine chapters from blocks if not specified
+        if chapters is None:
+            # Load all chapters that might be needed (1-2 for now)
+            chapters = [1, 2]
+        
+        print(f"Generating jam plan with {len(blocks)} blocks...")
+        
+        # Load catalog data for all chapters
+        print("  Loading catalog data...")
+        catalog_data = self._load_catalog_data(chapters)
+        print(f"    Found {len(catalog_data['frameworks'])} frameworks, {len(catalog_data['exercises'])} exercises")
+        
+        # Load chapter content for exact exercise text
+        print("  Loading chapter content for exact exercise instructions...")
+        chapter_content = self._load_chapter_content(chapters)
+        print(f"    Loaded {len(chapter_content)} chapters")
+        
+        pdf_paths = []
+        generator = JamGenerator(use_weasyprint=use_weasyprint)
+        
+        if not output_filename:
+            base_filename = f"jam_plan_blocks_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        else:
+            base_filename = output_filename
+        
+        # Generate Russian PDF
+        print("\n  Generating Russian PDF...")
+        ru_content = self._format_jam_plan_blocks(
+            catalog_data, blocks, duration, title or "План джема",
+            chapter_content=chapter_content, language='ru'
+        )
+        ru_path = self.output_dir / f"{base_filename}_ru.pdf"
+        pdf_path = generator.generate_jam_plan_pdf(
+            ru_content,
+            str(ru_path),
+            title=title or "План джема"
+        )
+        pdf_paths.append(pdf_path)
+        print(f"    ✓ Russian PDF: {pdf_path}")
+        
+        # Generate English PDF
+        if generate_both_languages:
+            print("\n  Generating English PDF...")
+            en_content = self._format_jam_plan_blocks(
+                catalog_data, blocks, duration, title or "Jam Plan",
+                chapter_content=chapter_content, language='en'
+            )
+            en_path = self.output_dir / f"{base_filename}_en.pdf"
+            pdf_path = generator.generate_jam_plan_pdf(
+                en_content,
+                str(en_path),
+                title=title or "Jam Plan"
+            )
+            pdf_paths.append(pdf_path)
+            print(f"    ✓ English PDF: {pdf_path}")
+        
+        print(f"\n✓ Generated {len(pdf_paths)} PDF file(s)")
+        return pdf_paths
     
     def _summarize_chapter(self, chapter_num: int, chapter_content: str, 
                           catalog_entries: List[Dict]) -> Tuple[str, List[Dict]]:
