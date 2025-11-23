@@ -6,6 +6,10 @@ from datetime import datetime
 import anthropic
 from pdf_generator import PDFGenerator
 from layout_config import IMAGE_POOLS
+try:
+    from cost_tracker import CostTracker
+except ImportError:
+    CostTracker = None
 
 class JamPlanGenerator:
     """Generates jam plans directly from chapter text using LLM."""
@@ -23,6 +27,7 @@ class JamPlanGenerator:
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
         self.client = anthropic.Anthropic()
+        self.cost_tracker = CostTracker() if CostTracker else None
     
     def _load_chapter_content(self, chapters: List[int]) -> Dict[int, str]:
         """
@@ -106,6 +111,19 @@ Do not include conversational filler before or after the markdown.
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}]
         )
+        
+        # Log cost
+        if self.cost_tracker:
+            input_tokens = response.usage.input_tokens
+            output_tokens = response.usage.output_tokens
+            self.cost_tracker.log_call(
+                operation="generate_jam_plan",
+                model="claude-3-5-sonnet-20241022",
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                is_batch=False,
+                metadata={"chapters": chapters, "duration": duration, "language": language}
+            )
         
         return response.content[0].text
 
