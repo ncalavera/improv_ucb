@@ -84,7 +84,7 @@ class PDFGenerator:
 
         # Import layout config here to avoid circular imports if any
         try:
-            from src.layout_config import LAYOUT_CONFIG
+            from layout_config import LAYOUT_CONFIG
         except ImportError:
             # Fallback config if file not found
             LAYOUT_CONFIG = {

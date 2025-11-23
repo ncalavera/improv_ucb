@@ -9,11 +9,19 @@ from typing import Dict, Any, List
 
 LAYOUT_CONFIG: Dict[str, Any] = {
     'chapter': {
-        'max_images': 5,
+        'max_images': 4,
         'placement_strategy': 'auto',
         'min_spacing': 3,
-        'preferred_sections': ['## ', '### '],
-        'avoid_sections': ['# ', '## Chapter Review', '## Exercises'],
+        'preferred_sections': [
+            '## Игра Сцены',
+            '## Вовлеченность',
+            '## Упражнение'
+        ],
+        'avoid_sections': [
+            '### Инструкции',
+            '### Цель',
+            '## Обзор'
+        ],
     },
     'jam_plan': {
         'max_images': 3,
@@ -27,11 +35,10 @@ LAYOUT_CONFIG: Dict[str, Any] = {
 # Image pools (fallback if not provided dynamically)
 IMAGE_POOLS: Dict[str, List[str]] = {
     'chapter': [
-        'ucb_improv_training.jpg',
-        'the_big_team.jpg',
+        'Screenshot 2025-11-23 at 22.33.09.png',
+        'Screenshot 2025-11-23 at 22.34.18.png',
         'kristen_schaal_performance.jpg',
-        'john_early_performance.jpg',
-        'bigger_show.jpg'
+        'john_early_performance.jpg'
     ],
     'jam_plan': [
         'bigger_show.jpg',

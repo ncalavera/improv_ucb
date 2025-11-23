@@ -10,23 +10,26 @@ sys.path.insert(0, str(Path(__file__).parent.parent / 'src'))
 
 from pdf_generator import PDFGenerator
 
-# Image configuration for different content types
-IMAGE_CONFIGS = {
-    "chapter": [
-        "ucb_improv_training.jpg",
-        "the_big_team.jpg",
-        "kristen_schaal_performance.jpg",
-        "john_early_performance.jpg",
-        "bigger_show.jpg"
-    ],
-    "jam_plan": [
-        "bigger_show.jpg",
-        "asssscat_will_ferrell.jpg",
-        "ego_nwodim_asssscat.jpg",
-        "jon_gabrus_asssscat.jpg",
-        "ucb_improv_training.jpg"
-    ]
-}
+try:
+    from layout_config import IMAGE_POOLS as IMAGE_CONFIGS
+except ImportError:
+    # Fallback configuration if layout_config not found
+    IMAGE_CONFIGS = {
+        "chapter": [
+            "ucb_improv_training.jpg",
+            "the_big_team.jpg",
+            "kristen_schaal_performance.jpg",
+            "john_early_performance.jpg",
+            "bigger_show.jpg"
+        ],
+        "jam_plan": [
+            "bigger_show.jpg",
+            "asssscat_will_ferrell.jpg",
+            "ego_nwodim_asssscat.jpg",
+            "jon_gabrus_asssscat.jpg",
+            "ucb_improv_training.jpg"
+        ]
+    }
 
 def main():
     parser = argparse.ArgumentParser(description='Generate beautiful PDFs from markdown files')
