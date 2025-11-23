@@ -13,7 +13,7 @@ The system works with PDF books to:
 
 ## Setup
 
-1. Create virtual environment:
+1. Create and activate virtual environment:
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -36,14 +36,12 @@ The system works with PDF books to:
 improv_ucb/
 ├── src/
 │   ├── pdf_processor.py              # PDF reading and chapter extraction
-│   ├── framework_exercises_extractor.py  # Extract frameworks and exercises
-│   ├── catalog_manager.py            # Manage catalog CSV file
-│   ├── translator.py                 # Selective Russian translation
-│   └── jam_generator.py              # Generate PDF jam plans
+│   ├── pdf_processor.py              # PDF reading and chapter extraction
+│   ├── jam_generator.py              # Generate PDF jam plans
+│   └── translator.py                 # Translation utilities
 ├── data/
 │   ├── books/                        # Store book PDFs
 │   ├── chapters/                     # Extracted chapter text (English)
-│   └── catalog.csv                   # Main catalog table (CSV format)
 ├── output/
 │   └── jam_plans/                    # Generated PDF jam plans
 └── archive/                          # Old scripts (archived)
@@ -57,35 +55,22 @@ Request via Cursor chat: "Process chapter 1"
 
 The system will:
 - Extract chapter text from PDF → `data/chapters/chapter_1.md`
-- Extract frameworks and exercises using LLM
-- Add entries to `data/catalog.csv` (English only)
+- That's it! The raw text is the source of truth.
 
 > **Clarification:** Phrases like "process chapter 3" always refer to the Upright Citizens Brigade book chapters defined in `data/ucb_chapter_pages.csv`. Use those CSV ranges (book and PDF pages) so future agents can jump straight to the correct section without re-deriving boundaries.
 
-### 2. Catalog Structure
+### 2. Generate Jam Plan
 
-The catalog (`data/catalog.csv`) is a CSV file with:
-- **Chapter**: Chapter number
-- **Page(s)**: Page number where concept/exercise appears
-- **Type**: Framework or Exercise
-- **Name**: Name/title
-- **Description (EN)**: English description
-- **Description (RU)**: Russian description (translated on-demand)
-- **How-to/Instructions (EN)**: How to apply/use (English)
-- **How-to/Instructions (RU)**: How to apply/use (Russian, translated on-demand)
-
-### 3. Generate Jam Plan
-
-**Markdown-First Workflow (Recommended):**
+**Markdown-First Workflow:**
 
 Request via Cursor chat: "Create jam plan for chapters 1-2"
 
 The workflow:
-1. Create English markdown file first (`output/jam_plans/session_X_jam_plan_en.md`)
-2. Review and iterate on content structure
-3. Verify all exercise names and instructions against actual chapter content
-4. Translate to Russian markdown (`output/jam_plans/session_X_jam_plan_ru.md`)
-5. Generate PDFs from markdown files (optional)
+1. System reads raw chapter markdown files (`data/chapters/*.md`)
+2. LLM generates a structured Jam Plan directly from the text
+3. Output saved to `output/jam_plans/session_X_jam_plan_en.md` (or `_ru.md`)
+4. Review and iterate on content structure
+5. Generate PDFs from markdown files
 
 **Jam Plan Structure:**
 - **Block-based format**: Organize by learning themes (e.g., Platform Building, Object Work, Commitment)
@@ -94,23 +79,15 @@ The workflow:
 - **Feedback integration**: Built-in feedback principles from previous sessions
 - **Timing estimates**: Rough time allocations per block and exercise
 
-**Exercise Verification:**
-- All exercise names must match exact names from book chapters
-- All instructions must come from actual chapter content (not catalog summaries)
-- Group adaptations noted when book version differs (e.g., two-person vs. whole-group)
-
-### 4. Translation
+### 3. Translation
 
 Translation happens selectively:
-- Catalog entries: Translated when needed (only Description and How-to fields)
-- Jam plans: Translated to Russian when generating final PDF
+- Jam plans: Translated to Russian when generating final PDF (or during generation)
 - Chapters: Kept in English (not translated)
 
 ## Key Features
 
-- **On-demand processing**: Only process chapters when requested
-- **Selective translation**: Only translate what's needed
-- **Structured catalog**: Single source of truth for frameworks and exercises
+- **Direct Text Processing**: No intermediate catalog database; works directly with book text
 - **Interactive jam planning**: Dialogue-based via Cursor chat
 - **PDF output**: Direct PDF generation for jam plans
 
@@ -119,9 +96,7 @@ Translation happens selectively:
 All operations are done through Cursor chat interface:
 
 1. **Process chapter**: "Process chapter 1"
-2. **View catalog**: "Show me frameworks from chapter 1"
-3. **Create jam plan**: "Create jam plan for chapters 1-2"
-4. **Translate**: "Translate catalog entries for chapter 1 to Russian"
+2. **Create jam plan**: "Create jam plan for chapters 1-2"
 
 ## Dependencies
 
@@ -202,8 +177,8 @@ The PDF generation system follows a clean separation of concerns:
 
 ### Quick Start
 ```bash
-# Activate PDF environment
-source .venv_pdf/bin/activate
+# Activate virtual environment
+source venv/bin/activate
 
 # Generate chapter PDFs
 python3 scripts/generate_pdf.py data/chapters/chapter_1_ru.md \
@@ -311,6 +286,18 @@ All styling is embedded in `PDFGenerator._markdown_to_html()`:
 - **Footers:** Author credit, page numbers, UCB logo positioning
 
 CSS is injected during HTML conversion, then WeasyPrint renders to PDF.
+
+## Next Session Improvements
+
+### PDF Layout Configuration Priority
+**Issue:** Image placement is currently automatic but can create layout inconsistencies
+**Next Steps:**
+- Create more granular layout configs for different content types
+- Add content-aware image placement rules (e.g., specific sections, exercise types)
+- Improve photo distribution and positioning logic
+- Consider semantic image selection based on content analysis
+
+The current system works well but needs refinement in image placement strategy to avoid "photo mess" and create more professional, contextually relevant layouts.
 
 ## Development Log
 

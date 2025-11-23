@@ -420,3 +420,14 @@ Created first jam plan as English markdown file before translation, allowing for
 - `output/jam_plans/session_2_jam_plan_en.md` - English markdown jam plan
 - `output/jam_plans/session_2_jam_plan_ru.md` - Russian markdown jam plan
 
+
+## 2025-11-23
+
+### Architectural Shift: Removing Catalog System
+- **Decision**: Removed the `catalog.csv` and intermediate extraction step.
+- **Reasoning**: The structured catalog was adding unnecessary complexity and friction. Working directly with the original chapter text (`data/chapters/*.md`) allows for more flexible and accurate jam plan generation using LLMs.
+- **Changes**:
+  - Removed `src/catalog_manager.py`
+  - Removed `src/framework_exercises_extractor.py`
+  - Removed `data/catalog.csv`
+  - Refactored `src/jam_plan_generator.py` to generate plans directly from text.
