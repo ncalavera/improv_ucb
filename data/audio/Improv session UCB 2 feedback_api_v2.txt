@@ -1,0 +1,8 @@
+Transcribing: /Users/nsolovev/Projects/personal/improv_ucb/data/audio/Improv session UCB 2 feedback.m4a
+File size: 9.3 MB
+Output format: text
+Using OpenAI Whisper API...
+
+
+Transcription complete!
+Output saved to: /Users/nsolovev/Projects/personal/improv_ucb/data/audio/Improv session UCB 2 feedback_api.text

@@ -1,6 +1,6 @@
 # Improv Book Catalog System
 
-This project processes improv books from PDF, extracts theoretical frameworks and exercises into a structured catalog, and generates jam plans through interactive dialogue.
+This project processes improv books from PDF, extracts theoretical frameworks and exercises, and generates jam plans through AI-assisted workflows.
 
 > 📚 **For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md)**
 
@@ -8,10 +8,9 @@ This project processes improv books from PDF, extracts theoretical frameworks an
 
 The system works with PDF books to:
 1. Extract chapters from PDF files
-2. Extract frameworks (theoretical concepts) and exercises from each chapter
-3. Store everything in a structured catalog table (markdown format)
-4. Generate jam plans through interactive dialogue (via Cursor chat)
-5. Translate catalog entries and jam plans to Russian when needed
+2. Generate jam plans using LLM-based analysis of chapter content
+3. Translate content to Russian when needed
+4. Generate professional PDFs with UCB branding
 
 ## Setup
 
@@ -60,25 +59,39 @@ improv_ucb/
 
 ### 1. Process a Chapter
 
-Request via Cursor chat: "Process chapter 1"
+Use `PDFProcessor` to extract chapters:
 
-The system will:
-- Extract chapter text from PDF → `data/chapters/chapter_1.md`
-- That's it! The raw text is the source of truth.
+```python
+from src.pdf_processor import PDFProcessor
 
-> **Clarification:** Phrases like "process chapter 3" always refer to the Upright Citizens Brigade book chapters defined in `data/ucb_chapter_pages.csv`. Use those CSV ranges (book and PDF pages) so future agents can jump straight to the correct section without re-deriving boundaries.
+processor = PDFProcessor("data/books/ucb.pdf", use_ocr=True)
+processor.save_chapter(1, output_dir="data/chapters")
+# Output: data/chapters/chapter_1.md
+```
+
+> **Note:** Chapter boundaries are defined in `data/ucb_chapter_pages.csv` for the Upright Citizens Brigade book.
 
 ### 2. Generate Jam Plan
 
 **LLM-Based Workflow:**
 
-Request via Cursor chat: "Create jam plan for chapters 1-2"
+```python
+from src.jam_plan_generator import JamPlanGenerator
+
+generator = JamPlanGenerator()
+generator.generate_jam_plan(
+    chapter_nums=[1, 2],
+    duration=120,  # minutes
+    language="ru",  # or "en"
+    output_file="output/jam_plans/session_2_ru.md"
+)
+```
 
 The workflow:
-1. `JamPlanGenerator` reads raw chapter markdown files (`data/chapters/*.md`)
-2. Claude LLM analyzes chapters and extracts concepts/exercises
+1. `JamPlanGenerator` reads chapter markdown files (`data/chapters/*.md`)
+2. LLM analyzes chapters and extracts concepts/exercises
 3. LLM generates structured jam plan markdown (Russian or English)
-4. Markdown saved to `output/jam_plans/session_X_*.md`
+4. Markdown saved to `output/jam_plans/`
 5. `PDFGenerator` creates versioned PDF with UCB branding
 
 **Jam Plan Structure:**
@@ -90,9 +103,12 @@ The workflow:
 
 ### 3. Translation
 
-Translation happens selectively:
-- Jam plans: Translated to Russian when generating final PDF (or during generation)
-- Chapters: Kept in English (not translated)
+Translation happens using `src/translator.py` (Anthropic Claude API):
+- **Chapters**: Can be translated to Russian (e.g., `chapter_1.md` → `chapter_1_ru.md`)
+  - Use `Translator.translate_text()` for chapter content
+  - Manually save translated content to `data/chapters/chapter_N_ru.md`
+- **Jam plans**: Translated to Russian during generation via `JamPlanGenerator`
+  - Automatic translation when `language="ru"` is specified
 
 ## Key Features
 
@@ -102,18 +118,22 @@ Translation happens selectively:
 - **Professional PDFs**: Versioned, branded PDFs with smart image placement
 - **Session Tracking**: Log feedback and learnings from each session
 
-## Usage via Cursor Chat
+## Usage Patterns
 
-All operations are done through Cursor chat interface:
+All operations can be done via Python API or AI coding assistant:
 
-1. **Process chapter**: "Process chapter 3"
-   - Extracts chapter from PDF with OCR fallback
-   - Formats and saves to `data/chapters/chapter_3.md`
+1. **Process chapter**: Extract and format chapter text
+   - Uses `PDFProcessor` with OCR fallback
+   - Saves to `data/chapters/chapter_N.md`
 
-2. **Create jam plan**: "Create jam plan for chapters 1-2"
-   - LLM reads chapters and generates structured plan
+2. **Create jam plan**: Generate structured training session
+   - Uses `JamPlanGenerator` with LLM analysis
    - Creates markdown and PDF outputs
    - Automatic versioning (never overwrites)
+
+3. **Translate content**: Convert English to Russian
+   - Uses `Translator` with Anthropic API
+   - Supports chapters and jam plans
 
 ## Dependencies
 
@@ -124,13 +144,12 @@ All operations are done through Cursor chat interface:
 
 ## Important Implementation Notes
 
-### For AI Assistant (Cursor):
+### For AI Coding Assistants:
 
-**DO NOT create unnecessary files:**
-- Do NOT create test scripts, demo files, or temporary helper files
-- Do NOT create documentation files like IMPROVEMENTS.md, NOTES.md, etc.
-- All documentation goes in this README.md only
-- Only create files that are part of the actual system (in `src/`, `data/`, `output/`)
+**File Management:**
+- Avoid creating temporary scripts - use Python API directly or document usage in README/ARCHITECTURE
+- Keep documentation consolidated in README.md and ARCHITECTURE.md
+- Only create files that are part of the core system (`src/`, `data/`, `output/`)
 
 **Chapter Extraction:**
 - Each chapter includes exercises at the END, often in a "Chapter Review" or exercises section
@@ -162,11 +181,10 @@ All operations are done through Cursor chat interface:
 
 ## Technical Notes
 
-- The system uses Anthropic Claude Haiku 4.5 for extraction and translation
-- No CLI interface - all interaction via Cursor chat
+- The system uses Anthropic Claude API for LLM-based generation and translation
+- Python API available for all operations (see usage examples above)
 - Image processing workflow has been archived (no longer needed)
-- Chapter boundaries are detected automatically from PDF structure
-  - When a CSV page map (like `data/ucb_chapter_pages.csv`) exists, it takes precedence over automatic detection for that book
+- Chapter boundaries defined in `data/ucb_chapter_pages.csv` for UCB book
 
 # PDF Generation System
 

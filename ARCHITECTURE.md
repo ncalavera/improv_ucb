@@ -80,14 +80,12 @@ improv_ucb/
 ├── assets/                       # Images for PDFs
 │   └── *.jpg                     # UCB performance photos
 │
-├── scripts/                      # Utility scripts
-│   ├── generate_pdf.py           # Universal PDF generator CLI
-│   ├── generate_session_3.py     # Session-specific generators
-│   └── ...
+├── scripts/
+│   ├── generate_pdf.py               # Universal PDF generator CLI
+│   └── generate_session_3.py         # Session 3 specific generator
 │
-├── requirements.txt              # Python dependencies
-├── README.md                     # System documentation
-└── WORK_LOG.md                   # Development history
+├── archive/                          # Legacy files (no longer used)
+│   └── scripts/                      # Archived PDF generation scripts
 ```
 
 ---
@@ -410,11 +408,33 @@ python scripts/generate_pdf.py \
 ```
 
 ### 4. Translate Content
+
+**Translate Jam Plans:**
 ```python
 from src.translator import Translator
 
 translator = Translator()
 russian_text = translator.translate_jam_plan(english_text)
+```
+
+**Translate Chapters:**
+```python
+from src.translator import Translator
+
+# Read English chapter
+with open("data/chapters/chapter_3.md", "r") as f:
+    english_chapter = f.read()
+
+# Translate to Russian
+translator = Translator()
+russian_chapter = translator.translate_text(
+    english_chapter, 
+    context="UCB improv training chapter"
+)
+
+# Save Russian translation
+with open("data/chapters/chapter_3_ru.md", "w") as f:
+    f.write(russian_chapter)
 ```
 
 ### 5. Log Session
@@ -477,7 +497,7 @@ log_session_result(
 
 ## Architecture Weaknesses
 
-⚠️ **Manual Workflow:** Requires Cursor chat interaction (no standalone CLI)  
+⚠️ **Python API Only:** No standalone CLI tool (use Python API or AI coding assistant)  
 ⚠️ **Image Placement:** Automatic but not content-aware  
 ⚠️ **Limited Testing:** No automated test suite  
 ⚠️ **Single Book Focus:** Optimized for UCB book specifically  
