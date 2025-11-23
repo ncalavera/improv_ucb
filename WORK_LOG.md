@@ -431,3 +431,26 @@ Created first jam plan as English markdown file before translation, allowing for
   - Removed `src/framework_exercises_extractor.py`
   - Removed `data/catalog.csv`
   - Refactored `src/jam_plan_generator.py` to generate plans directly from text.
+
+### Code Cleanup: Removing Redundant Jam Plan Files
+- **Decision**: Archived legacy jam plan generation files
+- **Reasoning**: After catalog removal, `JamGenerator` (template-based) became redundant. Current workflow uses `JamPlanGenerator` (LLM-based) exclusively.
+- **Changes**:
+  - Archived `src/jam_generator.py` → `archive/jam_generator.py`
+  - Archived `scripts/create_jam_plan.py` → `archive/create_jam_plan.py`
+  - Created `archive/README.md` documenting why files were archived
+  - Updated `README.md` to reflect LLM-based workflow
+  - Updated architecture documentation to show 7 core components (was 8)
+
+**Current Workflow (Simplified):**
+```
+Chapter PDF → PDFProcessor → ChapterFormatter → Chapter Markdown
+                                                        ↓
+                                                 JamPlanGenerator (LLM)
+                                                        ↓
+                                                 Jam Plan Markdown
+                                                        ↓
+                                                  PDFGenerator
+                                                        ↓
+                                                 Versioned PDF
+```

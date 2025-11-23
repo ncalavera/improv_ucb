@@ -2,6 +2,8 @@
 
 This project processes improv books from PDF, extracts theoretical frameworks and exercises into a structured catalog, and generates jam plans through interactive dialogue.
 
+> 📚 **For detailed architecture documentation, see [ARCHITECTURE.md](ARCHITECTURE.md)**
+
 ## Overview
 
 The system works with PDF books to:
@@ -36,15 +38,22 @@ The system works with PDF books to:
 improv_ucb/
 ├── src/
 │   ├── pdf_processor.py              # PDF reading and chapter extraction
-│   ├── pdf_processor.py              # PDF reading and chapter extraction
-│   ├── jam_generator.py              # Generate PDF jam plans
-│   └── translator.py                 # Translation utilities
+│   ├── chapter_formatter.py          # Markdown cleanup and formatting
+│   ├── jam_plan_generator.py         # LLM-based jam plan generation
+│   ├── pdf_generator.py              # Universal PDF generation
+│   ├── translator.py                 # EN→RU translation (Anthropic)
+│   ├── cost_tracker.py               # API cost tracking
+│   └── session_logger.py             # Session history logging
 ├── data/
 │   ├── books/                        # Store book PDFs
 │   ├── chapters/                     # Extracted chapter text (English)
+│   ├── ucb_chapter_pages.csv         # Chapter page mappings
+│   └── session_logs.csv              # Session history
 ├── output/
 │   └── jam_plans/                    # Generated PDF jam plans
-└── archive/                          # Old scripts (archived)
+├── scripts/
+│   └── generate_pdf.py               # Universal PDF generator CLI
+└── archive/                          # Legacy files (no longer used)
 ```
 
 ## Workflow
@@ -61,16 +70,16 @@ The system will:
 
 ### 2. Generate Jam Plan
 
-**Markdown-First Workflow:**
+**LLM-Based Workflow:**
 
 Request via Cursor chat: "Create jam plan for chapters 1-2"
 
 The workflow:
-1. System reads raw chapter markdown files (`data/chapters/*.md`)
-2. LLM generates a structured Jam Plan directly from the text
-3. Output saved to `output/jam_plans/session_X_jam_plan_en.md` (or `_ru.md`)
-4. Review and iterate on content structure
-5. Generate PDFs from markdown files
+1. `JamPlanGenerator` reads raw chapter markdown files (`data/chapters/*.md`)
+2. Claude LLM analyzes chapters and extracts concepts/exercises
+3. LLM generates structured jam plan markdown (Russian or English)
+4. Markdown saved to `output/jam_plans/session_X_*.md`
+5. `PDFGenerator` creates versioned PDF with UCB branding
 
 **Jam Plan Structure:**
 - **Block-based format**: Organize by learning themes (e.g., Platform Building, Object Work, Commitment)
@@ -87,16 +96,24 @@ Translation happens selectively:
 
 ## Key Features
 
-- **Direct Text Processing**: No intermediate catalog database; works directly with book text
-- **Interactive jam planning**: Dialogue-based via Cursor chat
-- **PDF output**: Direct PDF generation for jam plans
+- **LLM-Based Jam Planning**: Claude analyzes chapters and generates structured plans automatically
+- **Direct Text Processing**: Works directly with chapter markdown files (no intermediate database)
+- **Bilingual Support**: Automatic EN→RU translation with Anthropic API
+- **Professional PDFs**: Versioned, branded PDFs with smart image placement
+- **Session Tracking**: Log feedback and learnings from each session
 
 ## Usage via Cursor Chat
 
 All operations are done through Cursor chat interface:
 
-1. **Process chapter**: "Process chapter 1"
+1. **Process chapter**: "Process chapter 3"
+   - Extracts chapter from PDF with OCR fallback
+   - Formats and saves to `data/chapters/chapter_3.md`
+
 2. **Create jam plan**: "Create jam plan for chapters 1-2"
+   - LLM reads chapters and generates structured plan
+   - Creates markdown and PDF outputs
+   - Automatic versioning (never overwrites)
 
 ## Dependencies
 
@@ -157,11 +174,12 @@ All operations are done through Cursor chat interface:
 
 The PDF generation system follows a clean separation of concerns:
 
-### JamGenerator (`src/jam_generator.py`)
-- **Purpose:** Content creation only
-- **Input:** Requirements, exercise data
-- **Output:** Pure markdown files
-- **No:** PDF generation, styling, or presentation logic
+### JamPlanGenerator (`src/jam_plan_generator.py`)
+- **Purpose:** LLM-based jam plan generation from chapter content
+- **Input:** Chapter numbers, duration, language preference
+- **Process:** Reads chapter markdown → Claude LLM extracts concepts/exercises → Formats plan
+- **Output:** Structured markdown jam plans (EN or RU)
+- **Integration:** Calls PDFGenerator for final PDF output
 
 ### PDFGenerator (`src/pdf_generator.py`)
 - **Purpose:** Universal markdown → PDF conversion
