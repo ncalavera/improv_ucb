@@ -82,6 +82,22 @@ class PDFGenerator:
         if content_type not in image_config:
             return content
 
+        # Import layout config here to avoid circular imports if any
+        try:
+            from src.layout_config import LAYOUT_CONFIG
+        except ImportError:
+            # Fallback config if file not found
+            LAYOUT_CONFIG = {
+                'chapter': {'max_images': 5, 'min_spacing': 3},
+                'jam_plan': {'max_images': 3, 'min_spacing': 2}
+            }
+
+        config = LAYOUT_CONFIG.get(content_type, {'max_images': 3, 'min_spacing': 2})
+        max_images = config.get('max_images', 3)
+        min_spacing = config.get('min_spacing', 2)
+        preferred_sections = config.get('preferred_sections', [])
+        avoid_sections = config.get('avoid_sections', [])
+
         available_images = image_config[content_type].copy()
         used_images = self.used_images.get(content_type, [])
 
@@ -95,32 +111,40 @@ class PDFGenerator:
         lines = content.split('\n')
         enhanced_lines = []
         images_used_this_doc = []
+        paragraphs_since_last_image = min_spacing  # Start ready to place
 
-        for line in lines:
+        for i, line in enumerate(lines):
             enhanced_lines.append(line)
+            
+            # Count paragraphs (roughly)
+            if line.strip() and not line.startswith('#'):
+                paragraphs_since_last_image += 1
 
-            # Add title image after main heading
-            if line.startswith('#') and not line.startswith('##') and unused_images:
-                if not any('title' in img_name for img_name in images_used_this_doc):
-                    img = unused_images.pop(0)
-                    enhanced_lines.extend([
-                        '',
-                        f'![{content_type.title()} Image](assets/{img})',
-                        ''
-                    ])
-                    images_used_this_doc.append(img)
+            # Check if we should place an image
+            if not unused_images or len(images_used_this_doc) >= max_images:
+                continue
 
-            # Add exercise/section images
-            elif ('упражнение' in line.lower() or 'exercise' in line.lower()
-                  or line.startswith('## ')) and unused_images:
-                if len(images_used_this_doc) < 3:  # Limit images per document
-                    img = unused_images.pop(0)
-                    enhanced_lines.extend([
-                        '',
-                        f'![Section Image](assets/{img})',
-                        ''
-                    ])
-                    images_used_this_doc.append(img)
+            # Don't place images too close together
+            if paragraphs_since_last_image < min_spacing:
+                continue
+
+            # Check for preferred sections
+            is_preferred = any(line.startswith(p) for p in preferred_sections)
+            is_avoided = any(line.startswith(a) for a in avoid_sections)
+
+            # Logic: Place image AFTER a preferred header, provided it's not an avoided one
+            if is_preferred and not is_avoided:
+                # Look ahead to ensure we don't break a list or immediate text awkwardly?
+                # For now, simple placement after the header line
+                
+                img = unused_images.pop(0)
+                enhanced_lines.extend([
+                    '',
+                    f'![{content_type.title()} Image](assets/{img})',
+                    ''
+                ])
+                images_used_this_doc.append(img)
+                paragraphs_since_last_image = 0
 
         # Update usage tracking
         self.used_images.setdefault(content_type, []).extend(images_used_this_doc)
