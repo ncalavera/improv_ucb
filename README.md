@@ -13,7 +13,7 @@ The system works with PDF books to:
 
 ## Setup
 
-1. Create virtual environment:
+1. Create and activate virtual environment:
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -177,8 +177,8 @@ The PDF generation system follows a clean separation of concerns:
 
 ### Quick Start
 ```bash
-# Activate PDF environment
-source .venv_pdf/bin/activate
+# Activate virtual environment
+source venv/bin/activate
 
 # Generate chapter PDFs
 python3 scripts/generate_pdf.py data/chapters/chapter_1_ru.md \
