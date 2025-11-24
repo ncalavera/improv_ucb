@@ -29,7 +29,8 @@ from dotenv import load_dotenv
 
 import anthropic  # type: ignore[import-untyped]
 
-from src.cost_tracker import CostTracker
+# Import CostTracker from the same directory (scripts/)
+from cost_tracker import CostTracker
 
 
 def _load_vars(raw: str) -> Dict[str, Any]:
