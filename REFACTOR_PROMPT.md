@@ -111,24 +111,25 @@ improv_ucb/
 
 ### Phase 2: Extract LLM Prompts
 
-1. [ ] **Book Prompts** (`prompts/book/`)
-   - `translate_chapter.md` - Extract from `src/translator.py`
-   - Template with placeholders: `{text}`, `{context}`
+1. [x] **Book Prompts** (`prompts/book/`)
+   - [x] `translate_chapter.md` - Extract from `src/translator.py`
+   - [x] `review_extracted_markdown.md` - Review and fix OCR artifacts and formatting issues
+   - [x] Template with placeholders: `{text}`, `{context}`
 
-2. [ ] **Jam Prompts** (`prompts/jam/`)
-   - `extract_concepts.md` - Extract concepts from chapters
-   - `process_feedback.md` - Process feedback text
-   - `generate_candidates.md` - Generate candidate concepts/exercises
-   - `generate_plan.md` - Generate jam plan (EN)
-   - `translate_plan.md` - Translate jam plan (EN → RU)
+2. [x] **Jam Prompts** (`prompts/jam/`)
+   - [x] `extract_concepts.md` - Extract concepts from chapters
+   - [x] `process_feedback.md` - Process feedback text
+   - [x] `generate_candidates.md` - Generate candidate concepts/exercises
+   - [x] `generate_plan.md` - Generate jam plan (EN)
+   - [x] `translate_plan.md` - Translate jam plan (EN → RU)
 
-3. [ ] **Shared Prompts** (`prompts/shared/`)
-   - `translate_generic.md` - Generic EN → RU translation
-   - `generate_image_prompts.md` - Generate prompts for image generation models (used by both book and jam workflows)
+3. [x] **Shared Prompts** (`prompts/shared/`)
+   - [x] `translate_generic.md` - Generic EN → RU translation
+   - [x] `generate_image_prompts.md` - Generate prompts for image generation models (used by both book and jam workflows)
 
 ### Phase 3: Create Workflows
 
-1. [ ] **`workflows/book.md`**
+1. [x] **`workflows/book.md`**
    ```
    ## Book Extraction Workflow
    
@@ -154,7 +155,7 @@ improv_ucb/
    - Log: scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --model pdf_generator
    ```
 
-2. [ ] **`workflows/jam.md`**
+2. [x] **`workflows/jam.md`**
    ```
    ## Jam Plan Generation Workflow
    
