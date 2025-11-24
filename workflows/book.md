@@ -150,22 +150,22 @@ wc -l tmp/chapter_{N}.md tmp/chapter_{N}_ru.md
 **IMPORTANT**: After translation, images must be manually inserted into the translated markdown file according to the placement guide.
 
 **Placement Guide Location:**
-- Default: `assets/chapter_{N}/PLACEMENT_GUIDE.md` (e.g., `assets/chapter_1/PLACEMENT_GUIDE.md` for chapter 1)
+- Default: `data/assets/chapter_{N}/PLACEMENT_GUIDE.md` (e.g., `data/assets/chapter_1/PLACEMENT_GUIDE.md` for chapter 1)
 - Or manually specify a custom path if images are organized differently
 
 **Instructions:**
 1. Open the translated markdown file: `tmp/chapter_{N}_ru.md`
 2. Locate the placement guide:
-   - Check `assets/chapter_{N}/PLACEMENT_GUIDE.md` first (where {N} is the chapter number)
-   - If not found, check `assets/` directory for any `PLACEMENT_GUIDE.md` files
+   - Check `data/assets/chapter_{N}/PLACEMENT_GUIDE.md` first (where {N} is the chapter number)
+   - If not found, check `data/assets/` directory for any `PLACEMENT_GUIDE.md` files
    - Or use a manually specified guide path
 3. Insert image markdown references at the specified locations (line numbers may need adjustment based on actual content)
-4. Image format: `![Description](assets/chapter_{N}/image_name.png)` (adjust path based on actual image location)
+4. Image format: `![Description](data/assets/chapter_{N}/image_name.png)` (adjust path based on actual image location)
 5. Ensure all image files exist in the specified assets directory
 
 **Example placement:**
 ```markdown
-![Строительные блоки "Да, и..."](assets/chapter_{N}/01_yes_and_blocks.png)
+![Строительные блоки "Да, и..."](data/assets/chapter_{N}/01_yes_and_blocks.png)
 ```
 
 **Note:** 
@@ -360,7 +360,7 @@ python scripts/run_prompt.py \
 # Cleanup: rm tmp/vars_translate.json (if using file instead of inline JSON)
 
 # Step 3: Place images in translated markdown (manual step)
-# Follow instructions in assets/chapter_${N}/PLACEMENT_GUIDE.md
+# Follow instructions in data/assets/chapter_${N}/PLACEMENT_GUIDE.md
 # Insert image markdown references at specified locations in tmp/chapter_${N}_ru.md
 
 # Step 4: Image prompts (optional - only if generating new images)

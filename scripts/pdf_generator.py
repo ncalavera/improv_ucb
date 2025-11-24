@@ -30,7 +30,7 @@ class PDFGenerator:
         if not WEASYPRINT_AVAILABLE:
             raise ImportError("WeasyPrint is required. Install with: pip install weasyprint")
 
-        self.assets_dir = assets_dir or Path.cwd() / 'assets'
+        self.assets_dir = assets_dir or Path.cwd() / 'data' / 'assets'
         self.logs_dir = logs_dir or Path.cwd() / 'logs'
         self.logs_dir.mkdir(exist_ok=True)
 
@@ -220,7 +220,7 @@ class PDFGenerator:
 
                 @bottom-right {
                     content: "";
-                    background-image: url(../../assets/logos/ucb_main_logo.jpg);
+                    background-image: url(assets/logos/ucb_main_logo.jpg);
                     background-size: contain;
                     background-repeat: no-repeat;
                     background-position: center right;
@@ -661,7 +661,7 @@ def main() -> int:
     args = parse_args()
 
     project_root = Path.cwd()
-    assets_dir = project_root / "assets"
+    assets_dir = project_root / "data" / "assets"
     logs_dir = project_root / "logs"
 
     try:
