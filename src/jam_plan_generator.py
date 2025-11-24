@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import List, Dict, Optional
 from datetime import datetime
+import re
 import anthropic
 from pdf_generator import PDFGenerator
 try:
@@ -14,13 +15,13 @@ class JamPlanGenerator:
     """Generates jam plans directly from chapter text using LLM."""
     
     def __init__(self, chapters_dir: str = "data/chapters",
-                 output_dir: str = "output/jam_plans"):
+                 output_dir: str = "output/jam_plans/markdown"):
         """
         Initialize jam plan generator.
         
         Args:
             chapters_dir: Directory containing chapter markdown files
-            output_dir: Directory for output PDF files
+            output_dir: Directory for output markdown files (default: output/jam_plans/markdown)
         """
         self.chapters_dir = Path(chapters_dir)
         self.output_dir = Path(output_dir)
@@ -265,28 +266,34 @@ Do not include conversational filler before or after the markdown.
 
     def generate_jam_plan(self, chapters: List[int], duration: int = 120,
                          title: Optional[str] = None,
-                         output_filename: Optional[str] = None) -> Path:
+                         output_filename: Optional[str] = None,
+                         session_number: Optional[int] = None,
+                         language: str = 'ru') -> Path:
         """
         Generate a complete jam plan PDF from chapter text.
         
         Args:
             chapters: List of chapter numbers
             duration: Total duration in minutes
-            title: Optional custom title
+            title: Optional custom title (used as theme name)
             output_filename: Optional output filename (without extension)
+            session_number: Optional session number (extracted from filename if not provided)
+            language: Language code ('ru' or 'en', default: 'ru')
             
         Returns:
             Path to generated PDF file
         """
         # Generate Markdown Content
-        plan_content = self.generate_plan_from_text(chapters, duration, language='ru')
+        plan_content = self.generate_plan_from_text(chapters, duration, language=language)
         
-        # Determine filename
+        # Determine filename following convention: session_{number}_jam_plan_{language}.md
         if not output_filename:
-            chapter_str = "_".join(map(str, chapters))
-            output_filename = f"session_generated_{chapter_str}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            if session_number is None:
+                # Try to infer from existing files or use timestamp
+                session_number = self._get_next_session_number()
+            output_filename = f"session_{session_number}_jam_plan_{language}"
         
-        # Save Markdown
+        # Save Markdown to markdown subdirectory
         md_path = self.output_dir / f"{output_filename}.md"
         with open(md_path, 'w', encoding='utf-8') as f:
             f.write(plan_content)
@@ -294,15 +301,37 @@ Do not include conversational filler before or after the markdown.
             
         # Generate PDF
         print(f"Generating PDF...")
-        pdf_gen = PDFGenerator(assets_dir=self.output_dir.parent.parent / 'assets', 
-                               logs_dir=self.output_dir.parent.parent / 'logs')
+        # Get project root: output_dir is output/jam_plans/markdown, so parent.parent is project root
+        project_root = self.output_dir.parent.parent
+        pdf_gen = PDFGenerator(assets_dir=project_root / 'assets', 
+                               logs_dir=project_root / 'logs')
+        
+        # Use title as theme name, or derive from chapters
+        theme_name = title or self._derive_theme_name(chapters)
         
         pdf_path = pdf_gen.generate_pdf(
             input_file=md_path,
             content_type='jam_plan',
-            theme_name=title or f"Chapters_{'_'.join(map(str, chapters))}",
+            theme_name=theme_name,
+            language=language,
             title=title or "Jam Plan"
         )
         
         print(f"✓ Jam plan PDF created: {pdf_path}")
         return pdf_path
+    
+    def _get_next_session_number(self) -> int:
+        """Get the next available session number by checking existing files."""
+        existing_numbers = []
+        for file in self.output_dir.glob("session_*_jam_plan_*.md"):
+            match = re.search(r'session_(\d+)_jam_plan', file.name)
+            if match:
+                existing_numbers.append(int(match.group(1)))
+        return max(existing_numbers) + 1 if existing_numbers else 1
+    
+    def _derive_theme_name(self, chapters: List[int]) -> str:
+        """Derive a theme name from chapter numbers (simple implementation)."""
+        # This is a simple implementation - could be enhanced to extract actual themes
+        if len(chapters) == 1:
+            return f"Chapter{chapters[0]}"
+        return f"Chapters_{'_'.join(map(str, chapters))}"

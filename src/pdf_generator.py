@@ -35,6 +35,7 @@ class PDFGenerator:
                     input_file: Path,
                     content_type: str,
                     theme_name: str,
+                    language: str = 'ru',
                     title: Optional[str] = None) -> Path:
         """
         Generate PDF from markdown file.
@@ -45,6 +46,7 @@ class PDFGenerator:
             input_file: Path to markdown file
             content_type: 'chapter' or 'jam_plan' for output directory
             theme_name: Theme name for output filename
+            language: Language code ('ru' or 'en', default: 'ru')
             title: Optional title override
 
         Returns:
@@ -55,7 +57,7 @@ class PDFGenerator:
             content = f.read()
 
         # Generate output path with versioning
-        output_path = self._generate_output_path(input_file, theme_name)
+        output_path = self._generate_output_path(input_file, theme_name, language)
 
         # Convert to HTML
         html_content = self._markdown_to_html(content, title)
@@ -68,36 +70,51 @@ class PDFGenerator:
         return output_path
 
 
-    def _generate_output_path(self, input_file: Path, theme_name: str) -> Path:
-        """Generate versioned output path."""
+    def _generate_output_path(self, input_file: Path, theme_name: str, language: str) -> Path:
+        """
+        Generate versioned output path following naming conventions.
+        
+        Naming patterns:
+        - Chapters: chapter_{number}_{theme}_{language}_v{version:03d}.pdf
+        - Jam Plans: Session{Number}_JamPlan_{Theme}_{language}_v{version:03d}.pdf
+        """
         # Extract content identifier from input file
         stem = input_file.stem
+        input_str = str(input_file)
 
-        # Extract chapter/session number
-        if 'chapter' in stem:
-            match = re.search(r'chapter_(\d+)', stem)
-            identifier = f"chapter_{match.group(1)}" if match else "chapter_X"
-        elif 'session' in stem:
-            match = re.search(r'session_(\d+)', stem)
-            identifier = f"session_{match.group(1)}" if match else "session_X"
-        else:
-            identifier = stem.replace('_ru', '').replace('_en', '')
-
-        # Create base filename
-        base_name = f"{identifier}_{theme_name}"
-
-        # Find next version number
-        # Use absolute path to project root output directory
-        # self.assets_dir is .../assets, so parent is project root
+        # Detect content type and determine output directory
         project_root = self.assets_dir.parent
         output_dir = project_root / 'output'
         
-        if 'chapters' in str(input_file):
+        # Check if input is from jam_plans/markdown/ and output to jam_plans/pdf/
+        if 'jam_plans' in input_str and 'markdown' in input_str:
+            output_dir = output_dir / 'jam_plans' / 'pdf'
+            is_jam_plan = True
+        elif 'chapters' in input_str:
             output_dir = output_dir / 'chapters'
-        elif 'jam_plans' in str(input_file):
-            output_dir = output_dir / 'jam_plans'
+            is_jam_plan = False
+        elif 'jam_plans' in input_str:
+            # Fallback: if jam_plans is in path but not markdown, assume pdf output
+            output_dir = output_dir / 'jam_plans' / 'pdf'
+            is_jam_plan = True
+        else:
+            # Default to chapters if unclear
+            output_dir = output_dir / 'chapters'
+            is_jam_plan = False
 
         output_dir.mkdir(parents=True, exist_ok=True)
+
+        # Extract number and build filename
+        if is_jam_plan:
+            # Jam plan format: Session{Number}_JamPlan_{Theme}_{language}_v{version:03d}.pdf
+            session_match = re.search(r'session_(\d+)', stem)
+            session_num = session_match.group(1) if session_match else "X"
+            base_name = f"Session{session_num}_JamPlan_{theme_name}_{language}"
+        else:
+            # Chapter format: chapter_{number}_{theme}_{language}_v{version:03d}.pdf
+            chapter_match = re.search(r'chapter_(\d+)', stem)
+            chapter_num = chapter_match.group(1) if chapter_match else "X"
+            base_name = f"chapter_{chapter_num}_{theme_name}_{language}"
 
         # Find next available version
         version = 1
@@ -109,6 +126,53 @@ class PDFGenerator:
             version += 1
 
         return output_path
+    
+    def finalize_pdf(self, versioned_pdf_path: Path, remove_other_versions: bool = True) -> Path:
+        """
+        Finalize a versioned PDF by renaming it to clean name and optionally removing other versions.
+        
+        Args:
+            versioned_pdf_path: Path to the versioned PDF file (e.g., chapter_2_CommitmentAndListening_ru_v003.pdf)
+            remove_other_versions: If True, remove other versioned files with the same base name
+            
+        Returns:
+            Path to the finalized (renamed) PDF file
+        """
+        if not versioned_pdf_path.exists():
+            raise FileNotFoundError(f"Versioned PDF not found: {versioned_pdf_path}")
+        
+        # Extract base name by removing version suffix
+        stem = versioned_pdf_path.stem
+        version_pattern = r'_v\d{3}$'
+        base_stem = re.sub(version_pattern, '', stem)
+        final_path = versioned_pdf_path.parent / f"{base_stem}.pdf"
+        
+        # Check if final file already exists
+        if final_path.exists() and final_path != versioned_pdf_path:
+            raise FileExistsError(f"Final file already exists: {final_path}")
+        
+        # Rename the versioned file to final name
+        versioned_pdf_path.rename(final_path)
+        print(f"✅ Finalized PDF: {final_path.name}")
+        
+        # Remove other versioned files if requested
+        if remove_other_versions:
+            self._remove_other_versions(final_path.parent, base_stem, final_path)
+        
+        return final_path
+    
+    def _remove_other_versions(self, directory: Path, base_stem: str, keep_file: Path) -> None:
+        """Remove all versioned files matching the base name, except the one to keep."""
+        pattern = re.compile(rf'^{re.escape(base_stem)}_v\d{{3}}\.pdf$')
+        removed_count = 0
+        
+        for file in directory.glob(f"{base_stem}_v*.pdf"):
+            if file != keep_file and pattern.match(file.name):
+                file.unlink()
+                removed_count += 1
+        
+        if removed_count > 0:
+            print(f"🗑️  Removed {removed_count} temporary version file(s)")
 
     def _markdown_to_html(self, content: str, title: Optional[str]) -> str:
         """Convert markdown to HTML with UCB styling."""
@@ -461,24 +525,19 @@ def main():
     import sys
     
     parser = argparse.ArgumentParser(description='Generate beautiful PDFs from markdown files')
-    parser.add_argument('input_file', help='Path to markdown file')
+    parser.add_argument('input_file', nargs='?', help='Path to markdown file (or versioned PDF for finalize)')
     parser.add_argument('--content-type', choices=['chapter', 'jam_plan'],
                        default='chapter', help='Type of content (default: chapter)')
-    parser.add_argument('--theme', required=True,
-                       help='Theme name for output filename (e.g., BaseReality, CommitmentAndListening)')
+    parser.add_argument('--theme', help='Theme name for output filename (e.g., BaseReality, CommitmentAndListening)')
+    parser.add_argument('--language', choices=['ru', 'en'], default='ru',
+                       help='Language code (default: ru)')
     parser.add_argument('--title', help='Optional title override for PDF')
+    parser.add_argument('--finalize', metavar='PDF_PATH', 
+                       help='Finalize a versioned PDF: remove version suffix and clean up temp versions')
+    parser.add_argument('--keep-versions', action='store_true',
+                       help='When finalizing, keep other versioned files (default: remove them)')
     
     args = parser.parse_args()
-    
-    # Validate input file
-    input_path = Path(args.input_file)
-    if not input_path.exists():
-        print(f"❌ Error: Input file not found: {input_path}")
-        sys.exit(1)
-    
-    if not input_path.suffix.lower() == '.md':
-        print(f"❌ Error: Input file must be a markdown file (.md): {input_path}")
-        sys.exit(1)
     
     # Setup paths (assume we're running from project root)
     project_root = Path.cwd()
@@ -492,6 +551,45 @@ def main():
         print(f"❌ Error: {e}")
         sys.exit(1)
     
+    # Handle finalization mode
+    if args.finalize:
+        finalize_path = Path(args.finalize)
+        if not finalize_path.exists():
+            print(f"❌ Error: PDF file not found: {finalize_path}")
+            sys.exit(1)
+        
+        if not finalize_path.suffix.lower() == '.pdf':
+            print(f"❌ Error: File must be a PDF: {finalize_path}")
+            sys.exit(1)
+        
+        try:
+            print(f"📄 Finalizing PDF: {finalize_path}")
+            final_path = pdf_gen.finalize_pdf(
+                versioned_pdf_path=finalize_path,
+                remove_other_versions=not args.keep_versions
+            )
+            print(f"🎉 Success! Finalized PDF: {final_path.name}")
+            return final_path
+        except Exception as e:
+            print(f"❌ Error finalizing PDF: {e}")
+            sys.exit(1)
+    
+    # Generate PDF mode (requires input file and theme)
+    if not args.input_file:
+        parser.error("input_file is required for PDF generation (or use --finalize)")
+    
+    if not args.theme:
+        parser.error("--theme is required for PDF generation")
+    
+    input_path = Path(args.input_file)
+    if not input_path.exists():
+        print(f"❌ Error: Input file not found: {input_path}")
+        sys.exit(1)
+    
+    if not input_path.suffix.lower() == '.md':
+        print(f"❌ Error: Input file must be a markdown file (.md): {input_path}")
+        sys.exit(1)
+    
     # Generate PDF (images must be manually included in markdown)
     try:
         print(f"📄 Generating PDF from: {input_path}")
@@ -502,6 +600,7 @@ def main():
             input_file=input_path,
             content_type=args.content_type,
             theme_name=args.theme,
+            language=args.language,
             title=args.title
         )
         
