@@ -2,18 +2,37 @@
 
 This workflow extracts chapters from PDF, translates them to Russian, and generates PDFs.
 
+**Prerequisites:**
+- Activate the virtual environment before running any commands:
+  ```bash
+  source venv/bin/activate
+  ```
+- The chapter mapping CSV is located at `data/books/mapping.csv`
+
 ## Step 1: Extract PDF → Markdown (EN)
 
 Extract chapter content from PDF and format as markdown.
 
 **Command:**
 ```bash
-python scripts/extract.py --chapter 1 --output data/chapters/en/
+source venv/bin/activate && python scripts/extract.py --chapter 1 --output data/chapters/en/
 ```
 
 **Cost Logging:**
 ```bash
-python scripts/cost_tracker.py log --operation extract --tokens 0,0 --model extract
+source venv/bin/activate && python scripts/cost_tracker.py log --operation extract --tokens 0,0 --model extract
+```
+
+**Verification:**
+```bash
+# Check file exists and has reasonable length (should be > 100 lines for a chapter)
+wc -l data/chapters/en/chapter_1.md
+
+# Verify key sections are present
+grep -E "^## |^### |Exercise:|Chapter Review" data/chapters/en/chapter_1.md | head -10
+
+# Check file ends properly (not truncated)
+tail -10 data/chapters/en/chapter_1.md
 ```
 
 **Output:** `data/chapters/en/chapter_1.md`
@@ -34,7 +53,7 @@ python scripts/cost_tracker.py log --operation extract --tokens 0,0 --model extr
 
 **Command:**
 ```bash
-python scripts/run_prompt.py \
+source venv/bin/activate && python scripts/run_prompt.py \
   --template prompts/book/review_extracted_markdown.md \
   --vars vars.json \
   --output data/chapters/en/chapter_1_fixed.md \
@@ -56,6 +75,18 @@ rm vars.json  # Remove temporary vars file
 
 **Note:** The `run_prompt.py` script automatically logs costs, so no separate cost logging step is needed.
 
+**Verification:**
+```bash
+# Check file exists and has reasonable length
+wc -l data/chapters/en/chapter_1_fixed.md
+
+# Verify key sections are present
+grep -E "^## |^### |Chapter Review" data/chapters/en/chapter_1_fixed.md
+
+# Compare line counts (fixed should be similar to or slightly less than original)
+wc -l data/chapters/en/chapter_1.md data/chapters/en/chapter_1_fixed.md
+```
+
 **Output:** `data/chapters/en/chapter_1.md` (fixed version)
 
 ---
@@ -63,6 +94,8 @@ rm vars.json  # Remove temporary vars file
 ## Step 2: Translate EN → RU
 
 Translate the extracted chapter from English to Russian.
+
+**Terminology Note:** The translation prompt preserves key English improv terms in parentheses (e.g., "Коммитмент (Commitment)") to maintain consistency with established terminology and allow reference back to original terms.
 
 **Prepare variables file** (`vars.json`):
 ```json
@@ -74,7 +107,7 @@ Translate the extracted chapter from English to Russian.
 
 **Command:**
 ```bash
-python scripts/run_prompt.py \
+source venv/bin/activate && python scripts/run_prompt.py \
   --template prompts/book/translate_chapter.md \
   --vars vars.json \
   --output data/chapters/ru/chapter_1_ru.md \
@@ -88,6 +121,21 @@ rm vars.json  # Remove temporary vars file
 ```
 
 **Note:** The `run_prompt.py` script automatically logs costs, so no separate cost logging step is needed.
+
+**Verification:**
+```bash
+# Check file exists and has reasonable length (should be similar to English version)
+wc -l data/chapters/ru/chapter_1_ru.md
+
+# Verify translation is complete - check for key sections in Russian
+grep -E "^## |^### |Обзор главы|Игра сцены" data/chapters/ru/chapter_1_ru.md
+
+# Check file ends properly (not truncated)
+tail -20 data/chapters/ru/chapter_1_ru.md
+
+# Compare with English version (Russian should be ~1.5-2x longer due to language)
+wc -l data/chapters/en/chapter_1.md data/chapters/ru/chapter_1_ru.md
+```
 
 **Output:** `data/chapters/ru/chapter_1_ru.md`
 
@@ -139,7 +187,7 @@ Generate prompts for image generation models based on the translated chapter.
 
 **Command:**
 ```bash
-python scripts/run_prompt.py \
+source venv/bin/activate && python scripts/run_prompt.py \
   --template prompts/shared/generate_image_prompts.md \
   --vars vars.json \
   --output image_prompts.txt \
@@ -150,6 +198,13 @@ python scripts/run_prompt.py \
 **Cleanup:**
 ```bash
 rm vars.json  # Remove temporary vars file
+```
+
+**Verification:**
+```bash
+# Check file exists and has content
+wc -l image_prompts.txt
+head -10 image_prompts.txt
 ```
 
 **Output:** `image_prompts.txt` (contains prompts for image generation)
@@ -164,15 +219,26 @@ Generate PDF from the translated markdown chapter.
 
 **Command:**
 ```bash
-python scripts/pdf_generator.py \
+source venv/bin/activate && python scripts/pdf_generator.py \
   --input data/chapters/ru/chapter_1_ru.md \
   --output data/chapters/pdf/ \
-  --theme BaseReality
+  --theme BaseReality \
+  --content-type chapter \
+  --language ru
 ```
 
 **Cost Logging:**
 ```bash
-python scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --model pdf_generator
+source venv/bin/activate && python scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --model pdf_generator
+```
+
+**Verification:**
+```bash
+# Check PDF was generated
+ls -lh data/chapters/pdf/chapter_1_BaseReality_*.pdf
+
+# Verify PDF has reasonable size (should be > 100KB for a chapter with images)
+du -h data/chapters/pdf/chapter_1_BaseReality_*.pdf
 ```
 
 **Output:** `data/chapters/pdf/chapter_1_BaseReality_v001.pdf` (or next version number)
@@ -184,6 +250,9 @@ python scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --mod
 For Chapter 1:
 
 ```bash
+# Activate virtual environment first
+source venv/bin/activate
+
 # Step 1: Extract
 python scripts/extract.py --chapter 1 --output data/chapters/en/
 python scripts/cost_tracker.py log --operation extract --tokens 0,0 --model extract
@@ -225,7 +294,9 @@ python scripts/run_prompt.py \
 python scripts/pdf_generator.py \
   --input data/chapters/ru/chapter_1_ru.md \
   --output data/chapters/pdf/ \
-  --theme BaseReality
+  --theme BaseReality \
+  --content-type chapter \
+  --language ru
 python scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --model pdf_generator
 ```
 

@@ -1060,7 +1060,7 @@ class PDFProcessor:
 
         return extracted_text, info
 
-    def _load_chapter_page_map(self, csv_path: str = "data/ucb_chapter_pages.csv") -> Dict[str, Dict[str, str]]:
+    def _load_chapter_page_map(self, csv_path: str = "data/books/mapping.csv") -> Dict[str, Dict[str, str]]:
         path = Path(csv_path)
         if not path.exists():
             raise FileNotFoundError(f"Chapter page map CSV not found: {csv_path}")
@@ -1085,7 +1085,7 @@ class PDFProcessor:
     def extract_chapter_from_map(
         self,
         chapter_num: int,
-        csv_path: str = "data/ucb_chapter_pages.csv",
+        csv_path: str = "data/books/mapping.csv",
     ) -> Tuple[str, Dict]:
         mapping = self._load_chapter_page_map(csv_path)
         key = f"chapter_{chapter_num}"

@@ -39,7 +39,8 @@ class PDFGenerator:
                     content_type: str,
                     theme_name: str,
                     language: str = 'ru',
-                    title: Optional[str] = None) -> Path:
+                    title: Optional[str] = None,
+                    output_dir: Optional[Path] = None) -> Path:
         """
         Generate PDF from markdown file.
         
@@ -60,7 +61,7 @@ class PDFGenerator:
             content = f.read()
 
         # Generate output path with versioning
-        output_path = self._generate_output_path(input_file, theme_name, language)
+        output_path = self._generate_output_path(input_file, theme_name, language, output_dir)
 
         # Convert to HTML
         html_content = self._markdown_to_html(content, title)
@@ -72,37 +73,52 @@ class PDFGenerator:
         print(f"✅ PDF generated: {output_path}")
         return output_path
 
-    def _generate_output_path(self, input_file: Path, theme_name: str, language: str) -> Path:
+    def _generate_output_path(self, input_file: Path, theme_name: str, language: str, custom_output_dir: Optional[Path] = None) -> Path:
         """
         Generate versioned output path following naming conventions.
         
         Naming patterns:
         - Chapters: chapter_{number}_{theme}_{language}_v{version:03d}.pdf
         - Jam Plans: Session{Number}_JamPlan_{Theme}_{language}_v{version:03d}.pdf
+        
+        Args:
+            input_file: Path to input markdown file
+            theme_name: Theme name for filename
+            language: Language code ('ru' or 'en')
+            custom_output_dir: Optional custom output directory (overrides default detection)
         """
         # Extract content identifier from input file
         stem = input_file.stem
         input_str = str(input_file)
 
-        # Detect content type and determine output directory
-        project_root = self.assets_dir.parent
-        output_dir = project_root / 'output'
-        
-        # Check if input is from jam_plans/markdown/ and output to jam_plans/pdf/
-        if 'jam_plans' in input_str and 'markdown' in input_str:
-            output_dir = output_dir / 'jam_plans' / 'pdf'
-            is_jam_plan = True
-        elif 'chapters' in input_str:
-            output_dir = output_dir / 'chapters'
-            is_jam_plan = False
-        elif 'jam_plans' in input_str:
-            # Fallback: if jam_plans is in path but not markdown, assume pdf output
-            output_dir = output_dir / 'jam_plans' / 'pdf'
-            is_jam_plan = True
+        # Use custom output directory if provided, otherwise detect from input path
+        if custom_output_dir is not None:
+            output_dir = Path(custom_output_dir)
+            # Try to detect content type from input path for naming
+            if 'jam_plans' in input_str:
+                is_jam_plan = True
+            else:
+                is_jam_plan = False
         else:
-            # Default to chapters if unclear
-            output_dir = output_dir / 'chapters'
-            is_jam_plan = False
+            # Detect content type and determine output directory
+            project_root = self.assets_dir.parent
+            output_dir = project_root / 'output'
+            
+            # Check if input is from jam_plans/markdown/ and output to jam_plans/pdf/
+            if 'jam_plans' in input_str and 'markdown' in input_str:
+                output_dir = output_dir / 'jam_plans' / 'pdf'
+                is_jam_plan = True
+            elif 'chapters' in input_str:
+                output_dir = output_dir / 'chapters'
+                is_jam_plan = False
+            elif 'jam_plans' in input_str:
+                # Fallback: if jam_plans is in path but not markdown, assume pdf output
+                output_dir = output_dir / 'jam_plans' / 'pdf'
+                is_jam_plan = True
+            else:
+                # Default to chapters if unclear
+                output_dir = output_dir / 'chapters'
+                is_jam_plan = False
 
         output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -260,6 +276,11 @@ class PDFGenerator:
             h3.exercise {
                 page-break-before: always;
             }
+            
+            /* H3 headings with new-page class should start on new page */
+            h3.new-page {
+                page-break-before: always;
+            }
 
             h4 {
                 font-size: 10.5pt;
@@ -387,10 +408,12 @@ class PDFGenerator:
         in_list = False
         in_section_div = False
         toc_inserted = False
-        # Initialize H2 counter for TOC placement
-        self._h2_count = 0
+        # Track if we've seen the "---" separator after Pages line
+        seen_pages_separator = False
+        line_index = 0
 
         for line in lines:
+            original_line = line
             line = line.strip()
 
             # Handle section wrapping for better page breaks
@@ -428,6 +451,26 @@ class PDFGenerator:
                     in_list = False
                 if not in_section_div:
                     html_parts.append('<p></p>')
+                
+                # Insert TOC after the "---" separator (which comes after Pages line)
+                if not toc_inserted and line.strip() == '---':
+                    # Look backwards to find the Pages line (skip empty lines)
+                    found_pages = False
+                    for i in range(line_index - 1, max(-1, line_index - 5), -1):
+                        if i >= 0:
+                            check_line = lines[i].strip()
+                            if check_line and ('Страницы:' in check_line or 'Pages:' in check_line):
+                                found_pages = True
+                                break
+                    
+                    if found_pages:
+                        html_parts.append('<div class="toc"><h2>Содержание</h2><ul>')
+                        for item in toc_items:
+                            html_parts.append(f'<li><a href="#{item["id"]}">{self._escape_html(item["text"])}</a></li>')
+                        html_parts.append('</ul></div>')
+                        toc_inserted = True
+                
+                line_index += 1
                 continue
 
             # Handle images: ![alt](src)
@@ -455,24 +498,13 @@ class PDFGenerator:
                     in_list = False
                 text = line[3:].strip()
                 
-                # Insert TOC after the first H2 section (usually "Что такое базовая реальность?")
-                # Strategy: Insert TOC after the first H2, before the second H2
-                should_break = any(keyword in text for keyword in ['Блок', 'Принципы обратной связи', 'Обратная связь', 'Заключительные заметки'])
-                
-                # Count H2s we've seen (excluding TOC)
-                if not hasattr(self, '_h2_count'):
-                    self._h2_count = 0
-                
-                # Insert TOC after first H2, before second H2
-                if not toc_inserted and self._h2_count == 1:
-                    # We're processing the second H2, insert TOC before it
-                    html_parts.append('<div class="toc"><h2>Содержание</h2><ul>')
-                    for item in toc_items:
-                        html_parts.append(f'<li><a href="#{item["id"]}">{self._escape_html(item["text"])}</a></li>')
-                    html_parts.append('</ul></div>')
-                    toc_inserted = True
-                
-                self._h2_count += 1
+                # Headings that should start on a new page
+                should_break = any(keyword in text for keyword in [
+                    'Блок', 'Принципы обратной связи', 'Обратная связь', 'Заключительные заметки',
+                    'Отрицание',  # Denial
+                    'Возьми дыхание и держись',  # Take a Breath & Hang In There
+                    'Как создать базовую реальность',  # How to Create a Base Reality
+                ])
 
                 css_class = ' class="new-page"' if should_break else ''
                 section_id = toc_ids.get(text, '')
@@ -486,7 +518,21 @@ class PDFGenerator:
                 text = line[4:].strip()
                 # Check if this H3 is an exercise
                 is_exercise = 'упражнение' in text.lower() or 'exercise' in text.lower()
-                css_class = ' class="exercise"' if is_exercise else ''
+                
+                # H3 headings that should start on a new page
+                should_break_h3 = any(keyword in text for keyword in [
+                    'Вариация',  # Variation
+                    'Возьми дыхание и держись',  # Take a Breath & Hang In There
+                ])
+                
+                # Build CSS classes
+                classes = []
+                if is_exercise:
+                    classes.append('exercise')
+                if should_break_h3:
+                    classes.append('new-page')
+                css_class = f' class="{" ".join(classes)}"' if classes else ''
+                
                 html_parts.append(f'<h3{css_class}>{self._escape_html(text)}</h3>')
             elif line.startswith('#### '):
                 if in_list:
@@ -532,6 +578,8 @@ class PDFGenerator:
                         escaped_parts.append(self._escape_html(part))
                 text = ''.join(escaped_parts)
                 html_parts.append(f'<p>{text}</p>')
+
+            line_index += 1
 
         if in_list:
             html_parts.append('</ul>')
@@ -598,6 +646,14 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="When finalizing, keep other versioned files (default: remove them).",
     )
+    parser.add_argument(
+        "--output",
+        "-o",
+        dest="output_dir",
+        type=str,
+        required=False,
+        help="Custom output directory for PDF (default: auto-detect from input path).",
+    )
     return parser.parse_args()
 
 
@@ -656,6 +712,11 @@ def main() -> int:
         print(f"📄 Generating PDF from: {input_path}")
         print(f"📋 Content type: {args.content_type}")
         print(f"🎨 Theme: {args.theme}")
+        
+        # Parse output directory if provided
+        output_dir = None
+        if args.output_dir:
+            output_dir = Path(args.output_dir)
 
         output_path = pdf_gen.generate_pdf(
             input_file=input_path,
@@ -663,6 +724,7 @@ def main() -> int:
             theme_name=args.theme,
             language=args.language,
             title=args.title,
+            output_dir=output_dir,
         )
         print(f"🎉 Success! PDF created: {output_path.name}")
         return 0
