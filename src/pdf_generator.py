@@ -174,7 +174,11 @@ class PDFGenerator:
         base_name = f"{identifier}_{theme_name}"
 
         # Find next version number
-        output_dir = input_file.parent.parent / 'output'
+        # Use absolute path to project root output directory
+        # self.assets_dir is .../assets, so parent is project root
+        project_root = self.assets_dir.parent
+        output_dir = project_root / 'output'
+        
         if 'chapters' in str(input_file):
             output_dir = output_dir / 'chapters'
         elif 'jam_plans' in str(input_file):
