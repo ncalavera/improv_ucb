@@ -73,9 +73,9 @@ REPLACEMENTS = {
     # Global text fixes
     "is tong rorm": "is Long Form",
     "TT. of your intelligence": "Top of your intelligence",
-    "“VES...AND”": "“YES...AND”",
+    '"VES...AND"': '"YES...AND"',
     "VES...AND": "YES...AND",
-    "“Ves...And”": "“Yes...And”",
+    '"Ves...And"': '"Yes...And"',
     "Ves...And": "Yes...And",
     "Whatis": "What is",
     "Let'S": "Let's",
@@ -86,6 +86,14 @@ REPLACEMENTS = {
     "outa ": "out a ",
     " ona ": " on a ",
     " ina ": " in a ",
+    # OCR errors: missing leading letters
+    "tis good": "It's good",
+    "ometimes": "Sometimes",
+    "tis ": "It's ",
+    "ometimes ": "Sometimes ",
+    # OCR errors: double letters
+    "SSSometimes": "Sometimes",
+    "SSSometimes ": "Sometimes ",
 }
 
 
@@ -94,19 +102,51 @@ def _format_heading_text(text: str) -> str:
     text = text.strip()
     if not text:
         return text
-    # Preserve all-uppercase text only for known special markers (like PURPOSES, SCENE, WORDS, etc.)
+    
+    # Special uppercase markers that should only be preserved when standalone
+    # When part of a larger heading, they should be title-cased
     special_uppercase_markers = {"PURPOSES", "SCENE", "WORDS", "EXAMPLES", "WHERE"}
-    if text.isupper() and text in special_uppercase_markers:
+    
+    # If the entire text is a special marker (single word), preserve it as uppercase
+    # But if it's part of a multi-word heading, title-case it
+    if text.isupper() and text in special_uppercase_markers and len(text.split()) == 1:
         return text
+    
+    # Handle trailing slash fragments
+    if text.endswith("/"):
+        text = _fix_trailing_slash_fragment(text)
+    
+    # For multi-word uppercase headings, title-case them
+    # Special markers in multi-word headings should be title-cased too
+    if text.isupper() and len(text.split()) > 1:
+        words = text.split()
+        # Title-case all words (including special markers when part of larger heading)
+        title_cased = [word.capitalize() for word in words]
+        return " ".join(title_cased)
+    
     # For single-word uppercase headings, title-case them
     if text.isupper() and len(text.split()) == 1:
         return text.capitalize()
-    if text.endswith("/"):
-        text = _fix_trailing_slash_fragment(text)
+    
+    # For mixed-case headings that contain uppercase special markers, title-case those markers
+    words = text.split()
+    if len(words) > 1:
+        title_cased_words = []
+        for word in words:
+            if word.isupper() and word in special_uppercase_markers:
+                # Title-case special markers when part of larger heading
+                title_cased_words.append(word.capitalize())
+            else:
+                title_cased_words.append(word)
+        # Only apply if we made changes
+        if title_cased_words != words:
+            return " ".join(title_cased_words)
+    
     # Title-case lowercase or mixed-case headings (unless already properly formatted)
     if not text.isupper() and not text.istitle() and not any(c.isupper() for c in text if c.isalpha()):
         # All lowercase - title case it
         return " ".join(word.capitalize() for word in text.split())
+    
     return text
 
 
@@ -150,14 +190,16 @@ def format_chapter_markdown(raw_text: str, metadata: Optional[Dict[str, str]] = 
     merged_fragments = _merge_fragmented_lines(cleaned)
     promoted = _promote_headings(merged_fragments, metadata or {})
     merged_headings = _coalesce_heading_fragments(promoted)
-    separated_headings = _split_overloaded_headings(merged_headings)
+    merged_player_labels = _merge_player_labels(merged_headings)
+    separated_headings = _split_overloaded_headings(merged_player_labels)
     compact_blanks = _drop_spurious_blank_lines(separated_headings)
     combined_lists = _combine_multiline_list_items(compact_blanks)
     reflowed = _reflow_paragraphs(combined_lists)
     trimmed = _trim_blank_runs(reflowed)
     with_heading_blanks = _ensure_blank_lines_around_headings(trimmed)
+    fixed_headings = _fix_remaining_heading_issues(with_heading_blanks)
 
-    output = "\n".join(with_heading_blanks).strip()
+    output = "\n".join(fixed_headings).strip()
     for bad, good in REPLACEMENTS.items():
         output = output.replace(bad, good)
 
@@ -300,19 +342,15 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
             if strip_line.isupper() and upper_line in {"PURPOSES"}:
                 promoted.append(strip_line)  # Keep as-is, no heading marker
             else:
+                # Use _format_heading_text which now handles title-casing properly
                 formatted = _format_heading_text(strip_line)
-                # Title case subheadings unless they're special markers
-                if formatted.isupper() and formatted not in {"PURPOSES", "SCENE", "WORDS", "EXAMPLES", "WHERE"}:
-                    formatted = " ".join(word.capitalize() for word in formatted.split())
                 promoted.append(f"### {formatted}")
             continue
 
         if strip_line.endswith(":") and len(strip_line.split()) <= 6:
             heading = strip_line[:-1].strip()
+            # Use _format_heading_text which now handles title-casing properly
             formatted = _format_heading_text(heading)
-            # Title case unless it's a special marker
-            if formatted.isupper() and formatted not in {"PURPOSES", "SCENE", "WORDS", "EXAMPLES", "WHERE"}:
-                formatted = " ".join(word.capitalize() for word in formatted.split())
             promoted.append(f"### {formatted}")
             continue
 
@@ -320,22 +358,16 @@ def _promote_headings(lines: List[str], metadata: Dict[str, str]) -> List[str]:
         if inline_heading_match and len(inline_heading_match.group(1).split()) <= 6:
             raw_heading = inline_heading_match.group(1).strip()
             rest = inline_heading_match.group(2).lstrip()
+            # Use _format_heading_text which now handles title-casing properly
             formatted = _format_heading_text(raw_heading)
-            # Title case unless it's a special marker
-            if formatted.isupper() and formatted not in {"PURPOSES", "SCENE", "WORDS", "EXAMPLES", "WHERE"}:
-                formatted = " ".join(word.capitalize() for word in formatted.split())
             promoted.append(f"### {formatted}")
             if rest:
                 promoted.append(rest[0].upper() + rest[1:])
             continue
 
         if _looks_like_major_heading(strip_line, metadata, prev_blank=prev_blank):
-            # For major headings, apply title case unless it's a special marker
+            # Use _format_heading_text which now handles title-casing properly
             formatted = _format_heading_text(strip_line)
-            # If it's all uppercase and not a special marker, title-case it
-            if formatted.isupper() and formatted not in {"PURPOSES", "SCENE", "WORDS", "EXAMPLES", "WHERE"}:
-                # Title case: capitalize first letter of each word
-                formatted = " ".join(word.capitalize() for word in formatted.split())
             promoted.append(f"## {formatted}")
             primary_heading_emitted = True
             continue
@@ -367,10 +399,71 @@ def _coalesce_heading_fragments(lines: List[str]) -> List[str]:
             marker, sep, body = base.partition(" ")
             fragment = _normalize_fragment_case(stripped)
             new_body = " ".join(part for part in (body.strip(), fragment) if part)
-            merged[-1] = f"{marker}{sep}{_format_heading_text(new_body)}"
+            # Format the merged heading - this will title-case it properly
+            formatted = _format_heading_text(new_body)
+            merged[-1] = f"{marker}{sep}{formatted}"
             continue
         merged.append(line)
 
+    return merged
+
+
+def _merge_player_labels(lines: List[str]) -> List[str]:
+    """Merge split player labels like '### Player' followed by '1:' or '1 steps' into '**Player 1:**'."""
+    merged: List[str] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+        
+        # Check if this is a "### Player" heading
+        if stripped == "### Player" or stripped == "### PLAYER":
+            # Look ahead for a number followed by colon or text
+            if i + 1 < len(lines):
+                next_line = lines[i + 1].strip()
+                # Match patterns like "1:", "2:", "ONE:", etc.
+                player_match = re.match(r"^(\d+|ONE|TWO|THREE|FOUR|FIVE|SIX|SEVEN|EIGHT|NINE|TEN)[:\.]\s*(.*)$", next_line, re.IGNORECASE)
+                if player_match:
+                    player_num = player_match.group(1)
+                    rest = player_match.group(2) if player_match.group(2) else ""
+                    # Convert word numbers to digits
+                    word_to_num = {
+                        "ONE": "1", "TWO": "2", "THREE": "3", "FOUR": "4", "FIVE": "5",
+                        "SIX": "6", "SEVEN": "7", "EIGHT": "8", "NINE": "9", "TEN": "10"
+                    }
+                    if player_num.upper() in word_to_num:
+                        player_num = word_to_num[player_num.upper()]
+                    # Create merged player label
+                    if rest:
+                        merged.append(f"**Player {player_num}:** {rest}")
+                    else:
+                        merged.append(f"**Player {player_num}:**")
+                    i += 2  # Skip both lines
+                    continue
+                # Also match patterns like "1 steps", "2 joins", etc.
+                player_match2 = re.match(r"^(\d+)\s+(.+)$", next_line)
+                if player_match2:
+                    player_num = player_match2.group(1)
+                    rest = player_match2.group(2)
+                    merged.append(f"**Player {player_num}:** {rest}")
+                    i += 2  # Skip both lines
+                    continue
+        
+        # Check for patterns like "PLAYER1:" or "PLAYER 1:" that should be formatted
+        player_pattern = re.match(r"^PLAYER\s*(\d+)[:\.]\s*(.*)$", stripped, re.IGNORECASE)
+        if player_pattern:
+            player_num = player_pattern.group(1)
+            rest = player_pattern.group(2) if player_pattern.group(2) else ""
+            if rest:
+                merged.append(f"**Player {player_num}:** {rest}")
+            else:
+                merged.append(f"**Player {player_num}:**")
+            i += 1
+            continue
+        
+        merged.append(line)
+        i += 1
+    
     return merged
 
 
@@ -413,6 +506,7 @@ def _split_overloaded_headings(lines: List[str]) -> List[str]:
 
 
 def _is_heading_tail_fragment(text: str) -> bool:
+    """Detect if a line is a heading fragment that should be merged with previous heading."""
     if not text:
         return False
     if text.startswith("#") or text.startswith("- ") or text.startswith(">"):
@@ -420,15 +514,31 @@ def _is_heading_tail_fragment(text: str) -> bool:
     # Don't merge fragments ending with "/" - they should stay on separate lines
     if text.endswith("/"):
         return False
+    # Don't merge lines that look like speaker lines or player labels
+    if re.match(r"^[A-Z][A-Z0-9 .,'\"“”\-]+\:\s", text):
+        return False
+    if re.match(r"^\d+[\.:]\s", text):
+        return False
+    # Don't merge lines that start with a number followed by text (like "1 steps")
+    if re.match(r"^\d+\s+[a-z]", text, re.IGNORECASE):
+        return False
     letters = [c for c in text if c.isalpha()]
     if not letters:
         return False
+    # Check if it's all uppercase (likely a fragment)
     if any(c.islower() for c in letters):
         return False
-    if len(text.split()) > 4:
+    # Allow single-word uppercase fragments (like "SCENE", "WORDS", etc.)
+    # and short multi-word fragments
+    words = text.split()
+    if len(words) > 4:
         return False
     if len(text) > 48:
         return False
+    # Special markers should be merged even if they're standalone
+    special_markers = {"PURPOSES", "SCENE", "WORDS", "EXAMPLES", "WHERE", "CHARACTERS", "MISTAKES", "WORK", "HINTS"}
+    if text in special_markers:
+        return True
     return True
 
 
@@ -664,6 +774,51 @@ def _ensure_blank_lines_around_headings(lines: List[str]) -> List[str]:
                 result.append("")
         result.append(line)
     return result
+
+
+def _fix_remaining_heading_issues(lines: List[str]) -> List[str]:
+    """Final pass to fix any remaining heading capitalization issues."""
+    fixed: List[str] = []
+    i = 0
+    while i < len(lines):
+        line = lines[i]
+        stripped = line.strip()
+        
+        # Fix headings that contain colons (e.g., "EXAMPLE SUGGESTION: balloon")
+        if stripped.startswith(("##", "###")):
+            parts = stripped.split(" ", 1)
+            if len(parts) == 2:
+                marker, heading_body = parts
+                # Check if heading contains a colon
+                if ":" in heading_body:
+                    # Split on colon
+                    before_colon, after_colon = heading_body.split(":", 1)
+                    # Title-case the part before colon (this will handle special markers properly)
+                    before_formatted = _format_heading_text(before_colon.strip())
+                    # Keep the part after colon as-is (might be example text)
+                    after_colon = after_colon.strip()
+                    if after_colon:
+                        fixed.append(f"{marker} {before_formatted}: {after_colon}")
+                    else:
+                        fixed.append(f"{marker} {before_formatted}:")
+                else:
+                    # No colon, just format the heading
+                    formatted = _format_heading_text(heading_body)
+                    fixed.append(f"{marker} {formatted}")
+            else:
+                fixed.append(line)
+        # Check if this is a standalone uppercase fragment that should be merged with previous heading
+        elif _is_heading_tail_fragment(stripped) and fixed and fixed[-1].strip().startswith(("##", "###")):
+            # Merge with previous heading
+            prev_line = fixed[-1].strip()
+            marker, sep, body = prev_line.partition(" ")
+            new_body = " ".join(part for part in (body.strip(), stripped) if part)
+            formatted = _format_heading_text(new_body)
+            fixed[-1] = f"{marker}{sep}{formatted}"
+        else:
+            fixed.append(line)
+        i += 1
+    return fixed
 
 
 # ---------------------------------------------------------------------------

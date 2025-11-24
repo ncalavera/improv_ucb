@@ -68,12 +68,17 @@ improv_ucb/
 
 1. [x] **`scripts/extract.py`**
    - [x] Inline `PDFProcessor` + formatter logic directly into `scripts/extract.py`
-   - [ ] Bring formatter output to parity with curated `data/chapters/*.md` (remaining issues: heading line-breaks like `Pant / NG`, uppercase “PURPOSES” sections, keeping book-style casing/quotes)
+   - [x] Enhanced formatting with heading capitalization, fragment merging, OCR error corrections, and player label formatting
+   - [ ] **IMPORTANT**: The Python script will NOT produce perfect results. After running `extract.py`, a coding agent (AI assistant) must manually review and fix remaining issues such as:
+     - Remaining OCR artifacts (garbled text, symbol soup)
+     - Edge cases in heading formatting
+     - Incomplete fragment merges
+     - Any other formatting inconsistencies
    - [ ] (Legacy deletion happens in Phase 7 after verification)
    - Combine `src/pdf_processor.py` + `src/chapter_formatter.py`
    - CLI: `extract.py --chapter N --output DIR`
    - Does: PDF extraction + formatting/cleanup in one step
-   - Output: Clean markdown file
+   - Output: Mostly clean markdown file (requires manual review and fixes)
 
 2. [x] **`scripts/pdf_generator.py`**
    - [ ] Inline `PDFGenerator` implementation into `scripts/pdf_generator.py`
@@ -130,6 +135,11 @@ improv_ucb/
    Step 1: Extract PDF → Markdown (EN)
    - Call: scripts/extract.py --chapter 1 --output data/chapters/en/
    - Log: scripts/cost_tracker.py log --operation extract --tokens 0,0 --model extract
+   
+   Step 1.5: Manual Review & Fixes (by coding agent)
+   - Review extracted markdown for remaining OCR artifacts, formatting issues, incomplete merges
+   - Manually fix any remaining problems (garbled text, heading issues, etc.)
+   - This step is necessary because the Python script cannot achieve 100% perfect results
    
    Step 2: Translate EN → RU
    - Call: scripts/run_prompt.py --template prompts/book/translate_chapter.md --vars {"text": "data/chapters/en/chapter_1.md", "context": "improv chapter"} --output data/chapters/ru/chapter_1_ru.md
