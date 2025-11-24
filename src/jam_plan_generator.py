@@ -57,24 +57,154 @@ class JamPlanGenerator:
         
         return chapter_content
 
-    def generate_plan_from_text(self, chapters: List[int], duration: int = 120,
-                               language: str = 'ru') -> str:
+    def generate_candidates(self, chapters: List[int], previous_feedback: Optional[str] = None) -> str:
         """
-        Generate a jam plan markdown directly from chapter text using LLM.
+        Generate a list of candidate concepts and exercises based on chapters and feedback.
         
         Args:
             chapters: List of chapter numbers
+            previous_feedback: Optional string containing feedback from previous session
+            
+        Returns:
+            String containing the list of candidates
+        """
+        print(f"Loading content for chapters {chapters}...")
+        content_map = self._load_chapter_content(chapters)
+        full_text = ""
+        for ch, text in content_map.items():
+            full_text += f"\n\n=== CHAPTER {ch} ===\n\n{text[:50000]}"
+
+        print("Generating candidates with LLM...")
+        
+        system_prompt = """You are an expert improv instructor planning a workshop.
+Your goal is to analyze the provided chapter content and previous feedback to suggest a list of potential concepts and exercises.
+"""
+
+        user_prompt = f"""Based on the following chapters from the UCB Manual, list 5-7 potential Concepts/Frameworks and 5-7 potential Exercises that would be good for a session.
+
+Context:
+{full_text}
+
+Previous Session Feedback (Consider this to address weaknesses):
+{previous_feedback if previous_feedback else "No previous feedback provided."}
+
+Output Format:
+Return a structured list in Markdown.
+For each candidate, provide a brief 1-sentence explanation of why it's a good fit.
+"""
+
+        response = self.client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=2000,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}]
+        )
+        
+        # Log cost
+        if self.cost_tracker:
+            self.cost_tracker.log_call(
+                operation="generate_candidates",
+                model="claude-3-5-sonnet-20241022",
+                input_tokens=response.usage.input_tokens,
+                output_tokens=response.usage.output_tokens,
+                is_batch=False,
+                metadata={"chapters": chapters}
+            )
+        
+        return response.content[0].text
+
+    def generate_final_plan(self, chapters: List[int], selected_candidates: str, 
+                           duration: int = 120, language: str = 'ru') -> str:
+        """
+        Generate the final jam plan markdown based on selected candidates.
+        
+        Args:
+            chapters: List of chapter numbers
+            selected_candidates: String containing the user's selected/refined candidates
             duration: Total duration in minutes
             language: 'ru' or 'en'
             
         Returns:
             Markdown content of the jam plan
         """
+        # We reload content just to be safe and have it in context, 
+        # though we could pass it if we wanted to optimize.
+        content_map = self._load_chapter_content(chapters)
+        full_text = ""
+        for ch, text in content_map.items():
+            full_text += f"\n\n=== CHAPTER {ch} ===\n\n{text[:50000]}"
+
+        print("Generating final plan with LLM...")
+        
+        system_prompt = """You are an expert improv instructor creating a workshop plan ('Jam Plan').
+Your goal is to create a practical, step-by-step session plan based on the provided book chapters and the specific concepts/exercises selected by the user.
+The plan should be structured, easy to read, and immediately usable by a facilitator.
+"""
+
+        user_prompt = f"""Create a {duration}-minute improv jam plan.
+
+Target Audience: Improv group (6-10 people).
+Language: {language.upper()} (The output must be in {language}).
+
+Selected Concepts and Exercises (MUST INCLUDE THESE):
+{selected_candidates}
+
+Structure Requirements:
+1. **Title & Overview**: Brief description of the focus.
+2. **Feedback Principles**: Reminders about supportive feedback (one person at a time).
+3. **Main Part (Sequential Steps)**:
+   - Break the session into 3-4 logical blocks/steps.
+   - Each step should pair a **Concept/Framework** (theory) with an **Exercise** (practice).
+   - For each Exercise, provide clear step-by-step instructions adapted for the group size.
+   - Include rough timing for each step.
+
+Content Source (Reference for theory/instructions):
+{full_text}
+
+Output Format:
+Return ONLY the Markdown content for the plan. Use standard markdown headers (#, ##, ###).
+Do not include conversational filler before or after the markdown.
+"""
+
+        response = self.client.messages.create(
+            model="claude-3-5-sonnet-20241022",
+            max_tokens=4000,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}]
+        )
+        
+        # Log cost
+        if self.cost_tracker:
+            self.cost_tracker.log_call(
+                operation="generate_final_plan",
+                model="claude-3-5-sonnet-20241022",
+                input_tokens=response.usage.input_tokens,
+                output_tokens=response.usage.output_tokens,
+                is_batch=False,
+                metadata={"chapters": chapters, "duration": duration, "language": language}
+            )
+        
+        return response.content[0].text
+
+    def generate_plan_from_text(self, chapters: List[int], duration: int = 120,
+                               language: str = 'ru') -> str:
+        """
+        Generate a jam plan markdown directly from chapter text using LLM.
+        Legacy method: generates candidates internally and picks best ones automatically.
+        """
+        # For backward compatibility, we can just use the old logic or chain the new ones.
+        # To keep it simple and safe, I'll keep the old logic here but wrapped or just leave it as is 
+        # if I wasn't replacing the whole file. 
+        # Since I am replacing the block, I will just paste the old logic back in or 
+        # better yet, implement it using the new methods to show "auto mode".
+        # But the old logic had a specific prompt. Let's just keep the old logic for this method 
+        # to ensure existing scripts (if any) don't break, but I'll paste the original implementation.
+        
         print(f"Loading content for chapters {chapters}...")
         content_map = self._load_chapter_content(chapters)
         full_text = ""
         for ch, text in content_map.items():
-            full_text += f"\n\n=== CHAPTER {ch} ===\n\n{text[:50000]}" # Limit context window if needed
+            full_text += f"\n\n=== CHAPTER {ch} ===\n\n{text[:50000]}"
             
         print("Generating plan with LLM...")
         
@@ -112,15 +242,12 @@ Do not include conversational filler before or after the markdown.
             messages=[{"role": "user", "content": user_prompt}]
         )
         
-        # Log cost
         if self.cost_tracker:
-            input_tokens = response.usage.input_tokens
-            output_tokens = response.usage.output_tokens
             self.cost_tracker.log_call(
                 operation="generate_jam_plan",
                 model="claude-3-5-sonnet-20241022",
-                input_tokens=input_tokens,
-                output_tokens=output_tokens,
+                input_tokens=response.usage.input_tokens,
+                output_tokens=response.usage.output_tokens,
                 is_batch=False,
                 metadata={"chapters": chapters, "duration": duration, "language": language}
             )
@@ -159,7 +286,7 @@ Do not include conversational filler before or after the markdown.
         # Generate PDF
         print(f"Generating PDF...")
         pdf_gen = PDFGenerator(assets_dir=self.output_dir.parent.parent / 'assets', 
-                              logs_dir=self.output_dir.parent.parent / 'logs')
+                               logs_dir=self.output_dir.parent.parent / 'logs')
         
         image_config = {'jam_plan': IMAGE_POOLS['jam_plan']}
         

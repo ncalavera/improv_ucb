@@ -135,6 +135,16 @@ All operations can be done via Python API or AI coding assistant:
    - Uses `Translator` with Anthropic API
    - Supports chapters and jam plans
 
+4. **Interactive Jam Flow (Agent Workflow)**:
+   - Use the AI agent to guide you through a strict 4-step process.
+   - **Command**: "Run the jam flow", "Let's create a plan for next session", "Let's create jam plan"
+   - **Steps**:
+     1. Context Selection (Chapter)
+     2. History & Feedback Retrieval
+     3. Candidate Generation & Selection
+     4. Final Plan Generation
+   - Defined in `.agent/workflows/jam_flow.md`
+
 ## Dependencies
 
 - `anthropic` - Anthropic API client
