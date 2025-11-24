@@ -137,7 +137,7 @@ All operations can be done via Python API or AI coding assistant:
 
 4. **Interactive Jam Flow (Agent Workflow)**:
    - Use the AI agent to guide you through a strict 4-step process.
-   - **Command**: "Run the jam flow", "Let's create a plan for next session", "Let's create jam plan"
+   - **Command**: `/jamplan`, "Run the jam flow", "Let's create a jam plan"
    - **Steps**:
      1. Context Selection (Chapter)
      2. History & Feedback Retrieval

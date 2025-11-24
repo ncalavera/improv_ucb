@@ -250,22 +250,31 @@ class PDFGenerator:
             }
 
             h2 {
-                font-size: 14pt;
+                font-size: 13pt;
                 font-weight: bold;
-                margin-top: 18pt;
-                margin-bottom: 10pt;
-                color: #000;
-                page-break-after: avoid;
-                page-break-before: auto;
-            }
-
-            h3 {
-                font-size: 12pt;
-                font-weight: bold;
-                margin-top: 12pt;
+                margin-top: 14pt;
                 margin-bottom: 8pt;
                 color: #000;
                 page-break-after: avoid;
+            }
+
+            /* H2 sections that should start on new page */
+            h2.new-page {
+                page-break-before: always;
+            }
+
+            h3 {
+                font-size: 11.5pt;
+                font-weight: bold;
+                margin-top: 10pt;
+                margin-bottom: 6pt;
+                color: #000;
+                page-break-after: avoid;
+            }
+
+            /* H3 exercises should start on new page */
+            h3.exercise {
+                page-break-before: always;
             }
 
             p {
@@ -300,13 +309,13 @@ class PDFGenerator:
                 display: none;
             }
 
-            /* Image styling */
+            /* Image styling - 55% centered */
             img {
-                max-width: 100%;
-                max-height: 35vh;
+                max-width: 55%;
+                max-height: 28vh;
                 height: auto;
                 display: block;
-                margin: 12pt auto;
+                margin: 10pt auto;
                 object-fit: contain;
                 page-break-inside: avoid;
             }
@@ -325,14 +334,62 @@ class PDFGenerator:
                 page-break-inside: avoid;
                 margin-bottom: 8pt;
             }
+
+            /* TOC styling */
+            .toc {
+                margin: 15pt 0 20pt 0;
+                padding: 10pt;
+                background-color: #fff;
+                border-top: 1px solid #ddd;
+                border-bottom: 1px solid #ddd;
+            }
+            .toc h2 {
+                margin: 0 0 10pt 0;
+                font-size: 12pt;
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                border: none;
+            }
+            .toc ul {
+                margin: 0;
+                padding-left: 0;
+                list-style-type: none;
+            }
+            .toc li {
+                margin: 4pt 0;
+                font-size: 10pt;
+            }
+            .toc a {
+                text-decoration: none;
+                color: #000;
+                display: block;
+            }
+            .toc a::after {
+                content: leader('.') target-counter(attr(href), page);
+                float: right;
+            }
         ''')
 
         html_parts.append('</style></head><body>')
 
         # Process content line by line
         lines = content.split('\n')
+        
+        # Extract headings for TOC
+        toc_items = []
+        toc_ids = {} # Map heading text to ID
+        for i, line in enumerate(lines):
+             if line.strip().startswith('## '):
+                 text = line.strip()[3:].strip()
+                 # Generate simple ID
+                 section_id = f"section-{len(toc_items) + 1}"
+                 toc_items.append({'text': text, 'id': section_id})
+                 toc_ids[text] = section_id
+
         in_list = False
         in_section_div = False
+        toc_inserted = False
 
         for line in lines:
             line = line.strip()
@@ -380,18 +437,45 @@ class PDFGenerator:
                     in_list = False
                 text = line[2:].strip()
                 html_parts.append(f'<h1>{self._escape_html(text)}</h1>')
+                
             elif line.startswith('## '):
                 if in_list:
                     html_parts.append('</ul>')
                     in_list = False
                 text = line[3:].strip()
-                html_parts.append(f'<h2>{self._escape_html(text)}</h2>')
+                
+                # Insert TOC before the second H2 (usually "Обратная связь") or if it's the first one but not "Обзор"
+                # Actually, user wants it at the bottom of first page.
+                # Strategy: Insert TOC before any H2 that forces a page break (class "new-page")
+                # OR before the second H2 if no page break.
+                
+                should_break = any(keyword in text for keyword in ['Блок', 'Принципы обратной связи', 'Обратная связь', 'Заключительные заметки'])
+                
+                if not toc_inserted and (should_break or len(toc_items) > 0): 
+                    # If we hit a page break section, definitely insert TOC before it.
+                    # Or if this is just the second section.
+                    # Let's use a simpler heuristic: Insert before the first section that is NOT "Обзор сессии".
+                    if "Обзор сессии" not in text:
+                         html_parts.append('<div class="toc"><h2>Содержание</h2><ul>')
+                         for item in toc_items:
+                             html_parts.append(f'<li><a href="#{item["id"]}">{self._escape_html(item["text"])}</a></li>')
+                         html_parts.append('</ul></div>')
+                         toc_inserted = True
+
+                css_class = ' class="new-page"' if should_break else ''
+                section_id = toc_ids.get(text, '')
+                id_attr = f' id="{section_id}"' if section_id else ''
+                
+                html_parts.append(f'<h2{css_class}{id_attr}>{self._escape_html(text)}</h2>')
             elif line.startswith('### '):
                 if in_list:
                     html_parts.append('</ul>')
                     in_list = False
                 text = line[4:].strip()
-                html_parts.append(f'<h3>{self._escape_html(text)}</h3>')
+                # Check if this H3 is an exercise
+                is_exercise = 'упражнение' in text.lower() or 'exercise' in text.lower()
+                css_class = ' class="exercise"' if is_exercise else ''
+                html_parts.append(f'<h3{css_class}>{self._escape_html(text)}</h3>')
             elif line.startswith('- ') or line.startswith('* '):
                 if not in_list:
                     html_parts.append('<ul>')

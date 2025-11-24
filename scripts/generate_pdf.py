@@ -39,8 +39,8 @@ def main():
     parser.add_argument('--theme', required=True,
                        help='Theme name for output filename (e.g., BaseReality, CommitmentAndListening)')
     parser.add_argument('--title', help='Optional title override for PDF')
-    parser.add_argument('--no-images', action='store_true',
-                       help='Skip image enhancement')
+    parser.add_argument('--add-images', action='store_true',
+                       help='Automatically add extra images (default: use only images in markdown)')
 
     args = parser.parse_args()
 
@@ -66,8 +66,8 @@ def main():
         print(f"❌ Error: {e}")
         sys.exit(1)
 
-    # Prepare image configuration
-    image_config = None if args.no_images else {args.content_type: IMAGE_CONFIGS[args.content_type]}
+    # Prepare image configuration (default: None = manual images only)
+    image_config = {args.content_type: IMAGE_CONFIGS[args.content_type]} if args.add_images else None
 
     # Generate PDF
     try:
