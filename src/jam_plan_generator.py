@@ -5,7 +5,6 @@ from typing import List, Dict, Optional
 from datetime import datetime
 import anthropic
 from pdf_generator import PDFGenerator
-from layout_config import IMAGE_POOLS
 try:
     from cost_tracker import CostTracker
 except ImportError:
@@ -298,13 +297,10 @@ Do not include conversational filler before or after the markdown.
         pdf_gen = PDFGenerator(assets_dir=self.output_dir.parent.parent / 'assets', 
                                logs_dir=self.output_dir.parent.parent / 'logs')
         
-        image_config = {'jam_plan': IMAGE_POOLS['jam_plan']}
-        
         pdf_path = pdf_gen.generate_pdf(
             input_file=md_path,
             content_type='jam_plan',
             theme_name=title or f"Chapters_{'_'.join(map(str, chapters))}",
-            image_config=image_config,
             title=title or "Jam Plan"
         )
         

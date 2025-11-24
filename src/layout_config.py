@@ -32,19 +32,5 @@ LAYOUT_CONFIG: Dict[str, Any] = {
     }
 }
 
-# Image pools (fallback if not provided dynamically)
-IMAGE_POOLS: Dict[str, List[str]] = {
-    'chapter': [
-        'Screenshot 2025-11-23 at 22.33.09.png',
-        'Screenshot 2025-11-23 at 22.34.18.png',
-        'kristen_schaal_performance.jpg',
-        'john_early_performance.jpg'
-    ],
-    'jam_plan': [
-        'bigger_show.jpg',
-        'asssscat_will_ferrell.jpg',
-        'ego_nwodim_asssscat.jpg',
-        'jon_gabrus_asssscat.jpg',
-        'ucb_improv_training.jpg'
-    ]
-}
+# Image pools removed - images must be manually included in markdown files
+# Only images in chapter_1/ and chapter_2/ folders are available

@@ -31,23 +31,20 @@ class PDFGenerator:
         self.logs_dir = logs_dir or Path.cwd() / 'logs'
         self.logs_dir.mkdir(exist_ok=True)
 
-        self.image_usage_log = self.logs_dir / 'image_usage.json'
-        self._load_image_usage()
-
     def generate_pdf(self,
                     input_file: Path,
                     content_type: str,
                     theme_name: str,
-                    image_config: Optional[Dict[str, List[str]]] = None,
                     title: Optional[str] = None) -> Path:
         """
         Generate PDF from markdown file.
+        
+        Images must be manually included in the markdown file.
 
         Args:
             input_file: Path to markdown file
-            content_type: 'chapter' or 'jam_plan' for image selection
+            content_type: 'chapter' or 'jam_plan' for output directory
             theme_name: Theme name for output filename
-            image_config: Dict with image lists per content type
             title: Optional title override
 
         Returns:
@@ -56,12 +53,6 @@ class PDFGenerator:
         # Read markdown content
         with open(input_file, 'r', encoding='utf-8') as f:
             content = f.read()
-
-        # Enhance content with images
-        if image_config:
-            content = self._enhance_content_with_images(
-                content, content_type, image_config
-            )
 
         # Generate output path with versioning
         output_path = self._generate_output_path(input_file, theme_name)
@@ -76,84 +67,6 @@ class PDFGenerator:
         print(f"✅ PDF generated: {output_path}")
         return output_path
 
-    def _enhance_content_with_images(self, content: str, content_type: str,
-                                   image_config: Dict[str, List[str]]) -> str:
-        """Add images to content based on content type and usage tracking."""
-        if content_type not in image_config:
-            return content
-
-        # Import layout config here to avoid circular imports if any
-        try:
-            from layout_config import LAYOUT_CONFIG
-        except ImportError:
-            # Fallback config if file not found
-            LAYOUT_CONFIG = {
-                'chapter': {'max_images': 5, 'min_spacing': 3},
-                'jam_plan': {'max_images': 3, 'min_spacing': 2}
-            }
-
-        config = LAYOUT_CONFIG.get(content_type, {'max_images': 3, 'min_spacing': 2})
-        max_images = config.get('max_images', 3)
-        min_spacing = config.get('min_spacing', 2)
-        preferred_sections = config.get('preferred_sections', [])
-        avoid_sections = config.get('avoid_sections', [])
-
-        available_images = image_config[content_type].copy()
-        used_images = self.used_images.get(content_type, [])
-
-        # Filter out recently used images
-        unused_images = [img for img in available_images if img not in used_images]
-        if not unused_images:
-            # Reset if all images used
-            unused_images = available_images
-            self.used_images[content_type] = []
-
-        lines = content.split('\n')
-        enhanced_lines = []
-        images_used_this_doc = []
-        paragraphs_since_last_image = min_spacing  # Start ready to place
-
-        for i, line in enumerate(lines):
-            enhanced_lines.append(line)
-            
-            # Count paragraphs (roughly)
-            if line.strip() and not line.startswith('#'):
-                paragraphs_since_last_image += 1
-
-            # Check if we should place an image
-            if not unused_images or len(images_used_this_doc) >= max_images:
-                continue
-
-            # Don't place images too close together
-            if paragraphs_since_last_image < min_spacing:
-                continue
-
-            # Check for preferred sections
-            is_preferred = any(line.startswith(p) for p in preferred_sections)
-            is_avoided = any(line.startswith(a) for a in avoid_sections)
-
-            # Logic: Place image AFTER a preferred header, provided it's not an avoided one
-            if is_preferred and not is_avoided:
-                # Look ahead to ensure we don't break a list or immediate text awkwardly?
-                # For now, simple placement after the header line
-                
-                img = unused_images.pop(0)
-                enhanced_lines.extend([
-                    '',
-                    f'![{content_type.title()} Image](assets/{img})',
-                    ''
-                ])
-                images_used_this_doc.append(img)
-                paragraphs_since_last_image = 0
-
-        # Update usage tracking
-        self.used_images.setdefault(content_type, []).extend(images_used_this_doc)
-        self._save_image_usage()
-
-        if images_used_this_doc:
-            print(f"📷 Images added: {', '.join(images_used_this_doc)}")
-
-        return '\n'.join(enhanced_lines)
 
     def _generate_output_path(self, input_file: Path, theme_name: str) -> Path:
         """Generate versioned output path."""
@@ -225,7 +138,7 @@ class PDFGenerator:
 
                 @bottom-right {
                     content: "";
-                    background-image: url(../../assets/ucb_main_logo.jpg);
+                    background-image: url(../../assets/logos/ucb_main_logo.jpg);
                     background-size: contain;
                     background-repeat: no-repeat;
                     background-position: center right;
@@ -540,21 +453,65 @@ class PDFGenerator:
         text = text.replace("'", '&#39;')
         return text
 
-    def _load_image_usage(self):
-        """Load image usage tracking from JSON file."""
-        try:
-            if self.image_usage_log.exists():
-                with open(self.image_usage_log, 'r', encoding='utf-8') as f:
-                    self.used_images = json.load(f)
-            else:
-                self.used_images = {}
-        except (json.JSONDecodeError, IOError):
-            self.used_images = {}
 
-    def _save_image_usage(self):
-        """Save image usage tracking to JSON file."""
-        try:
-            with open(self.image_usage_log, 'w', encoding='utf-8') as f:
-                json.dump(self.used_images, f, indent=2, ensure_ascii=False)
-        except IOError as e:
-            print(f"Warning: Could not save image usage log: {e}")
+
+def main():
+    """CLI entry point for PDF generation."""
+    import argparse
+    import sys
+    
+    parser = argparse.ArgumentParser(description='Generate beautiful PDFs from markdown files')
+    parser.add_argument('input_file', help='Path to markdown file')
+    parser.add_argument('--content-type', choices=['chapter', 'jam_plan'],
+                       default='chapter', help='Type of content (default: chapter)')
+    parser.add_argument('--theme', required=True,
+                       help='Theme name for output filename (e.g., BaseReality, CommitmentAndListening)')
+    parser.add_argument('--title', help='Optional title override for PDF')
+    
+    args = parser.parse_args()
+    
+    # Validate input file
+    input_path = Path(args.input_file)
+    if not input_path.exists():
+        print(f"❌ Error: Input file not found: {input_path}")
+        sys.exit(1)
+    
+    if not input_path.suffix.lower() == '.md':
+        print(f"❌ Error: Input file must be a markdown file (.md): {input_path}")
+        sys.exit(1)
+    
+    # Setup paths (assume we're running from project root)
+    project_root = Path.cwd()
+    assets_dir = project_root / 'assets'
+    logs_dir = project_root / 'logs'
+    
+    # Initialize PDF generator
+    try:
+        pdf_gen = PDFGenerator(assets_dir=assets_dir, logs_dir=logs_dir)
+    except ImportError as e:
+        print(f"❌ Error: {e}")
+        sys.exit(1)
+    
+    # Generate PDF (images must be manually included in markdown)
+    try:
+        print(f"📄 Generating PDF from: {input_path}")
+        print(f"📋 Content type: {args.content_type}")
+        print(f"🎨 Theme: {args.theme}")
+        
+        output_path = pdf_gen.generate_pdf(
+            input_file=input_path,
+            content_type=args.content_type,
+            theme_name=args.theme,
+            title=args.title
+        )
+        
+        print(f"🎉 Success! PDF created: {output_path.name}")
+        return output_path
+    
+    except Exception as e:
+        print(f"❌ Error generating PDF: {e}")
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
