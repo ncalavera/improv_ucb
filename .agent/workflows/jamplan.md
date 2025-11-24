@@ -118,3 +118,94 @@ plan_markdown = generator.generate_final_plan(
 - **Step 3 (Candidate Selection)**: Can be skipped if user already knows exact exercises
 - **Step 4 (Final Generation)**: Use custom script for complex structure requirements
 - **Verification**: Always check generated plan length (should be 300-500 lines for 2-hour session)
+
+---
+
+## PDF Layout Rules
+
+When generating jam plans, follow these markdown structure and PDF layout rules:
+
+### Markdown Structure
+
+1. **H1** (`#`) - Main title only ("План импров-джема, сессия X")
+2. **H2** (`##`) - Major sections:
+   - "Обзор сессии" - stays on same page as H1
+   - "Обратная связь: Сессия X" - starts NEW page
+   - "Принципы обратной связи" - starts NEW page  
+   - "Блок 1", "Блок 2", etc. - each starts NEW page
+3. **H3** (`###`) - Subsections:
+   - "Концепция:" - NO page break
+   - "Упражнение:" or "УПРАЖНЕНИЕ:" - starts NEW page
+   - Feedback subsections (1. Общее впечатление, 2. Что работало, etc.) - NO page break
+
+### Image Placement
+
+- **Size**: 65% width, centered
+- **Format**: `![Description](assets/chapter_X/image_name.png)`
+- **Placement**: After concept explanations, before or after exercises
+- Use images from `assets/chapter_1/` and `assets/chapter_2/` based on PLACEMENT_GUIDE.md
+
+### Page Break Logic (Automatic in PDF Generator)
+
+The PDF generator automatically applies these rules:
+- H2 with keywords "Блок", "Принципы обратной связи", "Обратная связь" → new page
+- H3 with keyword "упражнение" or "exercise" (case-insensitive) → new page
+- All other headings → no page break
+
+### Feedback Section Structure
+
+```markdown
+## Обратная связь: Сессия X (Структурировано)
+
+**Источник:** ...
+**Дата:** ...
+
+---
+
+### 1. Общее впечатление
+...
+
+### 2. Что работало (Positives)
+#### Subsection
+...
+
+### 3. Сложности (Challenges)
+...
+
+### 4. Инсайты и Предложения
+...
+
+### 5. Дебаты
+...
+
+---
+
+**Итог для сегодняшней сессии:**
+...
+```
+
+**Important**: All subsections (###) within feedback stay on ONE page together.
+
+### Table of Contents (Auto-Generated)
+
+The script automatically generates a Table of Contents (TOC) with page numbers:
+- **Placement**: Automatically inserted before the second H2 heading (usually "Обратная связь") or at the bottom of the first page.
+- **Content**: Collects all H2 headings.
+- **Styling**: Uses `target-counter` CSS for page numbers.
+
+### PDF Generation Command
+
+```bash
+# Default: manual images only (recommended)
+venv/bin/python scripts/generate_pdf.py \
+  output/jam_plans/session_X_jam_plan_ru.md \
+  --content-type jam_plan \
+  --theme SessionX_ThemeName
+
+# Optional: add automatic extra images (not recommended)
+venv/bin/python scripts/generate_pdf.py \
+  output/jam_plans/session_X_jam_plan_ru.md \
+  --content-type jam_plan \
+  --theme SessionX_ThemeName \
+  --add-images
+```
