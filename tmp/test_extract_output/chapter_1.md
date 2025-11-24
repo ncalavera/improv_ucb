@@ -335,7 +335,6 @@ In real life, you are usually doing one thing and talking about another. For exa
 - Getting the who-what-where out
 - Doing good object work when we mime props
 - Keeping the reality real, not wacky
-
 - Find Yes And in a Real Conversation
 - Character of the Space
 - Talk About Something Else

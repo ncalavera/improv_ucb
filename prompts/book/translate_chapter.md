@@ -4,7 +4,7 @@ Translate a chapter from English to Russian, preserving structure and formatting
 
 ## Variables
 - `text` - The chapter text to translate (raw text content)
-- `context` - Optional context prefix. Format as "Context: {value}. " if provided, or empty string "" if not needed.
+- `context` - Optional context prefix. Format as "Context: {{value}}. " if provided, or empty string "" if not needed.
 
 ## Prompt
 

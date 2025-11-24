@@ -69,11 +69,12 @@ improv_ucb/
 1. [x] **`scripts/extract.py`**
    - [x] Inline `PDFProcessor` + formatter logic directly into `scripts/extract.py`
    - [x] Enhanced formatting with heading capitalization, fragment merging, OCR error corrections, and player label formatting
-   - [ ] **IMPORTANT**: The Python script will NOT produce perfect results. After running `extract.py`, a coding agent (AI assistant) must manually review and fix remaining issues such as:
+   - [x] **IMPORTANT**: The Python script will NOT produce perfect results. After running `extract.py`, use `run_prompt.py` with `review_extracted_markdown.md` to fix remaining issues:
      - Remaining OCR artifacts (garbled text, symbol soup)
      - Edge cases in heading formatting
      - Incomplete fragment merges
      - Any other formatting inconsistencies
+   - [x] **TESTED**: Successfully tested with chapter 1 in `tmp/test_extract_output/`
    - [ ] (Legacy deletion happens in Phase 7 after verification)
    - Combine `src/pdf_processor.py` + `src/chapter_formatter.py`
    - CLI: `extract.py --chapter N --output DIR`
@@ -98,16 +99,19 @@ improv_ucb/
    - **Called after every LLM operation and script run**
 
 4. [x] **`scripts/run_prompt.py`** (NEW)
+   - [x] Helper script to execute LLM prompts
+   - [x] CLI: `run_prompt.py --template prompts/path/to/prompt.md --vars vars.json --output output.txt [--model MODEL] [--max-tokens N]`
+   - [x] Features:
+     - Load prompt template from file
+     - Load variables from JSON file or inline JSON string
+     - Call Anthropic API with prompt + variables
+     - **Auto-streaming** for requests > 8K tokens (required for long outputs)
+     - **Default max_tokens: 64,000** (max for Claude 4.5 models)
+     - Save response to output file
+     - Automatically call `CostTracker` to log usage
+   - [x] **TESTED**: Successfully tested with review and translation prompts
    - [ ] Ensure no remaining dependencies on `src/translator.py` / `src/jam_plan_generator.py`
    - [ ] (Legacy deletion happens in Phase 7 after prompt extraction is complete)
-   - Helper script to execute LLM prompts
-   - CLI: `run_prompt.py --template prompts/path/to/prompt.md --vars vars.json --output output.txt`
-   - Does:
-     - Load prompt template from file
-     - Load variables from JSON
-     - Call Anthropic API with prompt + variables
-     - Save response to output file
-     - Automatically call `cost_tracker.py` to log usage
 
 ### Phase 2: Extract LLM Prompts
 
@@ -130,6 +134,16 @@ improv_ucb/
 ### Phase 3: Create Workflows
 
 1. [x] **`workflows/book.md`**
+   - [x] Complete workflow with all steps documented
+   - [x] **Model selection strategy**:
+     - Haiku 4.5 for translation and OCR fixes (faster, cheaper: $1/$5 per MTok)
+     - Sonnet 4.5 for concept extraction (smarter: $3/$15 per MTok)
+   - [x] **Image placement step** added (Step 3) with flexible guide location
+   - [x] **Cleanup steps** added (remove temporary vars.json files)
+   - [x] **TESTED**: End-to-end test with chapter 1 in `tmp/test_extract_output/`:
+     - ✅ Step 1: Extract (341 lines)
+     - ✅ Step 1.5: Review & Fix (321 lines, complete)
+     - ✅ Step 2: Translate (321 lines, complete, 13,491 output tokens)
    ```
    ## Book Extraction Workflow
    
@@ -214,9 +228,14 @@ Simple documentation:
 
 ### Phase 6: Final Testing & Docs
 
-- Run both workflows end-to-end using the new scripts/prompts
-- Verify README + workflows link to the new structure
-- Ensure cost logging fires after every step
+- [x] **Book workflow tested** end-to-end with chapter 1:
+  - ✅ Extract → Review & Fix → Translate (all steps working)
+  - ✅ Token limits updated to 64K with auto-streaming
+  - ✅ Model selection optimized (Haiku for translation/review, Sonnet for concepts)
+  - ✅ Cleanup steps documented
+- [ ] Run jam workflow end-to-end (pending)
+- [ ] Verify README + workflows link to the new structure
+- [x] Ensure cost logging fires after every step (automatic via `run_prompt.py`)
 
 ### Phase 7: Legacy Removal (only after Phases 1–6 validated)
 
@@ -249,8 +268,48 @@ Simple documentation:
 ✅ Only 4 scripts exist in `scripts/`  
 ✅ All LLM operations are prompts in `prompts/book/`, `prompts/jam/`, `prompts/shared/`  
 ✅ 2 workflows document the sequence clearly (`workflows/book.md`, `workflows/jam.md`)  
-✅ Cost logging embedded in every workflow step  
+✅ Cost logging embedded in every workflow step (automatic via `run_prompt.py`)  
 ✅ Image generation prompt in `prompts/shared/generate_image_prompts.md`  
-✅ Data files moved to new structure (assets under `data/assets/`)  
-✅ README.md is simple and clear  
-✅ Old files removed/archived  
+✅ **Token limits optimized**: 64K max with auto-streaming for long requests  
+✅ **Model selection optimized**: Haiku for translation/review, Sonnet for concepts  
+✅ **Book workflow tested**: End-to-end test successful with chapter 1  
+⏳ Data files moved to new structure (assets under `data/assets/`) - pending  
+⏳ README.md is simple and clear - pending  
+⏳ Old files removed/archived - pending (Phase 7)
+
+---
+
+## Testing Progress (Latest Session)
+
+### ✅ Completed Testing
+
+**Location**: `tmp/test_extract_output/` (test environment)
+
+**Chapter 1 End-to-End Test**:
+1. ✅ **Extract**: `chapter_1.md` (341 lines) - extracted from PDF
+2. ✅ **Review & Fix**: `chapter_1_fixed.md` (321 lines) - OCR artifacts fixed using `review_extracted_markdown.md` prompt
+   - Input: 7,951 tokens
+   - Output: 7,392 tokens
+   - Model: Claude Haiku 4.5
+3. ✅ **Translate**: `chapter_1_ru.md` (321 lines) - complete Russian translation
+   - Input: 7,557 tokens  
+   - Output: 13,491 tokens
+   - Model: Claude Haiku 4.5
+   - **No truncation** - full 64K token limit with streaming support
+
+### 🔧 Improvements Made
+
+1. **Token Limits**: Updated from 4K → 64K (max for Claude 4.5 models)
+2. **Streaming Support**: Auto-enables for requests > 8K tokens (prevents timeouts)
+3. **Model Selection**: Optimized to use Haiku for translation/review (cheaper, faster)
+4. **Workflow Updates**: 
+   - Added image placement step (Step 3)
+   - Added cleanup instructions (remove vars.json files)
+   - Updated model recommendations throughout
+
+### 📝 Notes
+
+- All test files are in `tmp/` directory (can be cleaned up after verification)
+- Translation quality verified - complete and accurate
+- Review step successfully fixed OCR artifacts (e.g., "tl? T", ": NICE", "### Pant", "NG/")
+- Workflow is production-ready for book extraction pipeline  

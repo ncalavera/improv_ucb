@@ -74,6 +74,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--operation",
         help="Operation name for cost tracking (default: derived from template filename).",
     )
+    parser.add_argument(
+        "--max-tokens",
+        type=int,
+        default=64000,
+        help="Maximum tokens for LLM response (default: 64000, max for Claude Haiku/Sonnet 4.5).",
+    )
     return parser
 
 
@@ -105,16 +111,32 @@ def main() -> int:
 
     client = anthropic.Anthropic(api_key=api_key)
 
+    # Use streaming for long requests (required when max_tokens > 8K or request may take >10 min)
+    use_streaming = args.max_tokens > 8000
+
     try:
-        response = client.messages.create(
-            model=args.model,
-            max_tokens=4000,
-            messages=[{"role": "user", "content": prompt_text}],
-        )
+        if use_streaming:
+            # Stream the response for long requests
+            full_response_text = ""
+            with client.messages.stream(
+                model=args.model,
+                max_tokens=args.max_tokens,
+                messages=[{"role": "user", "content": prompt_text}],
+            ) as stream:
+                for text in stream.text_stream:
+                    full_response_text += text
+                response = stream.get_final_message()
+            text = full_response_text
+        else:
+            # Non-streaming for shorter requests
+            response = client.messages.create(
+                model=args.model,
+                max_tokens=args.max_tokens,
+                messages=[{"role": "user", "content": prompt_text}],
+            )
+            text = response.content[0].text if response.content else ""
     except Exception as exc:  # noqa: BLE001
         parser.error(f"Anthropic API call failed: {exc}")
-
-    text = response.content[0].text if response.content else ""
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)

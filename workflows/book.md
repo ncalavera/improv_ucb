@@ -38,14 +38,21 @@ python scripts/run_prompt.py \
   --template prompts/book/review_extracted_markdown.md \
   --vars vars.json \
   --output data/chapters/en/chapter_1_fixed.md \
-  --model claude-sonnet-4-5-20250929 \
+  --model claude-haiku-4-5-20251001 \
   --operation review_extracted_markdown
 ```
+
+**Note:** Using Haiku for OCR fixes - it's faster and cheaper ($1/$5 per MTok) while still being effective for this task.
 
 **After Review:**
 - Review the fixed output
 - If satisfied, replace the original file: `mv data/chapters/en/chapter_1_fixed.md data/chapters/en/chapter_1.md`
 - If additional fixes needed, repeat the process with the fixed version
+
+**Cleanup:**
+```bash
+rm vars.json  # Remove temporary vars file
+```
 
 **Note:** The `run_prompt.py` script automatically logs costs, so no separate cost logging step is needed.
 
@@ -75,13 +82,50 @@ python scripts/run_prompt.py \
   --operation translate_chapter
 ```
 
+**Cleanup:**
+```bash
+rm vars.json  # Remove temporary vars file
+```
+
 **Note:** The `run_prompt.py` script automatically logs costs, so no separate cost logging step is needed.
 
 **Output:** `data/chapters/ru/chapter_1_ru.md`
 
 ---
 
-## Step 3: Generate Image Prompts (Optional)
+## Step 3: Place Images in Translated Markdown
+
+**IMPORTANT**: After translation, images must be manually inserted into the translated markdown file according to the placement guide.
+
+**Placement Guide Location:**
+- Default: `assets/chapter_{N}/PLACEMENT_GUIDE.md` (e.g., `assets/chapter_1/PLACEMENT_GUIDE.md` for chapter 1)
+- Or manually specify a custom path if images are organized differently
+
+**Instructions:**
+1. Open the translated markdown file: `data/chapters/ru/chapter_1_ru.md`
+2. Locate the placement guide:
+   - Check `assets/chapter_{N}/PLACEMENT_GUIDE.md` first (where N is the chapter number)
+   - If not found, check `assets/` directory for any `PLACEMENT_GUIDE.md` files
+   - Or use a manually specified guide path
+3. Insert image markdown references at the specified locations (line numbers may need adjustment based on actual content)
+4. Image format: `![Description](assets/chapter_{N}/image_name.png)` (adjust path based on actual image location)
+5. Ensure all image files exist in the specified assets directory
+
+**Example placement:**
+```markdown
+![Строительные блоки "Да, и..."](assets/chapter_1/01_yes_and_blocks.png)
+```
+
+**Note:** 
+- Line numbers in the placement guide are approximate. Place images after the relevant content sections as specified in the guide.
+- Image paths should be relative to the project root (where `pdf_generator.py` is run from)
+- If images are in a different location, adjust paths accordingly
+
+**Output:** `data/chapters/ru/chapter_1_ru.md` (with images inserted)
+
+---
+
+## Step 4: Generate Image Prompts (Optional)
 
 Generate prompts for image generation models based on the translated chapter.
 
@@ -103,11 +147,18 @@ python scripts/run_prompt.py \
   --operation generate_image_prompts
 ```
 
+**Cleanup:**
+```bash
+rm vars.json  # Remove temporary vars file
+```
+
 **Output:** `image_prompts.txt` (contains prompts for image generation)
+
+**Note:** This step is only needed if generating new images. If using pre-generated images, skip to Step 5.
 
 ---
 
-## Step 4: Generate PDF
+## Step 5: Generate PDF
 
 Generate PDF from the translated markdown chapter.
 
@@ -142,9 +193,10 @@ python scripts/run_prompt.py \
   --template prompts/book/review_extracted_markdown.md \
   --vars '{"extracted_text": "<file content>", "chapter_number": 1}' \
   --output data/chapters/en/chapter_1_fixed.md \
-  --model claude-sonnet-4-5-20250929 \
+  --model claude-haiku-4-5-20251001 \
   --operation review_extracted_markdown
 # Review output and replace if satisfied: mv data/chapters/en/chapter_1_fixed.md data/chapters/en/chapter_1.md
+# Cleanup: rm vars.json (if using file instead of inline JSON)
 
 # Step 2: Translate
 # First, read the file and create vars.json
@@ -154,16 +206,22 @@ python scripts/run_prompt.py \
   --output data/chapters/ru/chapter_1_ru.md \
   --model claude-haiku-4-5-20251001 \
   --operation translate_chapter
+# Cleanup: rm vars.json (if using file instead of inline JSON)
 
-# Step 3: Image prompts (optional)
+# Step 3: Place images in translated markdown (manual step)
+# Follow instructions in assets/chapter_1/PLACEMENT_GUIDE.md
+# Insert image markdown references at specified locations
+
+# Step 4: Image prompts (optional - only if generating new images)
 python scripts/run_prompt.py \
   --template prompts/shared/generate_image_prompts.md \
   --vars '{"content": "<file content>", "type": "chapter"}' \
   --output image_prompts.txt \
   --model claude-haiku-4-5-20251001 \
   --operation generate_image_prompts
+# Cleanup: rm vars.json (if using file instead of inline JSON)
 
-# Step 4: Generate PDF
+# Step 5: Generate PDF
 python scripts/pdf_generator.py \
   --input data/chapters/ru/chapter_1_ru.md \
   --output data/chapters/pdf/ \
