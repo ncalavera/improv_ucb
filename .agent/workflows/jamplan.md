@@ -57,7 +57,7 @@ This workflow guides the AI agent and User through a strict 4-step process to ge
       ```
 2.  **Verify**: Read the generated file and show a preview to the user.
 3.  **PDF Generation (Optional)**: Ask if the user wants to generate the PDF now.
-    - If yes, run: `python scripts/generate_pdf.py output/jam_plans/[SESSION_NAME] --content-type jam_plan --theme [THEME_NAME]`
+    - If yes, use the [PDF Generation Flow](./pdf_generation.md) or run: `python -m src.pdf_generator output/jam_plans/[SESSION_NAME] --content-type jam_plan --theme [THEME_NAME]`
 
 ## Completion
 
@@ -84,10 +84,14 @@ When generating plans that must match a specific format:
 1. **Provide style reference**: Include previous session plan as a template
 2. **Be explicit about order**: List exact blocks and exercises in the desired sequence
 3. **Reference book content**: Specify which exercises should use text from `data/chapters/chapter_X_ru.md`
-4. **Create custom script**: For complex requirements, create a temporary script (e.g., `scripts/generate_session_3.py`) with detailed prompts
+4. **Use detailed selected_candidates**: Instead of creating temporary scripts, construct a detailed `selected_candidates` string with CRITICAL INSTRUCTIONS
 
-### Example Custom Script Pattern
+### Complex Generation Pattern (No Script Needed)
+When you need strict structure requirements, construct a detailed `selected_candidates` string directly:
+
 ```python
+from src.jam_plan_generator import JamPlanGenerator
+
 # Read feedback and style reference
 with open("output/feedback/session_X_feedback_structured.md", "r") as f:
     feedback_content = f.read()
@@ -106,17 +110,26 @@ STYLE REFERENCE:
 {style_reference[:2000]}...
 """
 
-# Generate with streaming
+# Generate directly using core module
+generator = JamPlanGenerator()
 plan_markdown = generator.generate_final_plan(
     chapters=[X], 
     selected_candidates=selected_candidates, 
     language='ru'
 )
+
+# Save the plan
+output_path = "output/jam_plans/session_X_jam_plan_ru.md"
+with open(output_path, "w", encoding='utf-8') as f:
+    f.write(plan_markdown)
 ```
+
+**Key Point**: Use the core `JamPlanGenerator` module directly. No need to create temporary scripts in `scripts/` folder.
 
 ### Workflow Optimization
 - **Step 3 (Candidate Selection)**: Can be skipped if user already knows exact exercises
-- **Step 4 (Final Generation)**: Use custom script for complex structure requirements
+- **Step 4 (Final Generation)**: Use detailed `selected_candidates` string for complex structure requirements (see Complex Generation Pattern above)
+- **Post-Generation Editing**: Use [Jam Plan Editing Flow](./jam_plan_editing.md) to reorganize blocks or fix content
 - **Verification**: Always check generated plan length (should be 300-500 lines for 2-hour session)
 
 ---
