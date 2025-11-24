@@ -140,33 +140,29 @@ improv_ucb/
      - Sonnet 4.5 for concept extraction (smarter: $3/$15 per MTok)
    - [x] **Image placement step** added (Step 3) with flexible guide location
    - [x] **Cleanup steps** added (remove temporary vars.json files)
-   - [x] **TESTED**: End-to-end test with chapter 1 in `tmp/test_extract_output/`:
-     - ✅ Step 1: Extract (341 lines)
-     - ✅ Step 1.5: Review & Fix (321 lines, complete)
-     - ✅ Step 2: Translate (321 lines, complete, 13,491 output tokens)
+   - [x] **tmp/ workflow**: All intermediate files now work in `tmp/` directory
+   - [x] **Chapter-agnostic**: Uses `{N}` and `{THEME}` placeholders for any chapter
+   - [x] **PDF finalization step** (Step 6.1): Removes version numbers from final PDFs
+   - [x] **File moving step** (Step 6.2): Moves files from `tmp/` to final locations after user confirmation
+   - [x] **Cleanup step** (Step 6.3): Removes temporary files from `tmp/`
+   - [x] **TESTED**: End-to-end test with chapters 1 and 2:
+     - ✅ Chapter 1: Extract → Review & Fix → Translate → Images → PDF → Finalize → Move
+     - ✅ Chapter 2: Complete workflow tested
+     - ✅ Files moved to final locations: `data/chapters/en/`, `data/chapters/ru/`, `data/chapters/pdf/`
+     - ✅ PDFs finalized (version numbers removed): `chapter_1_BaseReality_ru.pdf`, `chapter_2_CommitmentAndListening_ru.pdf`
    ```
    ## Book Extraction Workflow
    
-   Step 1: Extract PDF → Markdown (EN)
-   - Call: scripts/extract.py --chapter 1 --output data/chapters/en/
-   - Log: scripts/cost_tracker.py log --operation extract --tokens 0,0 --model extract
-   
-   Step 1.5: Manual Review & Fixes (by coding agent)
-   - Review extracted markdown for remaining OCR artifacts, formatting issues, incomplete merges
-   - Manually fix any remaining problems (garbled text, heading issues, etc.)
-   - This step is necessary because the Python script cannot achieve 100% perfect results
-   
-   Step 2: Translate EN → RU
-   - Call: scripts/run_prompt.py --template prompts/book/translate_chapter.md --vars {"text": "data/chapters/en/chapter_1.md", "context": "improv chapter"} --output data/chapters/ru/chapter_1_ru.md
-   - Log: scripts/cost_tracker.py log --operation translate_chapter --tokens INPUT,OUTPUT --model claude-haiku
-   
-   Step 3: Generate Image Prompts (optional)
-   - Call: scripts/run_prompt.py --template prompts/shared/generate_image_prompts.md --vars {"content": "data/chapters/ru/chapter_1_ru.md", "type": "chapter"} --output image_prompts.txt
-   - Log: scripts/cost_tracker.py log --operation generate_image_prompts --tokens INPUT,OUTPUT --model claude-haiku
-   
-   Step 4: Generate PDF
-   - Call: scripts/pdf_generator.py --input data/chapters/ru/chapter_1_ru.md --output data/chapters/pdf/ --theme BaseReality
-   - Log: scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --model pdf_generator
+   Step 1: Extract PDF → Markdown (EN) → tmp/chapter_{N}.md
+   Step 1.5: Review & Fix → tmp/chapter_{N}_fixed.md → tmp/chapter_{N}.md
+   Step 2: Translate EN → RU → tmp/chapter_{N}_ru.md
+   Step 3: Place Images (manual) → tmp/chapter_{N}_ru.md (with images)
+   Step 4: Generate Image Prompts (optional) → tmp/image_prompts.txt
+   Step 5: Generate PDF → tmp/chapter_{N}_{THEME}_ru_v001.pdf
+   Step 6: Finalize and Move (requires user confirmation):
+     - 6.1: Finalize PDF (remove version) → tmp/chapter_{N}_{THEME}_ru.pdf
+     - 6.2: Move to final locations → data/chapters/en/, data/chapters/ru/, data/chapters/pdf/
+     - 6.3: Clean up tmp/
    ```
 
 2. [x] **`workflows/jam.md`**
@@ -206,15 +202,21 @@ improv_ucb/
 
 ### Phase 4: Move Data Files
 
-1. `data/books/*.pdf` → `data/books/` (keep as-is)
-2. `data/ucb_chapter_pages.csv` → `data/books/mapping.csv`
-3. `data/chapters/*.md` → `data/chapters/en/` or `data/chapters/ru/` (based on filename)
-4. `output/jam_plans/markdown/*.md` → `data/sessions/plans/en/` or `data/sessions/plans/ru/`
-5. `output/jam_plans/pdf/*.pdf` → `data/sessions/plans/pdf/`
-6. `output/chapters/*.pdf` → `data/chapters/pdf/`
-7. `output/feedback/*.md` → `data/sessions/feedback/`
-8. `data/audio/*` → `data/sessions/feedback/audio/`
-9. `assets/*` → `data/assets/` (move entire assets folder)
+1. [x] `data/books/*.pdf` → `data/books/` (keep as-is)
+2. [x] `data/ucb_chapter_pages.csv` → `data/books/mapping.csv`
+3. [x] `data/chapters/*.md` → `data/chapters/en/` or `data/chapters/ru/` (based on filename)
+   - ✅ Chapters 1 and 2 moved to final locations from `tmp/`
+   - ✅ English: `data/chapters/en/chapter_1.md`, `data/chapters/en/chapter_2.md`
+   - ✅ Russian: `data/chapters/ru/chapter_1_ru.md`, `data/chapters/ru/chapter_2_ru.md`
+4. [ ] `output/jam_plans/markdown/*.md` → `data/sessions/plans/en/` or `data/sessions/plans/ru/` (pending)
+5. [ ] `output/jam_plans/pdf/*.pdf` → `data/sessions/plans/pdf/` (pending)
+6. [x] `output/chapters/*.pdf` → `data/chapters/pdf/`
+   - ✅ Chapters 1 and 2 PDFs moved and finalized (version numbers removed)
+   - ✅ `data/chapters/pdf/chapter_1_BaseReality_ru.pdf`
+   - ✅ `data/chapters/pdf/chapter_2_CommitmentAndListening_ru.pdf`
+7. [ ] `output/feedback/*.md` → `data/sessions/feedback/` (pending)
+8. [ ] `data/audio/*` → `data/sessions/feedback/audio/` (pending)
+9. [ ] `assets/*` → `data/assets/` (move entire assets folder) (pending)
 
 ### Phase 5: Create README.md
 
@@ -228,13 +230,17 @@ Simple documentation:
 
 ### Phase 6: Final Testing & Docs
 
-- [x] **Book workflow tested** end-to-end with chapter 1:
+- [x] **Book workflow tested** end-to-end with chapters 1 and 2:
   - ✅ Extract → Review & Fix → Translate (all steps working)
-  - ✅ Image placement tested (6 images inserted successfully)
+  - ✅ Image placement tested (6 images for chapter 1, images for chapter 2)
   - ✅ PDF generation tested with images (all formatting issues fixed)
   - ✅ Token limits updated to 64K with auto-streaming
   - ✅ Model selection optimized (Haiku for translation/review, Sonnet for concepts)
   - ✅ Cleanup steps documented
+  - ✅ **tmp/ workflow implemented**: All intermediate files work in `tmp/` directory
+  - ✅ **Chapter-agnostic workflow**: Uses `{N}` and `{THEME}` placeholders
+  - ✅ **PDF finalization**: Version numbers removed from final PDFs
+  - ✅ **File moving**: Files moved from `tmp/` to final locations after confirmation
   - ✅ PDF formatting fixes:
     - ✅ Removed `---` horizontal rules
     - ✅ Fixed TOC placement (after first H2 section)
@@ -245,6 +251,7 @@ Simple documentation:
 - [ ] Verify README + workflows link to the new structure
 - [x] Ensure cost logging fires after every step (automatic via `run_prompt.py`)
 - [x] **Note**: Test PDFs should only be in `tmp/` directory, not `output/`
+- [x] **Final files moved**: Chapters 1 and 2 in final locations with clean names (no version numbers)
 
 ### Phase 7: Legacy Removal (only after Phases 1–6 validated)
 
@@ -282,12 +289,15 @@ Simple documentation:
 ✅ Image generation prompt in `prompts/shared/generate_image_prompts.md`  
 ✅ **Token limits optimized**: 64K max with auto-streaming for long requests  
 ✅ **Model selection optimized**: Haiku for translation/review, Sonnet for concepts  
-✅ **Book workflow tested**: End-to-end test successful with chapter 1 (extract → review → translate → images → PDF)  
+✅ **Book workflow tested**: End-to-end test successful with chapters 1 and 2 (extract → review → translate → images → PDF → finalize → move)  
 ✅ **PDF generation tested**: All formatting issues fixed (H4 support, image sizing, spacing, TOC placement)  
+✅ **tmp/ workflow**: All intermediate files work in `tmp/`, final files moved after confirmation  
+✅ **Chapter-agnostic workflow**: Uses `{N}` and `{THEME}` placeholders for any chapter  
+✅ **PDF finalization**: Version numbers automatically removed from final PDFs  
+✅ **Chapters 1 and 2 finalized**: Files moved to final locations with clean names  
 ⏳ Data files moved to new structure (assets under `data/assets/`) - pending  
 ⏳ README.md is simple and clear - pending  
 ⏳ Old files removed/archived - pending (Phase 7)
-⏳ **Note**: Test PDFs should only be in `tmp/`, not `output/` - cleanup needed
 
 ---
 
@@ -295,24 +305,39 @@ Simple documentation:
 
 ### ✅ Completed Testing
 
-**Location**: `tmp/test_extract_output/` (test environment)
+**Location**: `tmp/` (intermediate) → `data/chapters/` (final)
 
 **Chapter 1 End-to-End Test**:
-1. ✅ **Extract**: `chapter_1.md` (341 lines) - extracted from PDF
-2. ✅ **Review & Fix**: `chapter_1_fixed.md` (321 lines) - OCR artifacts fixed using `review_extracted_markdown.md` prompt
+1. ✅ **Extract**: `tmp/chapter_1.md` (340 lines) - extracted from PDF
+2. ✅ **Review & Fix**: `tmp/chapter_1_fixed.md` (333 lines) - OCR artifacts fixed using `review_extracted_markdown.md` prompt
    - Input: 7,951 tokens
    - Output: 7,392 tokens
    - Model: Claude Haiku 4.5
-3. ✅ **Translate**: `chapter_1_ru.md` (321 lines) - complete Russian translation
+3. ✅ **Translate**: `tmp/chapter_1_ru.md` (333 lines) - complete Russian translation
    - Input: 7,557 tokens  
    - Output: 13,491 tokens
    - Model: Claude Haiku 4.5
    - **No truncation** - full 64K token limit with streaming support
 4. ✅ **Image Placement**: All 6 images inserted according to placement guide
    - Images: 01_yes_and_blocks.png, 03_initiation_flow.png, 04_space_agreement.png, 02_base_reality_components.png, 05_object_work_show_tell.png, 06_object_work_phone.png
-5. ✅ **PDF Generation**: `chapter_1_BaseReality_ru_v004.pdf` (1.5MB) - complete with images
-   - All formatting issues resolved
-   - **Note**: Test PDFs should only be in `tmp/`, not `output/`
+5. ✅ **PDF Generation**: `tmp/chapter_1_BaseReality_ru_v004.pdf` (1.5MB) - complete with images
+6. ✅ **PDF Finalization**: `tmp/chapter_1_BaseReality_ru.pdf` (version number removed)
+7. ✅ **File Moving**: Files moved to final locations:
+   - `data/chapters/en/chapter_1.md` (340 lines)
+   - `data/chapters/ru/chapter_1_ru.md` (333 lines)
+   - `data/chapters/pdf/chapter_1_BaseReality_ru.pdf` (1.5MB, no version)
+
+**Chapter 2 End-to-End Test**:
+1. ✅ **Extract**: `tmp/chapter_2.md` (421 lines) - extracted from PDF
+2. ✅ **Review & Fix**: OCR artifacts fixed
+3. ✅ **Translate**: `tmp/chapter_2_ru.md` (442 lines) - complete Russian translation
+4. ✅ **Image Placement**: Images inserted according to placement guide
+5. ✅ **PDF Generation**: `tmp/chapter_2_CommitmentAndListening_ru_v005.pdf` (1.7MB)
+6. ✅ **PDF Finalization**: `tmp/chapter_2_CommitmentAndListening_ru.pdf` (version number removed)
+7. ✅ **File Moving**: Files moved to final locations:
+   - `data/chapters/en/chapter_2.md` (421 lines)
+   - `data/chapters/ru/chapter_2_ru.md` (442 lines)
+   - `data/chapters/pdf/chapter_2_CommitmentAndListening_ru.pdf` (1.7MB, no version)
 
 ### 🔧 Improvements Made
 
@@ -323,6 +348,10 @@ Simple documentation:
    - Added image placement step (Step 3)
    - Added cleanup instructions (remove vars.json files)
    - Updated model recommendations throughout
+   - **tmp/ workflow**: All intermediate files now work in `tmp/` directory
+   - **Chapter-agnostic**: Workflow uses `{N}` and `{THEME}` placeholders
+   - **PDF finalization step**: Automatically removes version numbers
+   - **File moving step**: Moves files from `tmp/` to final locations after user confirmation
 5. **PDF Generator Fixes**:
    - ✅ Removed `---` horizontal rules (hidden in CSS and processing)
    - ✅ Fixed TOC placement (after first H2 section, before second H2)
@@ -334,12 +363,16 @@ Simple documentation:
      - Added `page-break-before: avoid` to H3
      - Only wrap exercises in section-block divs, not all H3s
    - ✅ Fixed cost_tracker.py bug (invalid action "signify_batch" → "store_true")
+   - ✅ **PDF finalization**: Added `--finalize` flag to remove version numbers from final PDFs
 
 ### 📝 Notes
 
-- All test files are in `tmp/` directory (can be cleaned up after verification)
-- Translation quality verified - complete and accurate
+- **tmp/ workflow**: All intermediate files work in `tmp/` directory during generation
+- **Final files**: After user confirmation, files are moved to final locations (`data/chapters/`)
+- **PDF naming**: Final PDFs have clean names without version numbers (e.g., `chapter_1_BaseReality_ru.pdf`)
+- Translation quality verified - complete and accurate for chapters 1 and 2
 - Review step successfully fixed OCR artifacts (e.g., "tl? T", ": NICE", "### Pant", "NG/")
-- PDF generation tested with images - all 6 images render correctly
-- Workflow is production-ready for book extraction pipeline
-- **Important**: Test PDFs should remain in `tmp/` only, not moved to `output/`  
+- PDF generation tested with images - all images render correctly
+- Workflow is production-ready and chapter-agnostic (works for any chapter number and theme)
+- **Chapter-agnostic**: Workflow uses `{N}` and `{THEME}` placeholders - set variables at start
+- **Finalization step**: Requires user confirmation before moving files and cleaning up `tmp/`  

@@ -9,6 +9,7 @@
 What is a Base
 
 In this chapter, we talk about the base reality of a scene. The main points of
+
 ### This Chapter Include
 
 - How to get a suggestion from the audience and use that to inspire a good first line, called the initiation
@@ -39,16 +40,16 @@ NG/
 
 You wouldn't be able to differentiate between the foundation and your art. Blue doesn’t show up well on blue. Starting scenes with a clearly communicated and specific base reality is like starting your scenes with a white canvas on which the blue paint of what is funny will show up vibrantly.
 
-### The First Line Of Your
-SCENE
+### The First Line Of Your Scene
 
 To begin Yes Anding, you need a first line for your scene. The first line of an improv scene is called the initiation. Although you could conjure this out of nothing, the initiation is usually inspired by a suggestion provided by someone other than the performers. A suggestion is taken for two reasons. First, the suggestion serves as inspiration for the improvisers. Second, it proves that they are indeed improvising and that the scene has not been scripted.
 
 When you get a suggestion, you want to notice the connection you immediately make to it in your mind, and then use that connection to fashion an initiation. The suggestion may or may not be used in the initiation, depending on the connection you have made.
 
-### Example Suggestion: Balloon
+### Example Suggestion: balloon
 
 If “balloon” made you think of how your mother used to tie balloons to your wrist so you didn’t lose them, you might offer the
+
 ### Following Initiation
 
 ### Initiation
@@ -56,6 +57,7 @@ ONE: “I’m going to tie the balloon
 around your wrist so you don’t lose it, honey.”
 
 If “balloon” made you think of a birthday party, you might offer the
+
 ### Following Initiation
 
 ### Initiation
@@ -67,15 +69,16 @@ In both of these examples, the audience should see the connection between the su
 Make sure that your initiation line starts the scene “in the middle of things.” You want an initiation that allows you to get to the important part of an interaction as quickly as possible. Avoid any extraneous dialogue leading up to this moment.
 
 Notice that in our first example, we didn’t need to start with the characters noticing the balloon vendor or the transaction of buying the balloon. In the second example, we didn’t need to start with people arriving at the party or people placing gifts on the gift table. In both
-### Examples, We Cut To The Chase By Starting “In The Middle.”
+
+### Examples, We Cut To The Chase By Starting “in The Middle.”
 
 You should initiate off of your suggestion immediately. If you hesitate, it shows that you are planning and not improvising.
 
-### Yes And, Inother
-WORDS ee YES AND AGREEING ADD TO
+### Yes And, Inother Words
 
-### Yes And
-EXAMPLES
+ee YES AND AGREEING ADD TO
+
+### Yes And Examples
 
 It is important to point out that Yes Anding does not mean literally saying the words “Yes And” before you add new information.
 
@@ -84,13 +87,12 @@ It is important to point out that Yes Anding does not mean literally saying the 
 SUGGESTION: balloon
 Player 1 mimes knocking on a door. Player 2 answers the door.
 
-### Player
-1: “Hi, I’m the magician for the birthday party.”
+**Player 1:** “Hi, I’m the magician for the birthday party.”
 
-### Player
-2: “Yes, and the kids are all in the rec room having cake and ice cream.”
+**Player 2:** “Yes, and the kids are all in the rec room having cake and ice cream.”
 
 For the sake of example, we have used the words “Yes” and “And” in Player 2’s response. However, in performance, Yes Anding will look
+
 ### Something More Like This
 
 ### Example 2
@@ -99,16 +101,14 @@ SUGGESTION: balloon
 
 Player 1 mimes knocking on a door. Player 2 answers the door.
 
-### Player
-1: “Hi, I’m the magician for the birthday party.”
+**Player 1:** “Hi, I’m the magician for the birthday party.”
 
-### Player
-2: “Great! The kids are all in the rec room having cake and ice cream.” The same information is conveyed in Example 2 as was conveyed in
+**Player 2:** “Great! The kids are all in the rec room having cake and ice cream.” The same information is conveyed in Example 2 as was conveyed in
 
-### Example 1. While The Words “Yes” And “And” Weren’T Literally Said, The
-rule of Yes And (agreeing and adding new information) was still employed.
+### Example 1
+While the words “Yes” and “And” weren’t literally said, the rule of Yes And (agreeing and adding new information) was still employed.
 
-## Exercise: FIND YES AND IN A Real Conversation
+## Exercise: FIND YES AND IN A REAL CONVERSATION
 
 ### Instructions
 
@@ -121,8 +121,8 @@ Also try to look for conversations in which an absence of Yes And ruins the conv
 ### Purpose
 
 - This exercise allows you to practice Yes And outside of the classroom or rehearsal studio. Recognizing how Yes And naturally occurs will make you better at using this concept in your scene work.
-### Honor The Reality Of The
-SCENE
+
+### Honor The Reality Of The Scene
 
 New improvisers often look to force something “crazy” or “wacky” at the beginning of scenes, or they will rush to a conflict (an argument) with their scene partner instead of adding information through Yes Anding. New improvisers do this because they are worried about being funny and do not yet have faith in the rules of improv.
 
@@ -134,8 +134,7 @@ In order to create a Long Form scene with another improviser, the very first thi
 
 Two improvisers should be looking to agree from the very start of the scene. It is important to note that even though you are in the pursuit of comedy, you are not “going for laughs” at this point in a scene. You are going for the establishment of a reality. Normally, what we find to be “funny” in a scene is a break from the expected norms of reality. For the unusual to stand out from the commonplace, it is important that you and your partner start the scene in agreement about a normal reality. If you start off a scene in which everything is crazy or funny, it will be difficult to determine what is unusual.
 
-### Character Of The
-SPACE
+### Character Of The SPACE
 
 The most basic form of agreement involves the character of the space. As soon as two improvisers walk on stage—before they even begin talking—they are more likely to find success if they can come to a basic agreement about the physical and/or emotional state of their characters.
 
@@ -153,33 +152,26 @@ A physical choice made by either improviser helps ground your scene from the sta
 
 For example, if you start by washing dishes, we can assume that you are in a kitchen. Your scene partner doesn’t necessarily have to mirror this choice, but they must acknowledge it. If they choose to start drying dishes, they have established basic physical agreement. Both characters exist in this kitchen. Or, if your scene partner initiates by tearing off an order slip and flipping a burger, you can come to physical agreement with them by choosing to be another short order cook lowering some fries into oil or a waitress picking up dishes. Most Long Form shows will involve a few chairs on stage. Through basic nonverbal cues and the manipulation of these chairs, important choices about the physical environment can be made, and you will have an opportunity to start your scene with physical agreement. If your scene partner sets two chairs close together facing the audience, sits down, and mimes holding a steering wheel, you can come to physical agreement by simply sitting down in the passenger seat he or she has created. If your scene partner sets two chairs facing each other and points to the other chair, you can come to physical agreement with them simply by sitting in that other chair. You want to be aware of these physical cues so that you can always start off your scenes in agreement. If you choose to simply watch the activity of your scene partner instead of doing something that fits with that activity, you’re missing your first opportunity to Yes And, thereby beginning to build the base reality of your scene.
 
-## Exercise: CHARACTER Of The Space
+## Exercise: CHARACTER OF THE SPACE
 
 One improviser will, in silence, make a choice that establishes one of the following aspects of the character of the space: activity (playing pool, fishing, stretching, etc.), location (automobile, prison cell, supermarket, etc.), or environmental condition (zero gravity, hot/cold, bright lights, etc.).
 
 A second improviser will join the scene and nonverbally agree with the choice that has been made.
-### Example: Activity
-### Player
-1 steps out into the scene and begins folding laundry
 
-### Player
-2 joins in by putting dirty laundry into a washing
+### Example: Activity
+**Player 1:** steps out into the scene and begins folding laundry
+
+**Player 2:** joins in by putting dirty laundry into a washing
 
 ### Example: Location
-### Player
-1 steps out and mimes holding onto prison cell bars.
+**Player 1:** steps out and mimes holding onto prison cell bars.
 
-### Player
-2 stands next to him and holds out a mirror to see down the row of cells.
+**Player 2:** stands next to him and holds out a mirror to see down the row of cells.
 
 ### Example: Environmental Condition
-### Player
-1 steps out squinting with his hand in front of his face.
-### Player
-2 simply mirrors this behavior.
+**Player 1:** steps out squinting with his hand in front of his face. **Player 2:** simply mirrors this behavior.
 
-### Who, What, And
-WHERE
+### Who, What, And Where
 
 Before you can get to the game, in which you play with what is funny about the scene, you and your scene partner must agree on WHO your characters are, WHAT your characters are doing, and WHERE your characters are. The Who, What, and Where are essential to determining the foundation or base reality of the scene. Agreeing on who you are, what you are doing, and where you are at the top of the scene gives your scene a realistic context from which a first unusual thing can be discovered.
 
@@ -191,18 +183,13 @@ Please note that while it is completely valid for a performer to establish the W
 
 Let’s look at some examples of the very start of three different scenes in which the improvisers successfully establish the Who, What, and Where.
 
-### Who, What, & Where
-EXAMPLES
+### Who, What, & Where Examples
 
 ### Example 1
 
-### Player
-1: “The chicken’s done.”
-### Player
-2: “Oh good, honey. The Jensens will be here soon.”
+**Player 1:** “The chicken’s done.” **Player 2:** “Oh good, honey. The Jensens will be here soon.”
 
-### Player
-1: “Can you finish up the vegetables? I’m gonna go tidy up the living room.”
+**Player 1:** “Can you finish up the vegetables? I’m gonna go tidy up the living room.”
 
 Player 1 starts the scene with a very simple initiation, but one that still establishes the What. (This person is cooking chicken.) Player 2 Yes Ands this choice by making the Who of the scene clearer. (By referring to Player 1 as “honey” and referring to the arrival of another couple, we can assume that this scene is about a married couple.) Player 1 then establishes a specific Where with the next line. (We can assume that this couple is currently in their kitchen.)
 
@@ -210,12 +197,9 @@ Now let’s see a bad example in which two improvisers fail to establish a stron
 
 ### Example 2
 
-### Player
-1: “The chicken’s done.”
-### Player
-2: “Great, I love chicken!”
+**Player 1:** “The chicken’s done.” **Player 2:** “Great, I love chicken!”
 
-PLAYER1: “Let’s eat it right now.”
+**Player 1:** “Let’s eat it right now.”
 
 Player 1 still establishes the What, but the next two lines fail to expand on this information. (They “Yes” but do not “And.”) We never discover anything about who or where these people are. All we know is that they have cooked and are now going to eat chicken.
 
@@ -223,7 +207,7 @@ Let’s look at another example in which an improviser successfully establishes 
 
 ### Example 3
 
-PLAYER1: “Alright class, take your seats for the test.”
+**Player 1:** “Alright class, take your seats for the test.”
 
 From this initiation, Player 1 is able to clearly establish the Who (Player 1 is a teacher addressing a group of students), What (the students are taking a test), and Where (a classroom). Now that the context of the scene has been set up so clearly, the improvisers can begin to look for the first unusual thing that breaks from this base reality.
 
@@ -233,8 +217,7 @@ Let’s take a look at two more examples of establishing the Who, What, and Wher
 
 Player 1 walks on stage, miming a coffee cup in his hand.
 
-PLAYER1: “Thompson, get out of your cubicle...the
-Quarterly Report you submitted is only half finished!”
+**Player 1:** “Thompson, get out of your cubicle...the Quarterly Report you submitted is only half finished!”
 
 Player 1 has once again established the Who, What, and Where in his initiation. Note that there are multiple cues establishing information, both verbal and physical. Player 1 has communicated the Who through both naming his scene partner and how he has addressed them. Using the other character’s last name and speaking in angry tone about this report being unacceptable communicates to Player 2 that Player 1 has higher status. We can assume that Player 2 works for Player 1. Player 1 communicates the What by making it clear that this scene is about a boss reprimanding his employee. Finally, Player 1 communicates the Where by using the word “cubicle.” Now we can assume that the characters are in an office.
 
@@ -242,9 +225,7 @@ Here is an example of a weak initiation attempting to convey the same informatio
 
 ### Example 5
 
-Player 1 walks on stage neutrally.
-### Player
-1: “Thompson, I need to speak to you.”
+Player 1 walks on stage neutrally. **Player 1:** “Thompson, I need to speak to you.”
 
 This initiation from Player 1 is clearly lacking. First, we don’t know much about the Who. We know nothing about Player 1, and we only know that Player 2 is named Thompson. Player 1 could be a coach, sergeant, or teacher at this point because we have established status without establishing a specific relationship. We don’t know anything about the Where and we know very little about the What. Player
 
@@ -254,15 +235,17 @@ Statements are the best way to efficiently establish the Who, What, and Where at
 
 Your top priority in establishing the Who, What, and Where of a scene is to be clear. You should also look to be specific and personal whenever possible. Specificity will help your scenes stand out. Specifics are always funnier than generic choices. Making choices based on your own opinions and life experiences will make your choices personal. Being specific and personal will make your scenes engaging and relatable. Doing so will also often result in getting to your game in less time.
 
-### Name Your
-CHARACTERS tis good to include the specific names of the characters at the start of the scene. That way, they will be easy to identify as the longform progresses.
+### Name Your CHARACTERS
 
-Novice improvisers are sometimes hesitant to quickly and clearly establish the Who, What, and Where. Instead, they remain vague out of deference to their scene partner. They erroneously feel that by establishing the Who, What, and Where, they are forcing their ideas onto their scene partner. This is not the case. In fact, there is nothing wrong with one improviser establishing the Who, What and Where in one line. Establishing the Who, What and Where quickly is not selfish. It is equivalent to priming a canvas before you paint. By providing as many details about the Who, What, and Where as you can early on, you are serving the scene and eliminating confusion. Make choices and be specific.
+It's good to include the specific names of the characters at the start of the scene. That way, they will be easy to identify as the longform progresses.
+
+Novice improvisers are sSSometimes hesitant to quickly and clearly establish the Who, What, and Where. Instead, they remain vague out of deference to their scene partner. They erroneously feel that by establishing the Who, What, and Where, they are forcing their ideas onto their scene partner. This is not the case. In fact, there is nothing wrong with one improviser establishing the Who, What and Where in one line. Establishing the Who, What and Where quickly is not selfish. It is equivalent to priming a canvas before you paint. By providing as many details about the Who, What, and Where as you can early on, you are serving the scene and eliminating confusion. Make choices and be specific.
 
 Conversely, don’t cut off your scene partner as they are initiating a scene. Give them a chance to get their idea out.
 
-### Show,
-DON’T TELL ometimes nonverbal choices made at the top of the scene will help you to establish the Who, What and Where for your scene. “Show, don’t tell” is the phrase improvisers use to describe instances in scenes when an improviser establishes information through action and physical choices instead of speaking. When you “show” instead of “telling,” information is conveyed as clearly as it would be if spoken. Sometimes opting to follow the principle of “show, don’t tell” will actually make the start of your scene seem smoother and more natural. “Show, don’t tell” also often allows you to make your scene work more visually engaging.
+### Show, DON’T TELL
+
+SSometimes nonverbal choices made at the top of the scene will help you to establish the Who, What and Where for your scene. “Show, don’t tell” is the phrase improvisers use to describe instances in scenes when an improviser establishes information through action and physical choices instead of speaking. When you “show” instead of “telling,” information is conveyed as clearly as it would be if spoken. Sometimes opting to follow the principle of “show, don’t tell” will actually make the start of your scene seem smoother and more natural. “Show, don’t tell” also often allows you to make your scene work more visually engaging.
 
 Long Form is more than smart ideas and verbal gymnastics. You want to constantly remind yourself that the visual and physical aspects of your scene work are very important parts of the overall theatrical experience that your audience is having.
 
@@ -292,10 +275,9 @@ Let’s say you're in a scene where you are playing a mechanic. You and your sce
 
 Note: the objects that you create during the base reality portion of the scene may become useful later in the game portion of the scene when you can use them as vehicles to explore the comedy of your scene.
 
-One additional note: sometimes your object work may get unintentional laughs. Do not get seduced by those easy laughs and make object work the only funny aspect of your scene. Use your object work as another way to make everything except your single comedic idea seem real.
+One additional note: sSSometimes your object work may get unintentional laughs. Do not get seduced by those easy laughs and make object work the only funny aspect of your scene. Use your object work as another way to make everything except your single comedic idea seem real.
 
-### Common Object Work
-MISTAKES
+### Common Object Work MISTAKES
 
 When miming objects, your goal should be to make them as real as possible. Remember that whenever you mime, your hand isn’t becoming the object; it is holding the object. If your character is holding a gun, don’t extend your index finger and raise your thumb like the “play guns” you made as a kid. Instead, you should actually pretend to hold a gun in your hand. Give it mass. If you don’t need it, put it in its holster.
 
@@ -311,8 +293,7 @@ The one exception to not using actual objects on stage is chairs, as some scenes
 
 Taking these aspects of your objects into consideration will help you to better commit to your reality. It will make your acting more realistic and help you to visualize your environment.
 
-### Bad Object
-WORK
+### Bad Object WORK
 
 Here are some frequent object work mistakes:
 
@@ -324,14 +305,14 @@ Holding a beer one moment and then dropping it without putting it down on a surf
 
 Walking through a table or desk
 
-### Helpful
-HINTS Before we move on, please keep in mind these two additional points that are important to the beginning of any Long Form scene.
+### Helpful HINTS
+Before we move on, please keep in mind these two additional points that are important to the beginning of any Long Form scene.
 
 First, it is important for you to maintain the environment that has been established during the base reality section throughout the rest of the scene. Many new improvisers will “drop” their environment once they begin talking. Keeping your characters grounded in the world established at the start of the scene will help you to keep your audience engaged in the reality you have created. Also remember, you will later be able to use this environment as a vehicle through which you can explore the comedy of your scene.
 
 Additionally, while establishing the base reality of your scene is very important, you want to be sure to avoid simply talking about whatever it is that you and your scene partner are doing. Once you start speaking, you don’t want to just speak about your physical environment. In order to more closely mirror real life, you should push yourself to determine the Who, What and Where of the scene by talking about something else as you remain engaged in the physical choices you’ve made. If you think about it, this is how we usually behave in real life. Your goal should be to simply exist in your Who, What, and Where.”
 
-## Exercise: TALK ABOUT Something Else
+## Exercise: TALK ABOUT SOMETHING ELSE
 
 ### Instructions
 Two improvisers take the stage.
@@ -354,7 +335,6 @@ In real life, you are usually doing one thing and talking about another. For exa
 - Getting the who-what-where out
 - Doing good object work when we mime props
 - Keeping the reality real, not wacky
-
 - Find Yes And in a Real Conversation
 - Character of the Space
 - Talk About Something Else
