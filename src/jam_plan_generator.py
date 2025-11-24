@@ -93,25 +93,30 @@ Return a structured list in Markdown.
 For each candidate, provide a brief 1-sentence explanation of why it's a good fit.
 """
 
-        response = self.client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=2000,
+        full_response_text = ""
+        with self.client.messages.stream(
+            model="claude-sonnet-4-5-20250929",
+            max_tokens=64000,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}]
-        )
-        
-        # Log cost
+        ) as stream:
+            for text in stream.text_stream:
+                full_response_text += text
+            
+            response = stream.get_final_message()
+
         if self.cost_tracker:
             self.cost_tracker.log_call(
                 operation="generate_candidates",
-                model="claude-3-5-sonnet-20241022",
+                model="claude-sonnet-4-5-20250929",
                 input_tokens=response.usage.input_tokens,
                 output_tokens=response.usage.output_tokens,
                 is_batch=False,
-                metadata={"chapters": chapters}
+                context_window=200000,
+                max_tokens=64000
             )
-        
-        return response.content[0].text
+
+        return full_response_text
 
     def generate_final_plan(self, chapters: List[int], selected_candidates: str, 
                            duration: int = 120, language: str = 'ru') -> str:
@@ -166,25 +171,30 @@ Return ONLY the Markdown content for the plan. Use standard markdown headers (#,
 Do not include conversational filler before or after the markdown.
 """
 
-        response = self.client.messages.create(
-            model="claude-3-5-sonnet-20241022",
-            max_tokens=4000,
+        full_response_text = ""
+        with self.client.messages.stream(
+            model="claude-sonnet-4-5-20250929",
+            max_tokens=64000,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}]
-        )
+        ) as stream:
+            for text in stream.text_stream:
+                full_response_text += text
+            
+            response = stream.get_final_message()
         
         # Log cost
         if self.cost_tracker:
             self.cost_tracker.log_call(
                 operation="generate_final_plan",
-                model="claude-3-5-sonnet-20241022",
+                model="claude-sonnet-4-5-20250929",
                 input_tokens=response.usage.input_tokens,
                 output_tokens=response.usage.output_tokens,
                 is_batch=False,
                 metadata={"chapters": chapters, "duration": duration, "language": language}
             )
         
-        return response.content[0].text
+        return full_response_text
 
     def generate_plan_from_text(self, chapters: List[int], duration: int = 120,
                                language: str = 'ru') -> str:
