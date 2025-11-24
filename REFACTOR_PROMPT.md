@@ -230,12 +230,21 @@ Simple documentation:
 
 - [x] **Book workflow tested** end-to-end with chapter 1:
   - ✅ Extract → Review & Fix → Translate (all steps working)
+  - ✅ Image placement tested (6 images inserted successfully)
+  - ✅ PDF generation tested with images (all formatting issues fixed)
   - ✅ Token limits updated to 64K with auto-streaming
   - ✅ Model selection optimized (Haiku for translation/review, Sonnet for concepts)
   - ✅ Cleanup steps documented
+  - ✅ PDF formatting fixes:
+    - ✅ Removed `---` horizontal rules
+    - ✅ Fixed TOC placement (after first H2 section)
+    - ✅ Added H4 heading support
+    - ✅ Increased image size (55% → 75%)
+    - ✅ Fixed spacing issues (H2/H3 margins reduced)
 - [ ] Run jam workflow end-to-end (pending)
 - [ ] Verify README + workflows link to the new structure
 - [x] Ensure cost logging fires after every step (automatic via `run_prompt.py`)
+- [x] **Note**: Test PDFs should only be in `tmp/` directory, not `output/`
 
 ### Phase 7: Legacy Removal (only after Phases 1–6 validated)
 
@@ -252,6 +261,7 @@ Simple documentation:
 ✅ **Image generation is a prompt** - `prompts/shared/generate_image_prompts.md` used by both workflows  
 ✅ **No separate formatting script** - formatting is part of extract  
 ✅ **Assets in data/** - `data/assets/` not top-level  
+✅ **Test files in tmp/** - Test PDFs should only be in `tmp/`, not `output/`  
 
 ## Current Code Mapping
 
@@ -272,10 +282,12 @@ Simple documentation:
 ✅ Image generation prompt in `prompts/shared/generate_image_prompts.md`  
 ✅ **Token limits optimized**: 64K max with auto-streaming for long requests  
 ✅ **Model selection optimized**: Haiku for translation/review, Sonnet for concepts  
-✅ **Book workflow tested**: End-to-end test successful with chapter 1  
+✅ **Book workflow tested**: End-to-end test successful with chapter 1 (extract → review → translate → images → PDF)  
+✅ **PDF generation tested**: All formatting issues fixed (H4 support, image sizing, spacing, TOC placement)  
 ⏳ Data files moved to new structure (assets under `data/assets/`) - pending  
 ⏳ README.md is simple and clear - pending  
 ⏳ Old files removed/archived - pending (Phase 7)
+⏳ **Note**: Test PDFs should only be in `tmp/`, not `output/` - cleanup needed
 
 ---
 
@@ -296,6 +308,11 @@ Simple documentation:
    - Output: 13,491 tokens
    - Model: Claude Haiku 4.5
    - **No truncation** - full 64K token limit with streaming support
+4. ✅ **Image Placement**: All 6 images inserted according to placement guide
+   - Images: 01_yes_and_blocks.png, 03_initiation_flow.png, 04_space_agreement.png, 02_base_reality_components.png, 05_object_work_show_tell.png, 06_object_work_phone.png
+5. ✅ **PDF Generation**: `chapter_1_BaseReality_ru_v004.pdf` (1.5MB) - complete with images
+   - All formatting issues resolved
+   - **Note**: Test PDFs should only be in `tmp/`, not `output/`
 
 ### 🔧 Improvements Made
 
@@ -306,10 +323,23 @@ Simple documentation:
    - Added image placement step (Step 3)
    - Added cleanup instructions (remove vars.json files)
    - Updated model recommendations throughout
+5. **PDF Generator Fixes**:
+   - ✅ Removed `---` horizontal rules (hidden in CSS and processing)
+   - ✅ Fixed TOC placement (after first H2 section, before second H2)
+   - ✅ Added H4 heading support (#### headings now render properly)
+   - ✅ Increased image size (55% → 75% width, 28vh → 35vh height)
+   - ✅ Fixed spacing issues:
+     - H2 margin-bottom: 8pt → 4pt
+     - H3 margin-top: 10pt → 6pt, margin-bottom: 6pt → 4pt
+     - Added `page-break-before: avoid` to H3
+     - Only wrap exercises in section-block divs, not all H3s
+   - ✅ Fixed cost_tracker.py bug (invalid action "signify_batch" → "store_true")
 
 ### 📝 Notes
 
 - All test files are in `tmp/` directory (can be cleaned up after verification)
 - Translation quality verified - complete and accurate
 - Review step successfully fixed OCR artifacts (e.g., "tl? T", ": NICE", "### Pant", "NG/")
-- Workflow is production-ready for book extraction pipeline  
+- PDF generation tested with images - all 6 images render correctly
+- Workflow is production-ready for book extraction pipeline
+- **Important**: Test PDFs should remain in `tmp/` only, not moved to `output/`  

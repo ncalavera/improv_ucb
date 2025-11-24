@@ -274,7 +274,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     log_parser.add_argument(
         "--batch",
-        action="signify_batch",
+        action="store_true",
         help="Flag indicating this was a batch API call (uses batch pricing when available).",
     )
 

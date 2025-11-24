@@ -236,7 +236,7 @@ class PDFGenerator:
                 font-size: 13pt;
                 font-weight: bold;
                 margin-top: 14pt;
-                margin-bottom: 8pt;
+                margin-bottom: 4pt;
                 color: #000;
                 page-break-after: avoid;
             }
@@ -249,15 +249,25 @@ class PDFGenerator:
             h3 {
                 font-size: 11.5pt;
                 font-weight: bold;
-                margin-top: 10pt;
-                margin-bottom: 6pt;
+                margin-top: 6pt;
+                margin-bottom: 4pt;
                 color: #000;
                 page-break-after: avoid;
+                page-break-before: avoid;
             }
 
             /* H3 exercises should start on new page */
             h3.exercise {
                 page-break-before: always;
+            }
+
+            h4 {
+                font-size: 10.5pt;
+                font-weight: bold;
+                margin-top: 8pt;
+                margin-bottom: 4pt;
+                color: #000;
+                page-break-after: avoid;
             }
 
             p {
@@ -290,12 +300,16 @@ class PDFGenerator:
 
             hr {
                 display: none;
+                visibility: hidden;
+                height: 0;
+                margin: 0;
+                padding: 0;
             }
 
-            /* Image styling - 55% centered */
+            /* Image styling - 75% centered */
             img {
-                max-width: 55%;
-                max-height: 28vh;
+                max-width: 75%;
+                max-height: 35vh;
                 height: auto;
                 display: block;
                 margin: 10pt auto;
@@ -304,18 +318,18 @@ class PDFGenerator:
             }
 
             /* Page break improvements */
-            h1, h2, h3 {
+            h1, h2, h3, h4 {
                 page-break-after: avoid;
             }
 
-            h2 + p, h3 + p {
+            h2 + p, h3 + p, h4 + p {
                 page-break-before: avoid;
             }
 
-            /* Section spacing */
+            /* Section spacing - only for exercises */
             .section-block {
                 page-break-inside: avoid;
-                margin-bottom: 8pt;
+                margin-bottom: 4pt;
             }
 
             /* TOC styling */
@@ -373,19 +387,28 @@ class PDFGenerator:
         in_list = False
         in_section_div = False
         toc_inserted = False
+        # Initialize H2 counter for TOC placement
+        self._h2_count = 0
 
         for line in lines:
             line = line.strip()
 
             # Handle section wrapping for better page breaks
+            # Only wrap exercises in section-block, not all H3s
+            # Note: We'll check for exercise in the H3 processing section below
             if line.startswith('### '):
                 if in_list:
                     html_parts.append('</ul>')
                     in_list = False
                 if in_section_div:
                     html_parts.append('</div>')
-                html_parts.append('<div class="section-block">')
-                in_section_div = True
+                    in_section_div = False
+                # Check if this is an exercise before wrapping
+                text = line[4:].strip()
+                is_exercise = 'упражнение' in text.lower() or 'exercise' in text.lower()
+                if is_exercise:
+                    html_parts.append('<div class="section-block">')
+                    in_section_div = True
             elif line.startswith('## ') or line.startswith('# '):
                 if in_list:
                     html_parts.append('</ul>')
@@ -393,8 +416,13 @@ class PDFGenerator:
                 if in_section_div:
                     html_parts.append('</div>')
                     in_section_div = False
+            elif line.startswith('#### '):
+                if in_list:
+                    html_parts.append('</ul>')
+                    in_list = False
 
-            if not line:
+            # Handle empty lines and horizontal rules
+            if not line or line.strip() == '---':
                 if in_list:
                     html_parts.append('</ul>')
                     in_list = False
@@ -427,23 +455,24 @@ class PDFGenerator:
                     in_list = False
                 text = line[3:].strip()
                 
-                # Insert TOC before the second H2 (usually "Обратная связь") or if it's the first one but not "Обзор"
-                # Actually, user wants it at the bottom of first page.
-                # Strategy: Insert TOC before any H2 that forces a page break (class "new-page")
-                # OR before the second H2 if no page break.
-                
+                # Insert TOC after the first H2 section (usually "Что такое базовая реальность?")
+                # Strategy: Insert TOC after the first H2, before the second H2
                 should_break = any(keyword in text for keyword in ['Блок', 'Принципы обратной связи', 'Обратная связь', 'Заключительные заметки'])
                 
-                if not toc_inserted and (should_break or len(toc_items) > 0): 
-                    # If we hit a page break section, definitely insert TOC before it.
-                    # Or if this is just the second section.
-                    # Let's use a simpler heuristic: Insert before the first section that is NOT "Обзор сессии".
-                    if "Обзор сессии" not in text:
-                         html_parts.append('<div class="toc"><h2>Содержание</h2><ul>')
-                         for item in toc_items:
-                             html_parts.append(f'<li><a href="#{item["id"]}">{self._escape_html(item["text"])}</a></li>')
-                         html_parts.append('</ul></div>')
-                         toc_inserted = True
+                # Count H2s we've seen (excluding TOC)
+                if not hasattr(self, '_h2_count'):
+                    self._h2_count = 0
+                
+                # Insert TOC after first H2, before second H2
+                if not toc_inserted and self._h2_count == 1:
+                    # We're processing the second H2, insert TOC before it
+                    html_parts.append('<div class="toc"><h2>Содержание</h2><ul>')
+                    for item in toc_items:
+                        html_parts.append(f'<li><a href="#{item["id"]}">{self._escape_html(item["text"])}</a></li>')
+                    html_parts.append('</ul></div>')
+                    toc_inserted = True
+                
+                self._h2_count += 1
 
                 css_class = ' class="new-page"' if should_break else ''
                 section_id = toc_ids.get(text, '')
@@ -459,6 +488,12 @@ class PDFGenerator:
                 is_exercise = 'упражнение' in text.lower() or 'exercise' in text.lower()
                 css_class = ' class="exercise"' if is_exercise else ''
                 html_parts.append(f'<h3{css_class}>{self._escape_html(text)}</h3>')
+            elif line.startswith('#### '):
+                if in_list:
+                    html_parts.append('</ul>')
+                    in_list = False
+                text = line[5:].strip()
+                html_parts.append(f'<h4>{self._escape_html(text)}</h4>')
             elif line.startswith('- ') or line.startswith('* '):
                 if not in_list:
                     html_parts.append('<ul>')
