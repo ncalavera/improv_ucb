@@ -145,7 +145,28 @@ wc -l tmp/chapter_{N}.md tmp/chapter_{N}_ru.md
 
 ---
 
-## Step 3: Place Images in Translated Markdown
+## Step 3: Check for Images and Generate Prompts if Needed
+
+**IMPORTANT**: Before proceeding, check if images already exist for this chapter.
+
+**Check for existing images:**
+```bash
+# Check if chapter assets directory exists
+ls -la data/assets/chapter_{N}/
+```
+
+**If `data/assets/chapter_{N}/` directory does NOT exist:**
+1. You need to generate image prompts first (see Step 4 below)
+2. Generate the images manually using the prompts
+3. Create the directory and save images there
+4. Then proceed to Step 3.5 to place images
+
+**If `data/assets/chapter_{N}/` directory EXISTS:**
+- Skip to Step 3.5 to place existing images in the markdown
+
+---
+
+## Step 3.5: Place Images in Translated Markdown
 
 **IMPORTANT**: After translation, images must be manually inserted into the translated markdown file according to the placement guide.
 
@@ -177,7 +198,16 @@ wc -l tmp/chapter_{N}.md tmp/chapter_{N}_ru.md
 
 ---
 
-## Step 4: Generate Image Prompts (Optional)
+## Step 4: Generate Image Prompts (Required if images don't exist)
+
+**When to run this step:**
+- If `data/assets/chapter_{N}/` directory does NOT exist
+- If you need to generate new images for the chapter
+
+**IMPORTANT**: 
+- All images must be in xkcd-style (stick figure style) with simple black line drawings on white background. The prompts will enforce this style.
+- **Model recommendation**: Use Sonnet (`claude-sonnet-4-5-20250929`) for better quality prompts with better wordplay and character details. Haiku is acceptable for cost efficiency but produces less polished results.
+- **Russian wordplay**: If wordplay or puns are used in image labels, they must work in Russian context (e.g., "ИГРА: Цвета" where "ИГРА" means both "Game" concept and "game/play" activity).
 
 Generate prompts for image generation models based on the translated chapter.
 
@@ -191,12 +221,21 @@ Generate prompts for image generation models based on the translated chapter.
 
 **Command:**
 ```bash
+# Recommended: Use Sonnet for better quality prompts (includes better wordplay and character details)
 source venv/bin/activate && python scripts/run_prompt.py \
   --template prompts/shared/generate_image_prompts.md \
   --vars tmp/vars_image_prompts.json \
   --output tmp/image_prompts.txt \
-  --model claude-haiku-4-5-20251001 \
+  --model claude-sonnet-4-5-20250929 \
   --operation generate_image_prompts
+
+# Alternative: Use Haiku for cost efficiency (cheaper, but less polished)
+# source venv/bin/activate && python scripts/run_prompt.py \
+#   --template prompts/shared/generate_image_prompts.md \
+#   --vars tmp/vars_image_prompts.json \
+#   --output tmp/image_prompts.txt \
+#   --model claude-haiku-4-5-20251001 \
+#   --operation generate_image_prompts
 ```
 
 **Cleanup:**
@@ -213,7 +252,18 @@ head -10 tmp/image_prompts.txt
 
 **Output:** `tmp/image_prompts.txt` (contains prompts for image generation)
 
-**Note:** This step is only needed if generating new images. If using pre-generated images, skip to Step 5.
+**After generating prompts:**
+1. Review the prompts in `tmp/image_prompts.txt`
+2. Generate images manually using your preferred image generation tool (DALL-E, Midjourney, etc.)
+3. Create directory: `mkdir -p data/assets/chapter_{N}/`
+4. Save generated images with the suggested filenames (e.g., `01_game_vs_plot_comparison.png`)
+5. Create a `PLACEMENT_GUIDE.md` file (see detailed instructions in `prompts/shared/IMAGE_ASSETS_GUIDE.md`)
+6. Then proceed to Step 3.5 to place images in the markdown
+
+**For detailed instructions on creating the assets folder structure and placement guide, see:**
+- `prompts/shared/IMAGE_ASSETS_GUIDE.md` - Complete guide with templates and examples
+
+**Note:** If images already exist in `data/assets/chapter_{N}/`, skip this step and go directly to Step 3.5.
 
 ---
 

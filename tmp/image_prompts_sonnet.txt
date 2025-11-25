@@ -1,0 +1,131 @@
+# Image Generation Prompts for Chapter 3: "Что такое Игра?"
+
+## Image 1: Game vs Plot
+
+**Title/Description**: Distinguishing Game from Plot - Visual comparison showing that plot (Who, What, Where) is different from the game (what's funny)
+
+**Filename suggestion**: `01_game_vs_plot_comparison.png`
+
+**Prompt**: 
+Create a simple educational diagram using stick figure style (xkcd-like). Show two contrasting sections divided vertically. LEFT SIDE labeled "СЮЖЕТ (не смешно)" shows three stick figures with labels: "КТО" (stick figure waving), "ЧТО" (stick figure holding something), "ГДЕ" (stick figure standing near simple house outline). RIGHT SIDE labeled "ИГРА (смешно!)" shows the same three stick figures but now engaged in unusual pattern behavior with arrows connecting them in a cycle, and a star symbol with "ПАТТЕРН" label. Add a large "≠" symbol between the two sides. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 2: Pattern Recognition in Game
+
+**Title/Description**: Number pattern analogy showing how game moves establish a pattern (3, 6, 9 sequence)
+
+**Filename suggestion**: `02_number_pattern_game_analogy.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show three panels horizontally. PANEL 1: Stick figure points at number "3" with label "ПЕРВАЯ НЕОБЫЧНАЯ ВЕЩЬ". PANEL 2: Another stick figure adds "6" with arrow showing "+3" and label "ПЕРВЫЙ ХОД ИГРЫ" with question mark above head (confused face). PANEL 3: Third stick figure confidently adds "9" with "+3" arrow, label "ПАТТЕРН УСТАНОВЛЕН!" and checkmark. Below all panels show the sequence "3 → 6 → 9 → 12 → 15..." with "ИГРА = +3" in a box. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 3: Alternative Patterns from Same Start
+
+**Title/Description**: Multiple valid games from the same unusual thing (3, 6, then either 9 or 12)
+
+**Filename suggestion**: `03_multiple_valid_patterns.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show a branching tree structure. At top: "3" in circle labeled "ПЕРВАЯ НЕОБЫЧНАЯ ВЕЩЬ". Arrow down to "6" labeled "ПЕРВЫЙ ХОД". Then two arrows branch: LEFT BRANCH shows stick figure choosing "9" with "+3" formula and continues "12, 15..."; RIGHT BRANCH shows different stick figure choosing "12" with "×2" formula and continues "24, 48...". Both stick figures have happy faces. Add label "ОБЕ ИГРЫ ПРАВИЛЬНЫ!" at bottom with two checkmarks. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 4: Parrot Sketch Game Abstraction
+
+**Title/Description**: Abstracting the game from specifics - Parrot sketch example showing how the same game applies to different contexts
+
+**Filename suggestion**: `04_game_abstraction_parrot.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show two scenarios stacked vertically. TOP SCENARIO: Stick figure holding dead bird (simple X for eyes) facing shopkeeper stick figure with label "СКЕТЧ О ПОПУГАЕ". Middle section shows arrow pointing down to a box with "ИГРА = Отказ признать неопровержимый факт" with the specifics "попугай" crossed out. BOTTOM SCENARIO: Stick figure (wife) pointing at two stick figures in bed, facing another stick figure (husband) denying, labeled "НОВЫЙ КОНТЕКСТ". Arrow shows "ТА ЖЕ ИГРА!" Both denial stick figures have similar defensive poses. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 5: Yes And to If Then Transition
+
+**Title/Description**: The shift from "Yes And" (building base reality) to "If...Then" (playing the game)
+
+**Filename suggestion**: `05_yes_and_to_if_then.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show timeline with two phases. LEFT PHASE labeled "БАЗОВАЯ РЕАЛЬНОСТЬ": Two stick figures saying "ДА, И..." with speech bubbles, building blocks stacking up labeled "информация". Middle shows starburst with "ПЕРВАЯ НЕОБЫЧНАЯ ВЕЩЬ!" and stick figure with surprised face (lightbulb above head). RIGHT PHASE labeled "ИГРА": Same two stick figures now saying "ЕСЛИ... ТО?" in thought bubbles, with pattern arrows connecting multiple comedy symbols (😄). Bottom shows transition arrow from "Развивать реальность" to "Быть смешным". Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 6: Game Makes Improv Easier
+
+**Title/Description**: Visual metaphor showing how game narrows infinite possibilities into a focused pattern
+
+**Filename suggestion**: `06_game_narrows_possibilities.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). LEFT SIDE: Overwhelmed stick figure with hands on head (stressed face) surrounded by many arrows pointing in all directions, labeled "БЕЗ ИГРЫ: Бесконечные возможности" with swirly confusion lines. Large arrow points right. RIGHT SIDE: Confident stick figure (happy face) walking along a simple straight path with few clear directional arrows, labeled "С ИГРОЙ: Ясный паттерн". Add speech bubble from right figure: "Я знаю, что работает!" Bottom text in box: "ИГРА = легче быть смешным". Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 7: Basketball Analogy
+
+**Title/Description**: Sports analogy - playing basketball with rules like playing a game in improv
+
+**Filename suggestion**: `07_basketball_game_analogy.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). TOP SECTION labeled "БАСКЕТБОЛ": Three stick figures playing with simple ball, following arrow patterns, with rules listed: "вести мяч", "бросать в корзину" (simple hoop drawing). One stick figure breaking rules has X mark. BOTTOM SECTION labeled "ИМПРОВ": Three stick figures in scene with comedy symbols, following pattern arrows, with rules: "следовать паттерну", "если...то". One stick figure breaking pattern has X mark. Center connecting text: "ПРАВИЛА ≠ ОГРАНИЧЕНИЕ" and "ПРАВИЛА = СТРУКТУРА ДЛЯ ТВОРЧЕСТВА". Both sections show happy faces on rule-following figures. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 8: Forest Path Metaphor
+
+**Title/Description**: Journey through forest metaphor - game as the path through a scene
+
+**Filename suggestion**: `08_forest_path_metaphor.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show side-by-side comparison. LEFT SIDE "БЕЗ ИГРЫ": Two stick figures struggling through obstacles (simple bush drawings, zigzag confusion lines), going in different directions, looking lost and frustrated. RIGHT SIDE "С ИГРОЙ": Same two stick figures walking together happily on clear straight path (dotted line) through same forest, reaching "КОНЕЦ СЦЕНЫ" sign. Trees drawn as simple circles on sticks. Add labels: "Трудно!" on left, "Легко и приятно!" on right. Bottom text: "ИГРА = дорожка через сцену". Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 9: Game Move Sequence
+
+**Title/Description**: Breaking down how multiple "game moves" create the pattern through repeated "If...Then" questions
+
+**Filename suggestion**: `09_game_moves_sequence.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show vertical flowchart. TOP: Circle with "НЕОБЫЧНАЯ ВЕЩЬ" and surprised stick figure. Arrow down labeled "ЕСЛИ ЭТО ПРАВДА... ТО?" leads to "ХОД ИГРЫ #1" with stick figure making discovery (lightbulb). Another arrow "...ТО ЧТО ЕЩЕ?" leads to "ХОД ИГРЫ #2" with stick figure continuing pattern. Another arrow "...И ЧТО ЕЩЕ?" leads to "ХОД ИГРЫ #3" with stick figure locked in pattern (confident face). Dotted arrows continue downward. Side bracket labels all moves as "ПАТТЕРН = ИГРА". Bottom shows audience stick figures laughing (😄 😄 😄). Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 10: Three Different Patterns from Orange
+
+**Title/Description**: Example showing three valid games from "orange" - colors, fruits, round objects
+
+**Filename suggestion**: `10_orange_three_patterns.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Center top shows "ОРАНЖЕВЫЙ" in a circle as starting point. Three arrows branch downward to three stick figures, each presenting their pattern. LEFT stick figure (artist with palette): "синий, желтый" with label "ИГРА: Цвета". MIDDLE stick figure (holding fruit): "ананас, яблоко" with label "ИГРА: Фрукты". RIGHT stick figure (holding ball): "бейсбольный мяч, глобус" with label "ИГРА: Круглые предметы". All three stick figures have happy/confident faces. Bottom text: "ВСЕ ПРАВИЛЬНЫ! Одно начало → разные игры". Three checkmarks below. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 11: Scene Structure Formula
+
+**Title/Description**: Visual formula showing the complete structure of a long-form scene with game
+
+**Filename suggestion**: `11_scene_structure_formula.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). Show horizontal flow diagram with boxes and arrows. Box 1: "БАЗОВАЯ РЕАЛЬНОСТЬ" with two calm stick figures establishing context. Plus sign. Box 2: "ПЕРВАЯ НЕОБЫЧНАЯ ВЕЩЬ" with stick figure showing surprise (starburst). Arrow labeled "ДА, И...". Box 3: "ХОД ИГРЫ, ХОД ИГРЫ, ХОД ИГРЫ..." with multiple stick figures creating pattern (comedy symbols, arrows showing repetition). Arrow labeled "ВОЗВЫШЕНИЕ". Box 4: "ЗАВЕРШЕНИЕ" with stick figures taking bow, audience applauding. Make it read left to right like a formula. Bottom label: "СТРУКТУРА СЦЕНЫ ЛОНГФОРМА". Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+
+---
+
+## Image 12: Breaking the Pattern (Wrong)
+
+**Title/Description**: Warning diagram showing what happens when you break the established pattern
+
+**Filename suggestion**: `12_breaking_pattern_wrong.png`
+
+**Prompt**:
+Create a simple educational diagram using stick figure style (xkcd-like). TOP SECTION "ПРАВИЛЬНО ✓": Show sequence "3 → 6 → 9 → 12" with happy stick figures following "+3" pattern, audience stick figures smiling. BOTTOM SECTION "НЕПРАВИЛЬНО ✗": Show sequence "3 → 6 → 9 → 47?!" with confused stick figure breaking pattern (adding random number), other stick figure looking confused/upset, audience stick figures with question marks and frowning. Label on bottom section: "РАЗРУШАЕТ ИГРУ!" with X mark. Add warning sign symbol. Text: "Придерживайтесь паттерна!" Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
