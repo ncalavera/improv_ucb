@@ -254,14 +254,26 @@ head -10 tmp/image_prompts.txt
 
 **After generating prompts:**
 1. Review the prompts in `tmp/image_prompts.txt`
-2. Generate images manually using your preferred image generation tool (DALL-E, Midjourney, etc.)
-3. Create directory: `mkdir -p data/assets/chapter_{N}/`
-4. Save generated images with the suggested filenames (e.g., `01_game_vs_plot_comparison.png`)
-5. Create a `PLACEMENT_GUIDE.md` file (see detailed instructions in `prompts/shared/IMAGE_ASSETS_GUIDE.md`)
-6. Then proceed to Step 3.5 to place images in the markdown
+2. **Option A: Automated Generation** - Use Nano Banana Pro API (see `workflows/image_generation.md` for details):
+   ```bash
+   # Generate a single image
+   python scripts/generate_image.py \
+     --prompt "Your prompt text here" \
+     --output data/assets/chapter_{N}/01_filename.png
+   ```
+   - **Model**: `gemini-3-pro-image-preview` (Nano Banana Pro)
+   - **Cost**: ~$0.12-$0.15 per image
+   - **Quality**: High-fidelity, studio quality
+   - **Prerequisites**: `pip install -U google-genai` and `GOOGLE_API_KEY` in `.env` file
+
+3. **Option B: Manual Generation** - Generate images using your preferred tool (DALL-E, Midjourney, etc.)
+4. Create directory: `mkdir -p data/assets/chapter_{N}/`
+5. Save generated images with the suggested filenames (e.g., `01_game_vs_plot_comparison.png`)
+6. Create a `PLACEMENT_GUIDE.md` file (see detailed instructions in `workflows/image_generation.md`)
+7. Then proceed to Step 3.5 to place images in the markdown
 
 **For detailed instructions on creating the assets folder structure and placement guide, see:**
-- `prompts/shared/IMAGE_ASSETS_GUIDE.md` - Complete guide with templates and examples
+- `workflows/image_generation.md` - Complete guide with automated and manual generation options
 
 **Note:** If images already exist in `data/assets/chapter_{N}/`, skip this step and go directly to Step 3.5.
 

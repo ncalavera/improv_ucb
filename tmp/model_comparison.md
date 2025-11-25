@@ -9,7 +9,7 @@ Comparing **Standard** (Imagen 3 Fast) vs **Pro** (Imagen 3).
 
 | Standard (Fast) | Pro (High Quality) |
 | :---: | :---: |
-| Failed | Failed |
+| ![Standard](tmp/comparison/01_Game_vs_Plot_standard.png) | Failed |
 
 ---
 
@@ -20,7 +20,7 @@ Comparing **Standard** (Imagen 3 Fast) vs **Pro** (Imagen 3).
 
 | Standard (Fast) | Pro (High Quality) |
 | :---: | :---: |
-| Failed | Failed |
+| ![Standard](tmp/comparison/03_Luk_Patterns_standard.png) | ![Pro](tmp/comparison/03_Luk_Patterns_pro.png) |
 
 ---
 
@@ -31,7 +31,7 @@ Comparing **Standard** (Imagen 3 Fast) vs **Pro** (Imagen 3).
 
 | Standard (Fast) | Pro (High Quality) |
 | :---: | :---: |
-| Failed | Failed |
+| ![Standard](tmp/comparison/04_Parrot_Sketch_standard.png) | ![Pro](tmp/comparison/04_Parrot_Sketch_pro.png) |
 
 ---
 

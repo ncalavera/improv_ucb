@@ -58,23 +58,25 @@ def check_api_key():
 def generate_image(client, model_name, prompt, output_path):
     print(f"Generating with {model_name}...")
     try:
-        # Using generate_images based on inspection
-        # Trying GenerateImagesConfig (plural) to match method
-        response = client.models.generate_images(
+        # Using generate_content for Gemini Image models
+        response = client.models.generate_content(
             model=model_name,
-            prompt=prompt,
-            config=types.GenerateImagesConfig(
-                number_of_images=1,
-                aspect_ratio="4:3"
-            )
+            contents=prompt
         )
-        if response.generated_images:
-            image = response.generated_images[0].image
-            image.save(output_path)
-            print(f"Saved to {output_path}")
-            return True
+        
+        # Extract image from response
+        if response.candidates and response.candidates[0].content.parts:
+            for part in response.candidates[0].content.parts:
+                if part.inline_data and part.inline_data.mime_type.startswith('image/'):
+                    # Save image data
+                    with open(output_path, 'wb') as f:
+                        f.write(part.inline_data.data)
+                    print(f"Saved to {output_path}")
+                    return True
+            print(f"No image found in response for {model_name}")
+            return False
         else:
-            print(f"No image generated for {model_name}")
+            print(f"No candidates generated for {model_name}")
             return False
     except Exception as e:
         print(f"Error generating with {model_name}: {e}")
@@ -104,7 +106,8 @@ def create_markdown_report(results):
 
 def main():
     api_key = check_api_key()
-    client = genai.Client(api_key=api_key)
+    # Try v1alpha for preview models
+    client = genai.Client(api_key=api_key, http_options={'api_version': 'v1alpha'})
     
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     

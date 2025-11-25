@@ -34,7 +34,54 @@ data/assets/
 
 ---
 
+---
+
 ## Step 2: Generate and Save Images
+
+### Option A: Automated Generation with Nano Banana Pro API
+
+**Prerequisites:**
+```bash
+# Install google-genai library
+pip install -U google-genai
+
+# API key should be in .env file (alongside ANTHROPIC_API_KEY)
+# GOOGLE_API_KEY=your_key_here
+```
+
+**Generate images automatically:**
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Generate a single image
+python scripts/generate_image.py \
+  --prompt "Your image prompt here" \
+  --output data/assets/chapter_{N}/01_image_name.png
+
+# Example: Generate from prompts file
+while IFS= read -r line; do
+  if [[ $line == "**Filename:**"* ]]; then
+    filename=$(echo "$line" | sed 's/.*`\(.*\)`.*/\1/')
+  elif [[ $line == "**Prompt:**"* ]]; then
+    # Read multi-line prompt until next ---
+    prompt=""
+    while IFS= read -r pline && [[ $pline != "---" ]]; do
+      prompt="$prompt $pline"
+    done
+    python scripts/generate_image.py \
+      --prompt "$prompt" \
+      --output "data/assets/chapter_{N}/$filename"
+  fi
+done < tmp/image_prompts.txt
+```
+
+**Model:** Uses `gemini-3-pro-image-preview` (Nano Banana Pro)
+- **Cost:** ~$0.12-$0.15 per image
+- **Quality:** High-fidelity, studio quality
+- **Speed:** ~10-30 seconds per image
+
+### Option B: Manual Generation
 
 1. **Use the generated prompts** from `tmp/image_prompts.txt`
 2. **Generate images** using your preferred tool (DALL-E, Midjourney, Stable Diffusion, etc.)
