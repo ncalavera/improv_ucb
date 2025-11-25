@@ -67,7 +67,8 @@ class PDFGenerator:
         html_content = self._markdown_to_html(content, title)
 
         # Generate PDF
-        base_url = str(self.assets_dir.parent.resolve()) + '/'
+        # base_url should be project root so paths like "data/assets/..." resolve correctly
+        base_url = str(self.assets_dir.parent.parent.resolve()) + '/'
         HTML(string=html_content, base_url=base_url).write_pdf(output_path)
 
         print(f"✅ PDF generated: {output_path}")
@@ -327,15 +328,57 @@ class PDFGenerator:
                 padding: 0;
             }
 
-            /* Image styling - 75% centered */
-            img {
-                max-width: 75%;
-                max-height: 35vh;
-                height: auto;
-                display: block;
-                margin: 10pt auto;
-                object-fit: contain;
+            /* Figure/image styling with text wrapping */
+            figure.img-wrap {
+                padding: 8pt;
+                background-color: #fafafa;
+                border: 1px solid #eee;
+                border-radius: 6px;
+                text-align: center;
                 page-break-inside: avoid;
+            }
+            figure.img-wrap img {
+                width: 100%;
+                height: auto;
+                object-fit: contain;
+                display: block;
+            }
+            figure.img-wrap figcaption {
+                font-size: 9pt;
+                color: #444;
+                margin-top: 4pt;
+            }
+            figure.img-wrap.img-center-large {
+                float: none;
+                margin: 12pt auto;
+                width: 72%;
+                max-width: 416pt;
+                max-height: 32vh;
+            }
+            figure.img-wrap.img-float-left {
+                float: left;
+                margin: 12pt 28pt 12pt 0;
+                width: 62%;
+                max-width: 360pt;
+                max-height: 32vh;
+            }
+            figure.img-wrap.img-float-right {
+                float: right;
+                margin: 12pt 0 12pt 28pt;
+                width: 62%;
+                max-width: 360pt;
+                max-height: 32vh;
+            }
+            h2, h3 {
+                clear: none;
+            }
+            .clear-block {
+                clear: both;
+                height: 0;
+            }
+            .page-break {
+                page-break-before: always;
+                height: 0;
             }
 
             /* Page break improvements */
@@ -351,6 +394,15 @@ class PDFGenerator:
             .section-block {
                 page-break-inside: avoid;
                 margin-bottom: 4pt;
+            }
+
+            /* Link styling */
+            a {
+                color: #0066cc;
+                text-decoration: underline;
+            }
+            a:hover {
+                color: #004499;
             }
 
             /* TOC styling */
@@ -411,6 +463,8 @@ class PDFGenerator:
         # Track if we've seen the "---" separator after Pages line
         seen_pages_separator = False
         line_index = 0
+        next_float = 'right'
+        current_figure_mode = None
 
         for line in lines:
             original_line = line
@@ -481,7 +535,52 @@ class PDFGenerator:
                     in_list = False
                 alt_text = img_match.group(1)
                 src = img_match.group(2)
-                html_parts.append(f'<img src="{src}" alt="{self._escape_html(alt_text)}">')
+                figure_classes = ['img-wrap']
+                if current_figure_mode == 'center':
+                    figure_classes.append('img-center-large')
+                elif current_figure_mode == 'float-left':
+                    figure_classes.append('img-float-left')
+                elif current_figure_mode == 'float-right':
+                    figure_classes.append('img-float-right')
+                else:
+                    figure_classes.append(f'img-float-{next_float}')
+                    next_float = 'left' if next_float == 'right' else 'right'
+
+                caption_html = f'<figcaption>{self._escape_html(alt_text)}</figcaption>' if alt_text else ''
+                class_attr = " ".join(figure_classes)
+                html_parts.append(
+                    f'<figure class="{class_attr}">'
+                    f'<img src="{src}" alt="{self._escape_html(alt_text)}">{caption_html}'
+                    f'</figure>'
+                )
+                current_figure_mode = None
+                continue
+
+            # Handle clear-block divs (raw HTML)
+            if line.startswith('<div class="clear-block"'):
+                if in_list:
+                    html_parts.append('</ul>')
+                    in_list = False
+                html_parts.append('<div class="clear-block"></div>')
+                continue
+            if line.startswith('<div class="page-break"'):
+                if in_list:
+                    html_parts.append('</ul>')
+                    in_list = False
+                html_parts.append('<div class="page-break"></div>')
+                continue
+            # Handle figure directives
+            directive_match = re.match(r'<!--\s*figure:(center|float|left|right|float-left|float-right)\s*-->', line, re.IGNORECASE)
+            if directive_match:
+                directive = directive_match.group(1).lower()
+                if directive == 'center':
+                    current_figure_mode = 'center'
+                elif directive in ('left', 'float-left'):
+                    current_figure_mode = 'float-left'
+                elif directive in ('right', 'float-right'):
+                    current_figure_mode = 'float-right'
+                else:
+                    current_figure_mode = None
                 continue
 
             # Handle headings
@@ -545,7 +644,9 @@ class PDFGenerator:
                     html_parts.append('<ul>')
                     in_list = True
                 text = line[2:].strip()
-                # Handle bold and italics in list items
+                # Handle links first, then bold and italics in list items
+                text = re.sub(r'(?<!\!)\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', text)
+                # Handle bold and italics
                 text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
                 text = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', text)
                 # Escape HTML but preserve our tags
@@ -563,8 +664,11 @@ class PDFGenerator:
                     html_parts.append('</ul>')
                     in_list = False
 
-                # Handle bold and italics
+                # Handle links first, then bold and italics
                 text = line
+                # Handle links: [text](url) - but not images (already handled above)
+                text = re.sub(r'(?<!\!)\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2">\1</a>', text)
+                # Handle bold and italics
                 text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
                 text = re.sub(r'(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)', r'<em>\1</em>', text)
 

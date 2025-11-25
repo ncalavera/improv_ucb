@@ -182,7 +182,8 @@ ls -la data/assets/chapter_{N}/
    - Or use a manually specified guide path
 3. Insert image markdown references at the specified locations (line numbers may need adjustment based on actual content)
 4. Image format: `![Description](data/assets/chapter_{N}/image_name.png)` (adjust path based on actual image location)
-5. Ensure all image files exist in the specified assets directory
+5. **If the placement guide specifies a layout directive** (e.g., `center`, `float-left`, `float-right`), add the corresponding HTML comment right before the image: `<!-- figure:center -->`, `<!-- figure:float-left -->`, etc. These directives control how `pdf_generator.py` renders the image.
+6. Ensure all image files exist in the specified assets directory
 
 **Example placement:**
 ```markdown
@@ -193,6 +194,7 @@ ls -la data/assets/chapter_{N}/
 - Line numbers in the placement guide are approximate. Place images after the relevant content sections as specified in the guide.
 - Image paths should be relative to the project root (where `pdf_generator.py` is run from)
 - If images are in a different location, adjust paths accordingly
+- See `workflows/image_generation.md` for details on how to decide between center vs float images and how to capture that in the placement guide.
 
 **Output:** `tmp/chapter_{N}_ru.md` (with images inserted)
 
@@ -313,57 +315,88 @@ du -h tmp/chapter_{N}_{THEME}_ru_*.pdf
 
 ## Step 6: Finalize and Move Files to Final Locations
 
-**IMPORTANT**: This step requires user confirmation before executing. Review all files in `tmp/` to ensure everything is correct.
+**IMPORTANT**: This step requires explicit user confirmation before moving files. All files remain in `tmp/` with version numbers until you confirm they are ready.
 
-**Before proceeding, verify:**
-1. ✅ English markdown is correct: `tmp/chapter_{N}.md`
-2. ✅ Russian markdown is correct: `tmp/chapter_{N}_ru.md`
-3. ✅ PDF looks good: `tmp/chapter_{N}_{THEME}_ru_v*.pdf`
-4. ✅ All images are properly placed in the markdown
+**Step 6.1: Generate Final PDF Version in tmp/**
 
-**Step 6.1: Finalize PDF (Remove Version Number)**
-
-Finalize the PDF by removing the version suffix and cleaning up temporary versions:
+Generate the final PDF version in `tmp/` (this preserves version history):
 
 ```bash
-# Find the latest versioned PDF
-LATEST_PDF=$(ls -t tmp/chapter_{N}_{THEME}_ru_v*.pdf | head -1)
-
-# Finalize it (removes version number and cleans up other versions)
+# Generate final PDF version in tmp/ (keeps versioned files)
 source venv/bin/activate && python scripts/pdf_generator.py \
-  --finalize "$LATEST_PDF"
+  --input tmp/chapter_{N}_ru.md \
+  --output tmp/ \
+  --theme {THEME} \
+  --content-type chapter \
+  --language ru
 ```
 
-**Output:** `tmp/chapter_{N}_{THEME}_ru.pdf` (clean name, no version)
+**Output:** `tmp/chapter_{N}_{THEME}_ru_v*.pdf` (versioned file in tmp/)
 
-**Step 6.2: Move Files to Final Locations**
+**Step 6.2: Review and Confirm Files in tmp/**
 
-After confirming everything is correct, move files to their final locations:
+**CRITICAL**: Before proceeding, you MUST review and confirm all files in `tmp/` are correct:
 
 ```bash
-# Move English markdown
+# List all chapter files in tmp/ to review
+ls -lh tmp/chapter_{N}*
+
+# Review English markdown
+cat tmp/chapter_{N}.md | less
+# Or open in editor: code tmp/chapter_{N}.md
+
+# Review Russian markdown (check images are placed correctly)
+cat tmp/chapter_{N}_ru.md | less
+# Or open in editor: code tmp/chapter_{N}_ru.md
+
+# Open PDF to verify it looks correct
+open tmp/chapter_{N}_{THEME}_ru_v*.pdf
+# Or: xdg-open tmp/chapter_{N}_{THEME}_ru_v*.pdf (Linux)
+```
+
+**Verification checklist:**
+1. ✅ English markdown is correct: `tmp/chapter_{N}.md`
+2. ✅ Russian markdown is correct: `tmp/chapter_{N}_ru.md`
+3. ✅ All images are properly placed in the markdown
+4. ✅ PDF looks good and all images are visible: `tmp/chapter_{N}_{THEME}_ru_v*.pdf`
+5. ✅ Video links (if any) are formatted correctly
+
+**ONLY proceed to Step 6.3 after confirming all files are correct!**
+
+**Step 6.3: Finalize PDF and Move Files to Final Locations**
+
+**WARNING**: This step will overwrite existing files in final locations. Only run after confirming files in `tmp/` are correct.
+
+```bash
+# Find the latest versioned PDF in tmp/
+LATEST_PDF=$(ls -t tmp/chapter_{N}_{THEME}_ru_v*.pdf | head -1)
+
+# Finalize it (creates non-versioned file in tmp/)
+source venv/bin/activate && python scripts/pdf_generator.py \
+  --finalize "$LATEST_PDF"
+
+# Now move files to final locations (only after confirmation!)
 mv tmp/chapter_{N}.md data/chapters/en/chapter_{N}.md
 
-# Move Russian markdown
 mv tmp/chapter_{N}_ru.md data/chapters/ru/chapter_{N}_ru.md
 
-# Move finalized PDF
 mv tmp/chapter_{N}_{THEME}_ru.pdf data/chapters/pdf/chapter_{N}_{THEME}_ru.pdf
 ```
 
-**Step 6.3: Clean Up Temporary Files**
+**Step 6.4: Clean Up Temporary Files (Optional)**
 
-Remove all temporary files from `tmp/`:
+After confirming files are successfully moved, you can optionally clean up temporary files:
 
 ```bash
-# Remove all files in tmp/ (be careful - this removes everything!)
 # Review what will be deleted first:
 ls -lh tmp/
 
-# If everything looks good, clean up:
+# If everything looks good, clean up (optional):
 rm -f tmp/chapter_{N}* tmp/vars_* tmp/image_prompts.txt
 # Or remove everything: rm -rf tmp/* (use with caution)
 ```
+
+**Note**: Keeping versioned files in `tmp/` can be useful for reference, so cleanup is optional.
 
 **Verification:**
 ```bash
@@ -371,9 +404,6 @@ rm -f tmp/chapter_{N}* tmp/vars_* tmp/image_prompts.txt
 ls -lh data/chapters/en/chapter_{N}.md
 ls -lh data/chapters/ru/chapter_{N}_ru.md
 ls -lh data/chapters/pdf/chapter_{N}_{THEME}_ru.pdf
-
-# Verify tmp/ is clean (or contains only files you want to keep)
-ls -lh tmp/
 ```
 
 **Final Output:**
@@ -444,16 +474,30 @@ python scripts/pdf_generator.py \
 python scripts/cost_tracker.py log --operation pdf_generation --tokens 0,0 --model pdf_generator
 
 # Step 6: Finalize and Move Files (REQUIRES USER CONFIRMATION)
-# 6.1: Finalize PDF (remove version number)
+# 6.1: Generate final PDF version in tmp/ (preserves version history)
+python scripts/pdf_generator.py \
+  --input tmp/chapter_${N}_ru.md \
+  --output tmp/ \
+  --theme $THEME \
+  --content-type chapter \
+  --language ru
+
+# 6.2: REVIEW AND CONFIRM FILES IN tmp/ BEFORE PROCEEDING
+# Review files:
+#   - cat tmp/chapter_${N}.md
+#   - cat tmp/chapter_${N}_ru.md
+#   - open tmp/chapter_${N}_${THEME}_ru_v*.pdf
+# Only proceed to 6.3 after confirming all files are correct!
+
+# 6.3: Finalize PDF and move to final locations (ONLY AFTER CONFIRMATION)
 LATEST_PDF=$(ls -t tmp/chapter_${N}_${THEME}_ru_v*.pdf | head -1)
 python scripts/pdf_generator.py --finalize "$LATEST_PDF"
 
-# 6.2: Move to final locations (after confirming everything is correct)
 mv tmp/chapter_${N}.md data/chapters/en/chapter_${N}.md
 mv tmp/chapter_${N}_ru.md data/chapters/ru/chapter_${N}_ru.md
 mv tmp/chapter_${N}_${THEME}_ru.pdf data/chapters/pdf/chapter_${N}_${THEME}_ru.pdf
 
-# 6.3: Clean up temporary files
-rm -f tmp/chapter_${N}* tmp/vars_* tmp/image_prompts.txt
+# 6.4: Clean up temporary files (optional)
+# rm -f tmp/chapter_${N}* tmp/vars_* tmp/image_prompts.txt
 ```
 

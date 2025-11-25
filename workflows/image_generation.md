@@ -114,9 +114,11 @@ This guide specifies where each diagram should be placed in `chapter_{N}_ru.md` 
 
 ### 1. [Image Title from Prompt]
 **File:** `data/assets/chapter_{N}/01_filename.png`
+**Placement Type:** `center` or `float` (default). Use `center` for full-width hero illustrations, `float` for wrap-around diagrams.
 **Location:** After line {X} (description of where it should go)
 **Markdown:**
 ```markdown
+<!-- figure:{center|float} -->
 ![Russian Description](data/assets/chapter_{N}/01_filename.png)
 ```
 
@@ -176,6 +178,10 @@ This guide specifies where each diagram should be placed in `chapter_{N}_ru.md` 
    - Place within 5-10 lines of the relevant content
    - Don't interrupt the flow - images should enhance, not distract
    - Order images to follow the narrative flow
+   - **Indicate the placement type before the image**:  
+     - `<!-- figure:center -->` for large, full-width or stand-alone diagrams  
+     - `<!-- figure:float -->` (or omit entirely) for wrap-around diagrams that can alternate left/right  
+     - Optionally use `<!-- figure:float-left -->` / `<!-- figure:float-right -->` to force a side
 
 ### Example:
 
@@ -222,6 +228,7 @@ Before proceeding to place images in markdown:
 - [ ] All images are in PNG format
 - [ ] `PLACEMENT_GUIDE.md` created with all image placements
 - [ ] Line numbers identified for each image
+- [ ] Placement type chosen for each image (center vs float) and noted in the guide
 - [ ] Russian alt text written for each image
 - [ ] Placement guide follows the template format
 - [ ] All image files exist in the directory

@@ -12,7 +12,7 @@ In this chapter we define the game of the scene, explaining that it is the centr
 
 We explain that the game is often a pattern. You want to continue that pattern to play the game.
 
-## Naming The Game
+## Naming the Game
 
 Think of your favorite written comedy sketch. Now try to sum up what is funny about that sketch in just a few words. That is "the game" of that particular sketch. Let's distill two classical sketches from the influential late '60s-early '70s British comedy troupe Monty Python down to their games. In the "Cheese Shop" sketch, a befuddled patron attempts to buy cheese from the proprietor of a cheese shop who, while claiming to have cheese, literally has no cheese for sale. The game of this sketch could be described as "specialty shop that does not sell what it claims to sell." In "The Parrot Sketch," an angry customer attempts to return a dead parrot to the owner of a pet shop who refuses to acknowledge that the parrot is dead. The game of this sketch could be described as "refusal to acknowledge an irrefutable fact."
 
@@ -22,7 +22,7 @@ Notice that in both of the previous examples, the games were described without e
 
 The Who, What, and Where are the elements that make up the plot of the scene. The plot is not what is funny about the scene. Our style of Long Form improvisation is not about plot or story. What is funny is the game, a pattern that is played within the context of that Who, What, and Where. If you strip away the specifics (the Who, What and Where) of any successful sketch or scene, you should still be able to describe the game of a scene, and you'll probably be able to set it in a new context, as we have done with "The Parrot Sketch." This is because the game of the scene is not beholden to the specifics of the scene. The specifics are there to support the game.
 
-Once you and your scene partner have established the base reality of your scene, you are ready to find and play the game of the scene. Again, the game is what is funny about your scene. It is a consistent pattern of behavior that breaks from the expected patterns of our everyday lives. You and your partner will work together to discover "the funny" of your scene. Once it is found, you will heighten and explore "the funny" for the rest of the scene. The key to finding and playing the game is identifying the first unusual thing in a scene, the first piece of information that breaks from the pattern of normal life. Once this has been discovered, the improvisers will shift away from "Yes And" and move onto "If...Then" (Asking the question "If This Unusual Thing Is True, Then What Else Is True?"). With Yes And, we were agreeing with information presented and adding new information to develop a base reality. Once the unusual thing has been found, we no longer need to develop a base reality; we need to be funny. Repeatedly answering the question "If this unusual thing is true, then what else is true?" creates a comic pattern. Each answer to this question (or similar, related versions of this question) is called a "game move." A combination of game moves forms a pattern that we call a "game."
+Once you and your scene partner have established the base reality of your scene, you are ready to find and play the game of the scene. Again, the game is what is funny about your scene. It is a consistent pattern of behavior that breaks from the expected patterns of our everyday lives. You and your partner will work together to discover "the funny" of your scene. Once it is found, you will heighten and explore "the funny" for the rest of the scene. The key to finding and playing the game is identifying the first unusual thing in a scene, the first piece of information that breaks from the pattern of normal life. Once this has been discovered, the improvisers will shift away from "Yes And" and move onto "If…Then" (Asking the question "If This Unusual Thing Is True, Then What Else Is True?"). With Yes And, we were agreeing with information presented and adding new information to develop a base reality. Once the unusual thing has been found, we no longer need to develop a base reality; we need to be funny. Repeatedly answering the question "If this unusual thing is true, then what else is true?" creates a comic pattern. Each answer to this question (or similar, related versions of this question) is called a "game move." A combination of game moves forms a pattern that we call a "game."
 
 The game of the scene requires building funny patterns of behavior in scenes. To help you understand how game helps improvisers to build scenes, think of forming a pattern with numbers.
 
@@ -34,7 +34,7 @@ At this point, if you are going to successfully follow this pattern, you are goi
 
 You can think of the 9 move as "locking" your pattern. From this point on, we know that we are only going to "Add 3." Anything else would fall outside of our pattern or game. Once this pattern has been established, it must stay the same in order to focus what is funny about the scene.
 
-### Now Let's Start Over
+### Now let's start over
 
 Now, instead of 9 being the next game move, let's imagine that the next game move is 12.
 
@@ -44,30 +44,27 @@ Both patterns are completely valid, and they both started from the same first un
 
 However, once the pattern has been locked, there is no need to stray from it. There is no need to find more interesting or unusual things. Think of it this way: if each number in the pattern gets a laugh and you have to choose another number to contribute, why wouldn't you choose what has already worked?
 
-In case the number example confused you, here is another quick
 ### Example
-In This Example, Let's Say The First Unusual Thing Is "Orange." The following are three different patterns that you could create from the
-### Same Starting Place
+
+In this example, let's say the first unusual thing is "orange." The following are three different patterns that you could create from the same starting place:
 
 - orange, blue, yellow (colors)
 - orange, pineapple, apple (fruits)
 - orange, baseball, globe (round objects)
-### Game Makes Your Life Easier
+
+### Game Makes Your Life EASIER
 
 In both of the abstract number examples in the previous section, each new number represents another funny moment in a scene. In order to continue to make each scene funny, you will still have to come up with new numbers. However, thanks to the game, your thought process isn't all over the place. You'll be thinking of certain numbers instead of all numbers. A major benefit of game is that you know what works, so you don't need to be wildly creative. The narrowing down of limitless possibilities in this way makes the task of being funny infinitely easier. With a game, you put boundaries on what choices you could be making and in doing so, lighten your cognitive load.
 
-### Base Reality+ First
-### Yes, And Unusual Thing
-
-----> EXPIRE HEIGHTEN
+**Base Reality + First Unusual Thing → Yes And → Heighten + Expire**
 
 The game makes being funny in a Long Form scene easier by forcing you to focus on a single comic idea. Its nature is to take away options so that you and your scene partner don't have to keep searching for new unusual, funny things. Having a game in your scene is the closest thing in improvisation to having a script. You don't have to wrack your brain for funny things to say. You now have a method that provides you with funny things to say. The method is asking the question "if this unusual thing is true, then what else is true?" to build your scene off of your initial funny discovery.
 
-Sports can serve as a great analogy for the game. Think of game as the sport you choose to play. If you agree to play basketball with other people, you all know that there are certain rules that will be followed and certain things you can expect to happen (e.g. you must dribble the ball if you want to move with it). If anyone were to deviate from these rules or constantly make up new rules (the equivalent of throwing random unusual things into the scene), the game would no longer be fun to play or watch. The game would fall apart.
+Sports can serve as a great analogy for the game. Think of game as the sport you choose to play. If you agree to play basketball with other people, you all know that there are certain rules that will be followed and certain things you can expect to happen (e.g., you must dribble the ball if you want to move with it). If anyone were to deviate from these rules or constantly make up new rules (the equivalent of throwing random unusual things into the scene), the game would no longer be fun to play or watch. The game would fall apart.
 
 You may be thinking that following rules in improv will be constraining. However, following the rules of a game in an improv scene is no more constraining than following the rules in a game of basketball. As is the case with basketball, there is an inexhaustible amount of variation within the rules. Even though there are rules, the specific way you play while adhering to those rules is never predetermined. Larry Bird, Michael Jordan, and Shaquille O'Neal all played the same game with the same rules, yet they all had completely different styles. Similarly, there is plenty of room for individual expression within the constraints of the game of the scene. The game is just giving you a structure within which you can be creative.
 
-You could also think of performing a successful Long Form scene as trying to get from one side of a forest to the other. Without a clear-cut path, you and your scene partner could encounter heavy brush, mud, or any number of other things that would make getting to the other side very difficult. You might disagree about the best way to get to other side, and this could keep you from working together. A path would make the task of getting from one side of the forest to the other much easier to accomplish. Game is the path leading you and your scene partner through the forest of a Long Form scene. The path provided by the game makes performing a Long Form scene with someone else effortless and enjoyable.
+You could also think of performing a successful Long Form scene as trying to get from one side of a forest to the other. Without a clear-cut path, you and your scene partner could encounter heavy brush, mud, or any number of other things that would make getting to the other side very difficult. You might disagree about the best way to get to the other side, and this could keep you from working together. A path would make the task of getting from one side of the forest to the other much easier to accomplish. Game is the path leading you and your scene partner through the forest of a Long Form scene. The path provided by the game makes performing a Long Form scene with someone else effortless and enjoyable.
 
 Now that we have defined what game is and why it is important, it is time to move on to how to find it.
 
