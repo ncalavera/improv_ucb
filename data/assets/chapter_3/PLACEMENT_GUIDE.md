@@ -26,6 +26,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 3. Three Different Patterns from One Word (ЛУК)
 **File:** `data/assets/chapter_3/03_luk_three_patterns.png`
+**Status:** ✅ DONE
 **Location:** After line 53 (after the "Пример" section showing three different patterns from "orange" - this image uses "ЛУК" as a Russian wordplay example)
 **Markdown:**
 ```markdown
@@ -36,7 +37,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 4. Parrot Sketch Game Abstraction
 **File:** `data/assets/chapter_3/04_game_abstraction_parrot.png`
-**Status:** ⏳ PENDING - User generating with other agent
+**Status:** ✅ DONE
 **Location:** After line 19 (after the paragraph about the bedroom sketch having the same game as Parrot Sketch)
 **Markdown:**
 ```markdown
@@ -112,7 +113,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 11. Scene Structure Formula
 **File:** `data/assets/chapter_3/11_scene_structure_formula.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 59 (after the formula "Base Reality + First Unusual Thing → Yes And → Heighten + Expire")
 **Markdown:**
 ```markdown
@@ -123,7 +124,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 12. Breaking the Pattern (Wrong)
 **File:** `data/assets/chapter_3/12_breaking_pattern_wrong.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 33 (after the paragraph explaining what happens if you "Add 2" or "Add 5" instead of following the pattern)
 **Markdown:**
 ```markdown
@@ -141,11 +142,12 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 5. **Line 35** → Pattern Recognition in Game (Numbers) ✅
 6. **Line 43** → Alternative Patterns from Same Start ⏳ (moved to #10)
 7. **Line 53** → Three Different Patterns from ЛУК ✅ (now #3)
-8. **Line 57** → Game Makes Improv Easier ⏳
-9. **Line 59** → Scene Structure Formula ⏳
-10. **Line 63** → Basketball Analogy ⏳
-11. **Line 67** → Forest Path Metaphor ⏳
-12. **Line 19** → Parrot Sketch Game Abstraction ⏳
+8. **Line 57** → Game Makes Improv Easier ✅
+9. **Line 59** → Scene Structure Formula ✅
+10. **Line 63** → Basketball Analogy ✅
+11. **Line 67** → Forest Path Metaphor ✅
+12. **Line 19** → Parrot Sketch Game Abstraction ✅
+13. **Line 33** → Breaking the Pattern (Wrong) ✅
 
 ---
 

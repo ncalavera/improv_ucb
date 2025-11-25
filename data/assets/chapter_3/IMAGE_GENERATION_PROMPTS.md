@@ -32,7 +32,7 @@ Create a simple educational diagram using stick figure style (xkcd-like). Show t
 
 ## 03. Three Different Patterns from One Word (ЛУК - REGENERATED)
 **Filename:** `03_luk_three_patterns.png`
-**Status:** ⏳ PENDING
+**Status:** ✅ DONE
 
 **Prompt:**
 ```
@@ -43,11 +43,11 @@ Create a simple educational diagram using stick figure style (xkcd-like). Show t
 
 ## 04. Parrot Sketch Game Abstraction
 **Filename:** `04_game_abstraction_parrot.png`
-**Status:** ⏳ PENDING
+**Status:** ✅ DONE
 
 **Prompt:**
 ```
-Create a simple educational diagram using stick figure style (xkcd-like). Show two scenarios stacked vertically. TOP SECTION: Stick figure (Customer) holding dead bird (X for eyes) shouting "Вы продали мне мертвого попугая!". Shopkeeper stick figure replies "Я не понимаю о чем вы говорите". BOTTOM SECTION: Stick figure (Wife) pointing at bed, shouting "Ты мне изменяеешь!". Husband stick figure (standing near bed with two other figures in it) replies "Я не понимаю о чем вы говорите". CENTER/CONNECTING: An arrow connecting the two scenarios with a box labeled "ИГРА = Отказ признать неопровержимый факт". Remove labels "TOP SCENARIO" and "BOTTOM SCENARIO". Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+Create a simple educational diagram using stick figure style (xkcd-like). Show two scenarios side by side with a connecting arrow in the middle. LEFT SCENARIO labeled "СКЕТЧ ПРО ПОПУГАЯ": Customer stick figure (left) holding dead bird with X eyes, shouting "Вы продали мне мертвого попугая!". Shopkeeper stick figure (right) with hands up, denying, saying "Я не понимаю о чем вы говорите". RIGHT SCENARIO labeled "СКЕТЧ ПРО ИЗМЕНУ": Wife stick figure (left) pointing at bed where husband and another woman are, shouting "Ты мне изменяешь!". Husband stick figure (right) with hands up, denying, saying "Я не понимаю о чем вы говорите". CENTER: Large arrow pointing from left to right with a box in the middle labeled "ИГРА = Отказ признать неопровержимый факт". Top text: "ОДНА ИГРА, РАЗНЫЕ СЦЕНАРИИ" (ONE GAME, DIFFERENT SCENARIOS). Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
 ```
 
 ---
@@ -120,7 +120,7 @@ Create a simple educational diagram using stick figure style (xkcd-like). Show a
 
 ## 11. Scene Structure Formula
 **Filename:** `11_scene_structure_formula.png`
-**Status:** ⏳ PENDING
+**Status:** ✅ DONE
 
 **Prompt:**
 ```
@@ -131,7 +131,7 @@ Create a simple educational diagram using stick figure style (xkcd-like). Show h
 
 ## 12. Breaking the Pattern (Wrong)
 **Filename:** `12_breaking_pattern_wrong.png`
-**Status:** ⏳ PENDING
+**Status:** ✅ DONE
 
 **Prompt:**
 ```

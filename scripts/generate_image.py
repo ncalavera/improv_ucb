@@ -15,14 +15,23 @@ except ImportError:
     print("Please run: pip install -U google-genai")
     sys.exit(1)
 
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    print("Warning: 'python-dotenv' not installed. Will only check environment variables.")
+    load_dotenv = lambda: None
+
 # Configuration
 MODEL = "gemini-3-pro-image-preview"  # Nano Banana Pro (high quality)
 
 def check_api_key():
     """Check if GOOGLE_API_KEY environment variable is set."""
+    # Try loading from .env file first
+    load_dotenv()
+    
     if "GOOGLE_API_KEY" not in os.environ:
         print("Error: GOOGLE_API_KEY environment variable is not set.")
-        print("Please export your API key:")
+        print("Please set it in your .env file or export it:")
         print("export GOOGLE_API_KEY='your_key_here'")
         sys.exit(1)
     return os.environ["GOOGLE_API_KEY"]
