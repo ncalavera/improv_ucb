@@ -36,7 +36,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 4. Parrot Sketch Game Abstraction
 **File:** `data/assets/chapter_3/04_game_abstraction_parrot.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ⏳ PENDING - User generating with other agent
 **Location:** After line 19 (after the paragraph about the bedroom sketch having the same game as Parrot Sketch)
 **Markdown:**
 ```markdown
@@ -47,7 +47,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 5. Yes And to If Then Transition
 **File:** `data/assets/chapter_3/05_yes_and_to_if_then.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 25 (after the paragraph explaining the shift from "Yes And" to "If...Then")
 **Markdown:**
 ```markdown
@@ -58,7 +58,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 6. Game Makes Improv Easier
 **File:** `data/assets/chapter_3/06_game_narrows_possibilities.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 57 (after the paragraph explaining how game narrows down limitless possibilities)
 **Markdown:**
 ```markdown
@@ -69,7 +69,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 7. Basketball Analogy
 **File:** `data/assets/chapter_3/07_basketball_game_analogy.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 63 (after the paragraph about sports analogy and basketball rules)
 **Markdown:**
 ```markdown
@@ -80,7 +80,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 8. Forest Path Metaphor
 **File:** `data/assets/chapter_3/08_forest_path_metaphor.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 67 (after the paragraph about the forest path metaphor)
 **Markdown:**
 ```markdown
@@ -91,7 +91,7 @@ This guide specifies where each diagram should be placed in `chapter_3_ru.md` fo
 
 ### 9. Game Move Sequence
 **File:** `data/assets/chapter_3/09_game_moves_sequence.png`
-**Status:** ⏳ PENDING - Image not yet generated
+**Status:** ✅ DONE
 **Location:** After line 25 (after the paragraph explaining how game moves form a pattern, around the "If...Then" explanation)
 **Markdown:**
 ```markdown

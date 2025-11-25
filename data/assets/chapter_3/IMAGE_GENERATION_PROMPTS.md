@@ -47,7 +47,7 @@ Create a simple educational diagram using stick figure style (xkcd-like). Show t
 
 **Prompt:**
 ```
-Create a simple educational diagram using stick figure style (xkcd-like). Show two scenarios stacked vertically. TOP SCENARIO: Stick figure holding dead bird (simple X for eyes) facing shopkeeper stick figure with label "СКЕТЧ О ПОПУГАЕ". Middle section shows arrow pointing down to a box with "ИГРА = Отказ признать неопровержимый факт" with the specifics "попугай" crossed out. BOTTOM SCENARIO: Stick figure (wife) pointing at two stick figures in bed, facing another stick figure (husband) denying, labeled "НОВЫЙ КОНТЕКСТ". Arrow shows "ТА ЖЕ ИГРА!" Both denial stick figures have similar defensive poses. Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
+Create a simple educational diagram using stick figure style (xkcd-like). Show two scenarios stacked vertically. TOP SECTION: Stick figure (Customer) holding dead bird (X for eyes) shouting "Вы продали мне мертвого попугая!". Shopkeeper stick figure replies "Я не понимаю о чем вы говорите". BOTTOM SECTION: Stick figure (Wife) pointing at bed, shouting "Ты мне изменяеешь!". Husband stick figure (standing near bed with two other figures in it) replies "Я не понимаю о чем вы говорите". CENTER/CONNECTING: An arrow connecting the two scenarios with a box labeled "ИГРА = Отказ признать неопровержимый факт". Remove labels "TOP SCENARIO" and "BOTTOM SCENARIO". Simple black line drawings on white background. Clean sans-serif Cyrillic typography. Minimal style. 4:3 aspect ratio.
 ```
 
 ---
